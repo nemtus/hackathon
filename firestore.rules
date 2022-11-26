@@ -1,8 +1,134 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // auth rule functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return request.auth.token.admin == true;
+    }
+
+    function isAdminAuthenticated() {
+      return isAuthenticated() && isAdmin();
+    }
+
+    function isUserAuthenticated(userId) {
+      return isAuthenticated() && userId == request.auth.uid;
+    }
+
+    function isUserOrAdminAuthenticated(userId) {
+      return isUserAuthenticated(userId) || isAdminAuthenticated();
+    }
+
+    // schema rule functions
+    function isValidUser(user) {
+      return user.keys().hasAll([
+          'nickName',
+          'websiteUrl',
+          'twitterId',
+          'githubId'
+        ]) &&
+        user.nickName is string &&
+        user.websiteUrl is string &&
+        user.twitterId is string &&
+        user.githubId is string;
+    }
+
     match /{document=**} {
       allow read, write: if false;
+    }
+
+    // for admin
+    match /v/1/scopes/admin/users/{userId} {
+      allow get: if isAdminAuthenticated();
+      allow list: if isAdminAuthenticated();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/admin/users/{userId}/entries/{entryId} {
+      allow get: if isAdminAuthenticated();
+      allow list: if isAdminAuthenticated();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/admin/users/{userId}/entries/{entryId}/judges/{judgeId} {
+      allow get: if isAdminAuthenticated();
+      allow list: if isAdminAuthenticated();
+      allow create: if isAdminAuthenticated();
+      allow update: if isAdminAuthenticated();
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/admin/users/{userId}/submissions/{submissionId} {
+      allow get: if isAdminAuthenticated();
+      allow list: if isAdminAuthenticated();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/admin/users/{userId}/submissions/{submissionId}/judges/{judgeId} {
+      allow get: if isAdminAuthenticated();
+      allow list: if isAdminAuthenticated();
+      allow create: if isAdminAuthenticated() && submissionId == judgeId;
+      allow update: if isAdminAuthenticated() && submissionId == judgeId;
+      allow delete: if false;
+    }
+
+    // for user or admin
+    match /v/1/scopes/private/users/{userId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isAdminAuthenticated();
+      allow create: if false;
+      allow update: if isUserOrAdminAuthenticated(userId);
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/private/users/{userId}/entries/{entryId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isAdminAuthenticated();
+      allow create: if isUserOrAdminAuthenticated(userId);
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/private/users/{userId}/submissions/{submissionId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isAdminAuthenticated();
+      allow create: if isUserOrAdminAuthenticated(userId);
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // for public
+    match /v/1/scopes/public/nodes/{nodeId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/public/users/{userId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/public/nodes/{userId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
   }
 }

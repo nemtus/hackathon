@@ -5,7 +5,7 @@
     "format": "prettier --write \"**/*.{js,ts}\"",
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "serve": "firebase emulators:start --only auth,firestore,storage,functions,pubsub",
+    "serve": "firebase emulators:start --only auth,firestore,storage,functions,pubsub --import=emulator --export-on-exit",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
