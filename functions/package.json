@@ -16,8 +16,11 @@
   },
   "main": "lib/index.js",
   "dependencies": {
+    "@nemtus/symbol-sdk-openapi-generator-typescript-axios": "^0.1.0",
+    "axios": "^1.2.1",
     "firebase-admin": "^10.0.2",
-    "firebase-functions": "^4.0.2"
+    "firebase-functions": "^4.1.0",
+    "ws": "^8.11.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.12.0",
