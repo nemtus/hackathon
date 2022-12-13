@@ -1,13 +1,13 @@
 import functions from '../../../../utils/firebase/baseFunction';
 import { hasAlreadyTriggered } from '../../../../utils/firebase/hasAlreadyTriggered';
 import { logger } from '../../../../utils/firebase/logger';
-import { adminUserConverter } from '../../../model/admin/users';
+import { privateUserConverter } from '../../../model/private/users';
 import {
-  convertAdminUserToPrivateUser,
-  setPrivateUser,
-} from '../../../model/private/users';
+  convertPrivateUserToPublicUser,
+  setPublicUser,
+} from '../../../model/public/users';
 
-const path = '/v/1/scopes/admin/users/{userID}';
+const path = '/v/1/scopes/private/users/{userID}';
 
 export const onCreate = () =>
   functions()
@@ -23,15 +23,15 @@ export const onCreate = () =>
       }
       logger.debug({ snapshot, context });
 
-      const adminUser = (
-        await snapshot.ref.withConverter(adminUserConverter).get()
+      const privateUser = (
+        await snapshot.ref.withConverter(privateUserConverter).get()
       ).data();
-      if (!adminUser) {
+      if (!privateUser) {
         throw Error('adminUser is undefined');
       }
-      logger.debug({ adminUser });
-
-      const privateUser = convertAdminUserToPrivateUser(adminUser);
       logger.debug({ privateUser });
-      await setPrivateUser(privateUser);
+
+      const publicUser = convertPrivateUserToPublicUser(privateUser);
+      logger.debug({ publicUser });
+      await setPublicUser(publicUser);
     });
