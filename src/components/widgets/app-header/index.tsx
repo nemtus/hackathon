@@ -97,7 +97,7 @@ const AppHeader = () => {
               src={SymbolBlockchainLogo}
               alt="Symbol Blockchain Logo"
             />
-            Symbol Playground
+            NEMTUS Hack+
           </a>
         </div>
         <div className="navbar-end">
