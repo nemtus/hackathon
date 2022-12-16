@@ -1,7 +1,7 @@
 import {
   exportFunctionsModule,
   exportFunction,
-} from '../../../../utils/firebase/deploy';
+} from '../../../../../utils/firebase/deploy';
 import { Change, CloudFunction } from 'firebase-functions';
 import { QueryDocumentSnapshot } from 'firebase-functions/lib/v1/providers/firestore';
 import { onCreate } from './onCreate';
@@ -14,15 +14,19 @@ const _exportFunction = (
   f: () =>
     | CloudFunction<QueryDocumentSnapshot>
     | CloudFunction<Change<QueryDocumentSnapshot>>
-) => exportFunction(['v1', 'firestore', 'private', 'user', name], exports, f);
+) =>
+  exportFunction(['v1', 'firestore', 'admin', 'user', 'tx', name], exports, f);
 
 _exportFunction('onCreate', onCreate);
 _exportFunction('onUpdate', onUpdate);
 // _exportFunction('onDelete', onDelete);
 
 // Note: Register sub-directories
-const domains: string[] = ['tx'];
+const domains: string[] = [];
 
 domains.forEach((domain) =>
-  exportFunctionsModule(['v1', 'firestore', 'private', 'user', domain], exports)
+  exportFunctionsModule(
+    ['v1', 'firestore', 'admin', 'user', 'tx', domain],
+    exports
+  )
 );

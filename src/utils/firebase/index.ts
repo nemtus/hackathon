@@ -14,7 +14,21 @@ import {
   GithubAuthProvider,
   OAuthProvider, // Note: Yahoo, Microsoft and Apple
 } from 'firebase/auth';
-import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
+import {
+  connectFirestoreEmulator,
+  DocumentData,
+  FirestoreDataConverter,
+  getFirestore,
+  QueryDocumentSnapshot,
+  collection,
+  doc,
+  where,
+  query,
+  orderBy,
+  getDoc,
+  setDoc,
+  getDocs,
+} from 'firebase/firestore';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { getAnalytics } from 'firebase/analytics';
@@ -249,11 +263,57 @@ if (process.env.NODE_ENV === 'development') {
   connectFunctionsEmulator(functions, 'localhost', 5001);
 }
 
+const converter = <
+  T extends Record<string, unknown>
+>(): FirestoreDataConverter<T> => ({
+  toFirestore: (data: T) => {
+    // Note: プロパティの最上位階層飲みに対して変換を行う実装としている
+    // Note: ネストさせたプロパティについては変換を行わないので注意が必要
+    const cloneObj = Object.assign(data);
+    Object.keys(cloneObj).forEach((key) => {
+      // Note: 自動的にupdatedAtを現在時刻で更新する
+      if (key === 'updatedAt') {
+        cloneObj[key] = new Date();
+      }
+      // Note: undefinedなプロパティが含まれているとエラーになるので取り除く
+      if (cloneObj[key] === undefined) {
+        delete cloneObj[key];
+      }
+    });
+    return cloneObj;
+  },
+  fromFirestore: (snapshot: QueryDocumentSnapshot<DocumentData>) => {
+    // Note: プロパティの最上位階層飲みに対して変換を行う実装としている
+    // Note: ネストさせたプロパティについては変換を行わないので注意が必要
+    const data = snapshot.data();
+    const cloneObj = Object.assign(data);
+    Object.keys(cloneObj).forEach((key) => {
+      // Note: ServerTimestamp型のプロパティをDate型に変換する
+      if (
+        typeof cloneObj[key].toString === 'function' &&
+        cloneObj[key].toString().startWith('Timestamp')
+      ) {
+        cloneObj[key] = cloneObj[key].toDate();
+      }
+    });
+    return cloneObj;
+  },
+});
+
 export {
   auth,
   storage,
   functions,
   analytics,
+  converter,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  getDocs,
+  where,
+  orderBy,
+  query,
   signInWithPopup,
   signOut,
   fetchSignInMethodsForEmail,

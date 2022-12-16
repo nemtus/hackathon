@@ -7,9 +7,11 @@ import {
   addNodeCheck,
   NodeCheck,
 } from '../../model/configs/symbol/nodes/checks';
+import { getLatestFinalizedBlockHeight } from '../../../utils/symbol/getLatestFinalizedBlockHeight';
 
 export const checkNodes = () =>
   functions()
+    .runWith({ timeoutSeconds: 540 })
     .pubsub.schedule('50 * * * *')
     .onRun(async (context) => {
       logger.debug({ context });
@@ -17,6 +19,10 @@ export const checkNodes = () =>
       const latestBlockHeight = await getLatestBlockHeight();
       logger.debug({ latestBlockHeight });
       await setChainInfo({ latestBlockHeight });
+
+      const latestFinalizedBlockHeight = await getLatestFinalizedBlockHeight();
+      logger.debug({ latestFinalizedBlockHeight });
+      await setChainInfo({ latestFinalizedBlockHeight });
 
       const allNodes = await getAllNodes();
       logger.debug({ allNodes });
