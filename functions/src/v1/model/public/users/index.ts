@@ -1,7 +1,7 @@
-import { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firestore';
-import { db, FieldValue } from '../../../../utils/firebase';
-import { omitUndefinedProperties } from '../../../../utils/typescript/omitUndefinedProperties';
-import { AdminUser as PrivateUser } from '../../admin/users';
+import { db } from '../../../../utils/firebase';
+import { converter } from '../../../../utils/firebase/converter';
+import { AdminUser } from '../../admin/users';
+import { PrivateUser } from '../../private/users';
 
 export type PublicUser = {
   id: string;
@@ -11,52 +11,68 @@ export type PublicUser = {
   githubId?: string;
   createdAt?: Date;
   updatedAt?: Date;
-  entryAt: Date | null;
-  submitAt: Date | null;
-  voteAt: Date | null;
+  entryAt?: Date;
+  submitAt?: Date;
+  voteAt?: Date;
   multisigAddress?: string;
 };
 
 export type PublicUsers = PublicUser[];
 
-export const publicUserConverter = {
-  toFirestore: (publicUser: PublicUser): DocumentData => {
-    return omitUndefinedProperties({
-      id: publicUser.id,
-      displayName: publicUser.displayName,
-      photoUrl: publicUser.photoUrl,
-      twitterId: publicUser.twitterId,
-      githubId: publicUser.githubId,
-      createdAt: publicUser.createdAt
-        ? FieldValue.serverTimestamp()
-        : undefined,
-      updatedAt: FieldValue.serverTimestamp(),
-      entryAt: publicUser.entryAt ? FieldValue.serverTimestamp() : null,
-      submitAt: publicUser.submitAt ? FieldValue.serverTimestamp() : null,
-      voteAt: publicUser.voteAt ? FieldValue.serverTimestamp() : null,
-      multisigAddress: publicUser.multisigAddress,
-    });
-  },
-  fromFirestore: (snapshot: QueryDocumentSnapshot): PublicUser => {
-    const data = snapshot.data();
-    return {
-      id: data.id,
-      displayName: data.displayName,
-      photoUrl: data.photoUrl,
-      twitterId: data.twitterId,
-      githubId: data.githubId,
-      createdAt: data.createdAt?.toDate(),
-      updatedAt: data.updatedAt?.toDate(),
-      entryAt: data.entryAt ? data.entryAt.toDate() : null,
-      submitAt: data.submitAt ? data.submitAt.toDate() : null,
-      voteAt: data.voteAt ? data.voteAt.toDate() : null,
-      multisigAddress: data.multisigAddress,
-    };
-  },
+export const publicUserConverter = converter<PublicUser>();
+
+const collectionPath = '/v/1/scopes/public/users';
+const collectionRef = db
+  .collection(collectionPath)
+  .withConverter(converter<PublicUser>());
+const docPath = (id: string) => `${collectionPath}/${id}`;
+const docRef = (id: string) =>
+  db.doc(docPath(id)).withConverter(converter<PublicUser>());
+
+export const getPrivateUser = async (
+  id: string
+): Promise<PublicUser | undefined> => {
+  return (await docRef(id).get()).data();
+};
+
+export const setPublicUser = async (publicUser: PublicUser): Promise<void> => {
+  await docRef(publicUser.id).set(publicUser, { merge: true });
+};
+
+export const getAllPublicUsers = async (): Promise<PublicUsers> => {
+  return (await collectionRef.get()).docs.map((snapshot) => snapshot.data());
+};
+
+export const queryEntryPublicUsers = async (): Promise<PublicUsers> => {
+  return (
+    await collectionRef
+      .where('entryAt', '!=', null)
+      .orderBy('entryAt', 'asc')
+      .get()
+  ).docs.map((snapshot) => snapshot.data());
+};
+
+export const querySubmitPublicUsers = async (): Promise<PublicUsers> => {
+  return (
+    await collectionRef
+      .where('entryAt', '!=', null)
+      .where('submitAt', '!=', null)
+      .orderBy('entryAt', 'asc')
+      .get()
+  ).docs.map((snapshot) => snapshot.data());
+};
+
+export const queryVotePublicUsers = async (): Promise<PublicUsers> => {
+  return (
+    await collectionRef
+      .where('voteAt', '!=', null)
+      .orderBy('entryAt', 'asc')
+      .get()
+  ).docs.map((snapshot) => snapshot.data());
 };
 
 export const convertAdminUserToPublicUser = (
-  adminUser: PrivateUser
+  adminUser: AdminUser
 ): PublicUser => {
   const publicUser: PublicUser = {
     id: adminUser.id,
@@ -66,9 +82,9 @@ export const convertAdminUserToPublicUser = (
     githubId: adminUser.githubId,
     createdAt: adminUser.createdAt,
     updatedAt: adminUser.updatedAt,
-    entryAt: adminUser.entryAt ? adminUser.entryAt : null,
-    submitAt: adminUser.submitAt ? adminUser.submitAt : null,
-    voteAt: adminUser.voteAt ? adminUser.voteAt : null,
+    entryAt: adminUser.entryAt,
+    submitAt: adminUser.submitAt,
+    voteAt: adminUser.voteAt,
     multisigAddress: adminUser.multisigAddress,
   };
   return publicUser;
@@ -85,82 +101,10 @@ export const convertPrivateUserToPublicUser = (
     githubId: privateUser.githubId,
     createdAt: privateUser.createdAt,
     updatedAt: privateUser.updatedAt,
-    entryAt: privateUser.entryAt ? privateUser.entryAt : null,
-    submitAt: privateUser.submitAt ? privateUser.submitAt : null,
-    voteAt: privateUser.voteAt ? privateUser.voteAt : null,
+    entryAt: privateUser.entryAt,
+    submitAt: privateUser.submitAt,
+    voteAt: privateUser.voteAt,
     multisigAddress: privateUser.multisigAddress,
   };
   return publicUser;
-};
-
-const collectionPath = '/v/1/scopes/public/users';
-const docPath = (id: string) => `${collectionPath}/${id}`;
-
-export const getPrivateUser = async (
-  id: string
-): Promise<PublicUser | undefined> => {
-  const publicUserSnapshot = await db
-    .doc(docPath(id))
-    .withConverter(publicUserConverter)
-    .get();
-  const publicUser = publicUserSnapshot.data();
-  return publicUser;
-};
-
-export const setPublicUser = async (publicUser: PublicUser): Promise<void> => {
-  await db
-    .doc(docPath(publicUser.id))
-    .withConverter(publicUserConverter)
-    .set(publicUser, { merge: true });
-};
-
-export const getAllPublicUsers = async (): Promise<PublicUsers> => {
-  const publicUsersSnapshot = await db
-    .collection(collectionPath)
-    .withConverter(publicUserConverter)
-    .get();
-  const publicUsers = publicUsersSnapshot.docs.map((publicUserSnapshot) =>
-    publicUserSnapshot.data()
-  );
-  return publicUsers;
-};
-
-export const queryEntryPublicUsers = async (): Promise<PublicUsers> => {
-  const entryPublicUsersSnapshot = await db
-    .collection(collectionPath)
-    .withConverter(publicUserConverter)
-    .where('entryAt', '!=', null)
-    .orderBy('entryAt', 'asc')
-    .get();
-  const entryPublicUsers = entryPublicUsersSnapshot.docs.map(
-    (entryPublicUser) => entryPublicUser.data()
-  );
-  return entryPublicUsers;
-};
-
-export const querySubmitPublicUsers = async (): Promise<PublicUsers> => {
-  const submitPublicUsersSnapshot = await db
-    .collection(collectionPath)
-    .withConverter(publicUserConverter)
-    .where('entryAt', '!=', null)
-    .where('submitAt', '!=', null)
-    .orderBy('submitAt', 'asc')
-    .get();
-  const submitPublicUsers = submitPublicUsersSnapshot.docs.map(
-    (submitPublicUser) => submitPublicUser.data()
-  );
-  return submitPublicUsers;
-};
-
-export const queryVotePublicUsers = async (): Promise<PublicUsers> => {
-  const votePublicUsersSnapshot = await db
-    .collection(collectionPath)
-    .withConverter(publicUserConverter)
-    .where('voteAt', '!=', null)
-    .orderBy('voteAt', 'asc')
-    .get();
-  const votePublicUsers = votePublicUsersSnapshot.docs.map((votePublicUser) =>
-    votePublicUser.data()
-  );
-  return votePublicUsers;
 };

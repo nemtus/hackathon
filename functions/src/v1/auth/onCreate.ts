@@ -18,7 +18,11 @@ const DATA_ENCRYPTION_KEY = defineSecret('DATA_ENCRYPTION_KEY');
 export const onCreate = () =>
   functions()
     .runWith({
-      secrets: ['DATA_ENCRYPTION_KEY'],
+      secrets: [
+        'FEE_BILLING_ACCOUNT_PRIVATE_KEY',
+        'MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY',
+        'DATA_ENCRYPTION_KEY',
+      ],
     })
     .auth.user()
     .onCreate(async (userRecord, context) => {
@@ -50,9 +54,9 @@ export const onCreate = () =>
         twitterId: undefined,
         githubId: undefined,
         createdAt: new Date(),
-        entryAt: null,
-        submitAt: null,
-        voteAt: null,
+        entryAt: undefined,
+        submitAt: undefined,
+        voteAt: undefined,
         multisigSaltHexString: multisigEncryptedAccount.saltHexString,
         multisigIvHexString: multisigEncryptedAccount.ivHexString,
         multisigEncryptedPrivateKey:

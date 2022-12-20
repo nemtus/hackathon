@@ -64,7 +64,7 @@ export const setPublicUserTx = async (
   userId: string,
   publicUserTx: PublicUserTx
 ): Promise<void> => {
-  await setDoc(docRef(userId, publicUserTx.id), publicUserTx);
+  await setDoc(docRef(userId, publicUserTx.id), publicUserTx, { merge: true });
 };
 
 export const getAllPublicUserTxs = async (

@@ -40,7 +40,7 @@ export const setAdminUserTx = async (
   userId: string,
   adminUserTx: AdminUserTx
 ): Promise<void> => {
-  await setDoc(docRef(userId, adminUserTx.id), adminUserTx);
+  await setDoc(docRef(userId, adminUserTx.id), adminUserTx, { merge: true });
 };
 
 export const getAllAdminUserTxs = async (

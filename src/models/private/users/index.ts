@@ -1,8 +1,16 @@
-import { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firestore';
-import { db, FieldValue } from '../../../../utils/firebase';
-import { omitUndefinedProperties } from '../../../../utils/typescript/omitUndefinedProperties';
-import { AdminUser } from '../../admin/users';
-import { PublicUser } from '../../public/users';
+import { AdminUser } from 'models/admin/users';
+import { PublicUser } from 'models/public/users';
+import db, {
+  doc,
+  converter,
+  getDoc,
+  setDoc,
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  startAt,
+} from '../../../utils/firebase';
 
 export type PrivateUser = {
   multisigPublicKey?: string;
@@ -16,54 +24,57 @@ export type PrivateUser = {
 
 export type PrivateUsers = PrivateUser[];
 
-export const privateUserConverter = {
-  toFirestore: (privateUser: PrivateUser): DocumentData => {
-    return omitUndefinedProperties({
-      id: privateUser.id,
-      displayName: privateUser.displayName,
-      photoUrl: privateUser.photoUrl,
-      twitterId: privateUser.twitterId,
-      githubId: privateUser.githubId,
-      createdAt: privateUser.createdAt
-        ? FieldValue.serverTimestamp()
-        : undefined,
-      updatedAt: FieldValue.serverTimestamp(),
-      entryAt: privateUser.entryAt ? FieldValue.serverTimestamp() : null,
-      submitAt: privateUser.submitAt ? FieldValue.serverTimestamp() : null,
-      voteAt: privateUser.voteAt ? FieldValue.serverTimestamp() : null,
-      multisigPublicKey: privateUser.multisigPublicKey,
-      multisigAddress: privateUser.multisigAddress,
-      multisigCosignatory1PublicKey: privateUser.multisigCosignatory1PublicKey,
-      multisigCosignatory1Address: privateUser.multisigCosignatory1Address,
-      multisigCosignatory2PublicKey: privateUser.multisigCosignatory2PublicKey,
-      multisigCosignatory2Address: privateUser.multisigCosignatory2Address,
-      multisigCosignatory3PublicKey: privateUser.multisigCosignatory3PublicKey,
-      multisigCosignatory3Address: privateUser.multisigCosignatory3Address,
-    });
-  },
-  fromFirestore: (snapshot: QueryDocumentSnapshot): PrivateUser => {
-    const data = snapshot.data();
-    return {
-      id: data.id,
-      displayName: data.displayName,
-      photoUrl: data.photoUrl,
-      twitterId: data.twitterId,
-      githubId: data.githubId,
-      createdAt: data.createdAt?.toDate(),
-      updatedAt: data.updatedAt?.toDate(),
-      entryAt: data.entryAt ? data.entryAt.toDate() : null,
-      submitAt: data.submitAt ? data.submitAt.toDate() : null,
-      voteAt: data.voteAt ? data.voteAt.toDate() : null,
-      multisigPublicKey: data.multisigPublicKey,
-      multisigAddress: data.multisigAddress,
-      multisigCosignatory1PublicKey: data.multisigCosignatory1PublicKey,
-      multisigCosignatory1Address: data.multisigCosignatory1Address,
-      multisigCosignatory2PublicKey: data.multisigCosignatory2PublicKey,
-      multisigCosignatory2Address: data.multisigCosignatory2Address,
-      multisigCosignatory3PublicKey: data.multisigCosignatory3PublicKey,
-      multisigCosignatory3Address: data.multisigCosignatory3Address,
-    };
-  },
+const collectionPath = '/v/1/scopes/private/users';
+const collectionRef = collection(db, collectionPath).withConverter(
+  converter<PrivateUser>()
+);
+const docPath = (id: string) => `${collectionPath}/${id}`;
+const docRef = (id: string) =>
+  doc(db, docPath(id)).withConverter(converter<PrivateUser>());
+
+export const getPrivateUser = async (
+  id: string
+): Promise<PrivateUser | undefined> => {
+  return (await getDoc(docRef(id))).data();
+};
+
+export const setPrivateUser = async (
+  privateUser: PrivateUser
+): Promise<void> => {
+  await setDoc(docRef(privateUser.id), privateUser, { merge: true });
+};
+
+export const getAllPrivateUsers = async (): Promise<PrivateUsers> => {
+  return (
+    await getDocs(query(collectionRef, orderBy('createdAt', 'asc')))
+  ).docs.map((doc) => doc.data());
+};
+
+export const queryEntryPrivateUsers = async (): Promise<PrivateUsers> => {
+  const startDate = new Date('2022-12-17T00:00:00.000Z');
+  return (
+    await getDocs(
+      query(collectionRef, orderBy('entryAt', 'asc'), startAt(startDate))
+    )
+  ).docs.map((doc) => doc.data());
+};
+
+export const querySubmitPrivateUsers = async (): Promise<PrivateUsers> => {
+  const startDate = new Date('2022-12-17T00:00:00.000Z');
+  return (
+    await getDocs(
+      query(collectionRef, orderBy('submitAt', 'asc'), startAt(startDate))
+    )
+  ).docs.map((doc) => doc.data());
+};
+
+export const queryVotePrivateUsers = async (): Promise<PrivateUsers> => {
+  const startDate = new Date('2022-12-17T00:00:00.000Z');
+  return (
+    await getDocs(
+      query(collectionRef, orderBy('voteAt', 'asc'), startAt(startDate))
+    )
+  ).docs.map((doc) => doc.data());
 };
 
 export const convertAdminUserToPrivateUser = (
@@ -77,9 +88,9 @@ export const convertAdminUserToPrivateUser = (
     githubId: adminUser.githubId,
     createdAt: adminUser.createdAt,
     updatedAt: adminUser.updatedAt,
-    entryAt: adminUser.entryAt ? adminUser.entryAt : null,
-    submitAt: adminUser.submitAt ? adminUser.submitAt : null,
-    voteAt: adminUser.voteAt ? adminUser.voteAt : null,
+    entryAt: adminUser.entryAt,
+    submitAt: adminUser.submitAt,
+    voteAt: adminUser.voteAt,
     multisigPublicKey: adminUser.multisigPublicKey,
     multisigAddress: adminUser.multisigAddress,
     multisigCosignatory1PublicKey: adminUser.multisigCosignatory1PublicKey,
@@ -90,78 +101,4 @@ export const convertAdminUserToPrivateUser = (
     multisigCosignatory3Address: adminUser.multisigCosignatory3Address,
   };
   return privateUser;
-};
-
-const collectionPath = '/v/1/scopes/private/users';
-const docPath = (id: string) => `${collectionPath}/${id}`;
-
-export const getPrivateUser = async (
-  id: string
-): Promise<PrivateUser | undefined> => {
-  const privateUserSnapshot = await db
-    .doc(docPath(id))
-    .withConverter(privateUserConverter)
-    .get();
-  const privateUser = privateUserSnapshot.data();
-  return privateUser;
-};
-
-export const setPrivateUser = async (
-  privateUser: PrivateUser
-): Promise<void> => {
-  await db
-    .doc(docPath(privateUser.id))
-    .withConverter(privateUserConverter)
-    .set(privateUser, { merge: true });
-};
-
-export const getAllPrivateUsers = async (): Promise<PrivateUsers> => {
-  const privateUsersSnapshot = await db
-    .collection(collectionPath)
-    .withConverter(privateUserConverter)
-    .get();
-  const privateUsers = privateUsersSnapshot.docs.map((privateUserSnapshot) =>
-    privateUserSnapshot.data()
-  );
-  return privateUsers;
-};
-
-export const queryEntryPrivateUsers = async (): Promise<PrivateUsers> => {
-  const entryPrivateUsersSnapshot = await db
-    .collection(collectionPath)
-    .withConverter(privateUserConverter)
-    .where('entryAt', '!=', null)
-    .orderBy('entryAt', 'asc')
-    .get();
-  const entryPrivateUsers = entryPrivateUsersSnapshot.docs.map(
-    (entryPrivateUser) => entryPrivateUser.data()
-  );
-  return entryPrivateUsers;
-};
-
-export const querySubmitPrivateUsers = async (): Promise<PrivateUsers> => {
-  const submitPrivateUsersSnapshot = await db
-    .collection(collectionPath)
-    .withConverter(privateUserConverter)
-    .where('entryAt', '!=', null)
-    .where('submitAt', '!=', null)
-    .orderBy('submitAt', 'asc')
-    .get();
-  const submitPrivateUsers = submitPrivateUsersSnapshot.docs.map(
-    (submitPrivateUser) => submitPrivateUser.data()
-  );
-  return submitPrivateUsers;
-};
-
-export const queryVotePrivateUsers = async (): Promise<PrivateUsers> => {
-  const votePrivateUsersSnapshot = await db
-    .collection(collectionPath)
-    .withConverter(privateUserConverter)
-    .where('voteAt', '!=', null)
-    .orderBy('voteAt', 'asc')
-    .get();
-  const votePrivateUsers = votePrivateUsersSnapshot.docs.map(
-    (votePrivateUser) => votePrivateUser.data()
-  );
-  return votePrivateUsers;
 };
