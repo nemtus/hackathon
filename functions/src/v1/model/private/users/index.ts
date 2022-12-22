@@ -80,6 +80,7 @@ export const convertAdminUserToPrivateUser = (
     githubId: adminUser.githubId,
     createdAt: adminUser.createdAt,
     updatedAt: adminUser.updatedAt,
+    initializedAt: adminUser.initializedAt,
     entryAt: adminUser.entryAt,
     submitAt: adminUser.submitAt,
     voteAt: adminUser.voteAt,

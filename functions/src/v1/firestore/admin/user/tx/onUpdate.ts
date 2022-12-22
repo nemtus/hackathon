@@ -1,6 +1,7 @@
 import functions from '../../../../../utils/firebase/baseFunction';
 import { hasAlreadyTriggered } from '../../../../../utils/firebase/hasAlreadyTriggered';
 import { logger } from '../../../../../utils/firebase/logger';
+import { setAdminUser } from '../../../../model/admin/users';
 import { adminUserTxConverter } from '../../../../model/admin/users/txs';
 import {
   convertAdminUserTxToPrivateUserTx,
@@ -44,4 +45,12 @@ export const onUpdate = () =>
         convertAdminUserTxToPrivateUserTx(after);
       logger.debug({ privateUserTx });
       await setPrivateUserTx(context.params.userID, privateUserTx);
+
+      if (
+        after.userId &&
+        after.description === 'CreateAndSetUpNewAccount' &&
+        after.confirmed
+      ) {
+        await setAdminUser({ id: after.userId, initializedAt: new Date() });
+      }
     });

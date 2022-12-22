@@ -23,17 +23,19 @@ service cloud.firestore {
     }
 
     // schema rule functions
-    function isValidUser(user) {
-      return user.keys().hasAll([
-          'nickName',
-          'websiteUrl',
-          'twitterId',
-          'githubId'
-        ]) &&
-        user.nickName is string &&
-        user.websiteUrl is string &&
-        user.twitterId is string &&
-        user.githubId is string;
+    function isValidEntry(entry, userId, yearId) {
+      return entry.keys().hasAll([
+        'id',
+        'yearId',
+        'userId',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      entry.id is string &&
+      entry.yearId == yearId &&
+      entry.userId == userId &&
+      entry.createdAt is timestamp &&
+      entry.updatedAt is timestamp;
     }
 
     match /{document=**} {
@@ -49,7 +51,7 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    match /v/1/scopes/admin/users/{userId}/entries/{entryId} {
+    match /v/1/scopes/admin/teams/{teamId} {
       allow get: if isAdminAuthenticated();
       allow list: if isAdminAuthenticated();
       allow create: if false;
@@ -57,15 +59,7 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    match /v/1/scopes/admin/users/{userId}/entries/{entryId}/judges/{judgeId} {
-      allow get: if isAdminAuthenticated();
-      allow list: if isAdminAuthenticated();
-      allow create: if isAdminAuthenticated();
-      allow update: if isAdminAuthenticated();
-      allow delete: if false;
-    }
-
-    match /v/1/scopes/admin/users/{userId}/submissions/{submissionId} {
+    match /v/1/scopes/admin/users/{userId}/years/{yearId}/entries/{entryId} {
       allow get: if isAdminAuthenticated();
       allow list: if isAdminAuthenticated();
       allow create: if false;
@@ -73,7 +67,23 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    match /v/1/scopes/admin/users/{userId}/submissions/{submissionId}/judges/{judgeId} {
+    match /v/1/scopes/admin/users/{userId}/years/{yearId}/entries/{entryId}/txs/{txId} {
+      allow get: if isAdminAuthenticated();
+      allow list: if isAdminAuthenticated();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/admin/users/{userId}/years/{yearId}/teams/{teamId} {
+      allow get: if isAdminAuthenticated();
+      allow list: if isAdminAuthenticated();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/admin/users/{userId}/years/{year}/submissions/{submissionId}/judges/{judgeId} {
       allow get: if isAdminAuthenticated();
       allow list: if isAdminAuthenticated();
       allow create: if isAdminAuthenticated() && submissionId == judgeId;
@@ -90,15 +100,23 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    match /v/1/scopes/private/users/{userId}/entries/{entryId} {
+    match /v/1/scopes/private/users/{userId}/txs/{txId} {
       allow get: if isUserOrAdminAuthenticated(userId);
-      allow list: if isAdminAuthenticated();
-      allow create: if isUserOrAdminAuthenticated(userId);
+      allow list: if isUserOrAdminAuthenticated(userId);
+      allow create: if false;
       allow update: if false;
       allow delete: if false;
     }
 
-    match /v/1/scopes/private/users/{userId}/submissions/{submissionId} {
+    match /v/1/scopes/private/users/{userId}/years/{yearId}/entries/{entryId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isUserOrAdminAuthenticated(userId);
+      allow create: if isUserOrAdminAuthenticated(userId) && isValidEntry(request.resource.data, userId, yearId);
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/private/users/{userId}/years/{year}/submissions/{submissionId} {
       allow get: if isUserOrAdminAuthenticated(userId);
       allow list: if isAdminAuthenticated();
       allow create: if isUserOrAdminAuthenticated(userId);
@@ -107,14 +125,6 @@ service cloud.firestore {
     }
 
     // for public
-    match /v/1/scopes/public/nodes/{nodeId} {
-      allow get: if true;
-      allow list: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
-    }
-
     match /v/1/scopes/public/users/{userId} {
       allow get: if true;
       allow list: if true;
@@ -123,7 +133,15 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    match /v/1/scopes/public/nodes/{userId} {
+    match /v/1/scopes/public/years/{yearId}/entries/{entryId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/public/years/{yearId}/teams/{teamId} {
       allow get: if true;
       allow list: if true;
       allow create: if false;

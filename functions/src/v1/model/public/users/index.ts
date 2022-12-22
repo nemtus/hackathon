@@ -11,6 +11,7 @@ export type PublicUser = {
   githubId?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  initializedAt?: Date;
   entryAt?: Date;
   submitAt?: Date;
   voteAt?: Date;
@@ -82,6 +83,7 @@ export const convertAdminUserToPublicUser = (
     githubId: adminUser.githubId,
     createdAt: adminUser.createdAt,
     updatedAt: adminUser.updatedAt,
+    initializedAt: adminUser.initializedAt,
     entryAt: adminUser.entryAt,
     submitAt: adminUser.submitAt,
     voteAt: adminUser.voteAt,
@@ -101,6 +103,7 @@ export const convertPrivateUserToPublicUser = (
     githubId: privateUser.githubId,
     createdAt: privateUser.createdAt,
     updatedAt: privateUser.updatedAt,
+    initializedAt: privateUser.initializedAt,
     entryAt: privateUser.entryAt,
     submitAt: privateUser.submitAt,
     voteAt: privateUser.voteAt,

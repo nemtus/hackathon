@@ -1,9 +1,13 @@
 import { signOut } from 'utils/firebase';
 import { FaSignOutAlt } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const SignOutButton = () => {
+  const navigate = useNavigate();
+
   const handleSignOut = async () => {
     await signOut();
+    navigate('/');
   };
 
   return (

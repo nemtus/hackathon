@@ -18,7 +18,7 @@ export type PrivateUserTxs = PublicUserTx[];
 const collectionPath = (userId: string) =>
   `/v/1/scopes/private/users/${userId}/txs`;
 
-const collectionRef = (userId: string) =>
+export const collectionRef = (userId: string) =>
   collection(db, collectionPath(userId)).withConverter(
     converter<PrivateUserTx>()
   );
@@ -26,7 +26,7 @@ const collectionRef = (userId: string) =>
 const docPath = (userId: string, id: string) =>
   `${collectionPath(userId)}/${id}`;
 
-const docRef = (userId: string, id: string) =>
+export const docRef = (userId: string, id: string) =>
   doc(db, docPath(userId, id)).withConverter(converter<PrivateUserTx>());
 
 export const getPrivateUserTx = async (

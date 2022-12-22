@@ -60,7 +60,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
 
     const serviceId = messageReceivingAccount.address.plain();
     const serviceName = 'NEMTUS Hackathon Hack+';
-    const description = 'createAndSetUpNewAccount';
+    const description = 'CreateAndSetUpNewAccount';
 
     logger.debug('embeddedTransferTransaction');
     const messageJson = {
@@ -80,6 +80,15 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
       PlainMessage.create(messageString),
       networkType
     ).toAggregate(feeBillingAccount.publicAccount);
+
+    logger.debug('embeddedTransferTransaction2');
+    const embeddedTransferTransaction2 = TransferTransaction.create(
+      deadline,
+      messageReceivingAccount.address,
+      [],
+      PlainMessage.create(messageString),
+      networkType
+    ).toAggregate(multisigAccount.publicAccount);
 
     logger.debug('embeddedMultisigAccountModificationTransaction');
     const minApprovalDelta = 2;
@@ -186,6 +195,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
     logger.debug('aggregateCompleteTransaction');
     const embeddedTransactions = [
       embeddedTransferTransaction,
+      embeddedTransferTransaction2,
       embeddedMultisigAccountModificationTransaction,
       embeddedMultisigAccountRestrictionTransaction,
       embeddedMultisigCosignatory1AccountRestrictionTransaction,
@@ -318,6 +328,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
       publicKey,
       type,
       networkType,
+      description,
       createdAt: new Date(),
       updatedAt: new Date(),
       announced: false,

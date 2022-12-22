@@ -25,11 +25,11 @@ export type PrivateUser = {
 export type PrivateUsers = PrivateUser[];
 
 const collectionPath = '/v/1/scopes/private/users';
-const collectionRef = collection(db, collectionPath).withConverter(
+export const collectionRef = collection(db, collectionPath).withConverter(
   converter<PrivateUser>()
 );
 const docPath = (id: string) => `${collectionPath}/${id}`;
-const docRef = (id: string) =>
+export const docRef = (id: string) =>
   doc(db, docPath(id)).withConverter(converter<PrivateUser>());
 
 export const getPrivateUser = async (

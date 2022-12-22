@@ -16,7 +16,7 @@ export type EncryptedAccount = {
   address: string;
 };
 
-export type MultisigAccount = {
+export type MultisigAccounts = {
   multisigAccount: Account;
   multisigCosignatory1Account: Account;
   multisigCosignatory2Account: Account;
@@ -121,7 +121,7 @@ export const restoreAccountFromPrivateKey = async (
 export const restoreAccountsFromAdminUser = async (
   adminUser: AdminUser,
   dataEncryptionKey: string
-): Promise<MultisigAccount> => {
+): Promise<MultisigAccounts> => {
   const networkType = await getNetworkType();
 
   if (!adminUser.multisigEncryptedPrivateKey) {

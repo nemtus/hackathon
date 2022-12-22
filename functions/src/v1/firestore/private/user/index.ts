@@ -21,7 +21,7 @@ _exportFunction('onUpdate', onUpdate);
 // _exportFunction('onDelete', onDelete);
 
 // Note: Register sub-directories
-const domains: string[] = ['tx'];
+const domains: string[] = ['tx', 'year'];
 
 domains.forEach((domain) =>
   exportFunctionsModule(['v1', 'firestore', 'private', 'user', domain], exports)

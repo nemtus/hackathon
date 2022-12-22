@@ -1,10 +1,23 @@
-import { signInWithGooglePopup } from 'utils/firebase';
+import { auth, signInWithGooglePopup } from 'utils/firebase';
 import { FaGoogle } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useEffect } from 'react';
 
 const SignInWithGooglePopupButton = () => {
+  const navigate = useNavigate();
+  const [authUser, authUserLoading] = useAuthState(auth);
+
   const handleSignInWithGooglePopup = async () => {
     await signInWithGooglePopup();
   };
+
+  useEffect(() => {
+    console.log({ authUser, authUserLoading });
+    if (!authUserLoading && authUser) {
+      navigate(`/private/users/${authUser.uid}`);
+    }
+  }, [authUser, authUserLoading, navigate]);
 
   return (
     <button

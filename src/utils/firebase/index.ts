@@ -3,6 +3,7 @@ import { initializeApp } from 'firebase/app';
 import {
   connectAuthEmulator,
   getAuth,
+  User as AuthUser,
   signInWithPopup,
   linkWithPopup,
   unlink,
@@ -32,8 +33,14 @@ import {
   setDoc,
   addDoc,
   getDocs,
+  getCountFromServer,
 } from 'firebase/firestore';
-import { connectStorageEmulator, getStorage } from 'firebase/storage';
+import {
+  connectStorageEmulator,
+  ref,
+  getStorage,
+  getDownloadURL,
+} from 'firebase/storage';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { getAnalytics } from 'firebase/analytics';
 // TODO: Add SDKs for Firebase products that you want to use
@@ -306,6 +313,8 @@ const converter = <
 export {
   auth,
   storage,
+  ref,
+  getDownloadURL,
   functions,
   analytics,
   converter,
@@ -315,6 +324,7 @@ export {
   setDoc,
   addDoc,
   getDocs,
+  getCountFromServer,
   where,
   orderBy,
   query,
@@ -339,4 +349,5 @@ export {
   signInWithMicrosoftPopup,
   signInWithApplePopup,
 };
+export type { AuthUser };
 export default db;
