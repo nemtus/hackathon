@@ -30,4 +30,6 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - run: rm .env
+      - name: Clear env file
+        if: always()
+        run: rm .env
