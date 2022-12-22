@@ -1,0 +1,46 @@
+name: CD Firebase testnet
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: testnet
+
+    strategy:
+      matrix:
+        node: ['16.x']
+
+    name: Node ${{ matrix.node }} CD Firebase testnet
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            functions/package-lock.json
+
+      - name: Create empty env file for testnet build
+        run: touch .env.testnet
+      - name: Restore testnet env file content from secret
+        env:
+          REACT_ENV: ${{ secrets.REACT_ENV }}
+        run: echo $REACT_ENV | base64 --decode --ignore-garbage > .env.testnet
+
+      - run: npm ci
+      - run: npm run build:testnet
+      - run: npm ci
+        working-directory: ./functions
+      - run: npm run build
+        working-directory: ./functions
+      - run: npx firebase deploy --project=testnet --token=${{ secrets.FIREBASE_TOKEN }} --force
+
+      - run: rm .env.testnet

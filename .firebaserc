@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "nemtus-hackathon-test"
-  }
+    "default": "nemtus-hackathon-test",
+    "testnet": "nemtus-hackathon-test",
+    "mainnet": "nemtus-hackathon"
+  },
+  "targets": {},
+  "etags": {}
 }

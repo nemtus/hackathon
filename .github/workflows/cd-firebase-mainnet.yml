@@ -1,0 +1,43 @@
+name: CD Firebase mainnet
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: mainnet
+
+    strategy:
+      matrix:
+        node: ['16.x']
+
+    name: Node ${{ matrix.node }} CD Firebase mainnet
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            functions/package-lock.json
+
+      - name: Create empty env file for mainnet build
+        run: touch .env.mainnet
+      - name: Restore mainnet env file content from secret
+        env:
+          REACT_ENV: ${{ secrets.REACT_ENV }}
+        run: echo $REACT_ENV | base64 --decode --ignore-garbage > .env.mainnet
+
+      - run: npm ci
+      - run: npm run build:mainnet
+      - run: npm ci
+        working-directory: ./functions
+      - run: npm run build
+        working-directory: ./functions
+      - run: npx firebase deploy --project=mainnet --token=${{ secrets.FIREBASE_TOKEN }} --force
+
+      - run: rm .env.mainnet
