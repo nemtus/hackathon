@@ -20,6 +20,8 @@
     "axios": "^1.2.1",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^4.1.0",
+    "rxjs": "^7.6.0",
+    "symbol-sdk": "^2.0.3",
     "ws": "^8.11.0"
   },
   "devDependencies": {

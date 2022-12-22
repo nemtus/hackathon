@@ -1,49 +1,26 @@
-import { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firestore';
 import { db } from '../../../../../utils/firebase';
-import { omitUndefinedProperties } from '../../../../../utils/typescript/omitUndefinedProperties';
+import { converter } from '../../../../../utils/firebase/converter';
 
 export type Network = {
   id: string;
-  epochAdjustment?: number;
-  generationHashSeed?: string;
-  identifier?: string;
+  epochAdjustment: number;
+  generationHashSeed: string;
+  identifier: string;
 };
 
-export const networkConverter = {
-  toFirestore: (network: Network): DocumentData => {
-    return omitUndefinedProperties({
-      id: network.id,
-      epochAdjustment: network.epochAdjustment,
-      generationHashSeed: network.generationHashSeed,
-      identifier: network.identifier,
-    });
-  },
-  fromFirestore: (snapshot: QueryDocumentSnapshot): Network => {
-    const data = snapshot.data();
-    return {
-      id: data.id,
-      epochAdjustment: data.epochAdjustment,
-      generationHashSeed: data.generationHashSeed,
-      identifier: data.identifier,
-    };
-  },
-};
+export const networkConverter = converter<Network>();
 
 const collectionPath = '/v/1/configs/symbol/network';
+// const collectionRef = db
+//   .collection(collectionPath)
+//   .withConverter(converter<Network>());
 const docPath = `${collectionPath}/info`;
+const docRef = db.doc(docPath).withConverter(converter<Network>());
 
 export const getNetworkInfo = async (): Promise<Network | undefined> => {
-  const networkInfoSnapshot = await db
-    .doc(docPath)
-    .withConverter(networkConverter)
-    .get();
-  const networkInfo = networkInfoSnapshot.data();
-  return networkInfo;
+  return (await docRef.get()).data();
 };
 
 export const setNetworkInfo = async (network: Network): Promise<void> => {
-  await db
-    .doc(docPath)
-    .withConverter(networkConverter)
-    .set(network, { merge: true });
+  await docRef.set(network, { merge: true });
 };

@@ -3,6 +3,7 @@ import { initializeApp } from 'firebase/app';
 import {
   connectAuthEmulator,
   getAuth,
+  User as AuthUser,
   signInWithPopup,
   linkWithPopup,
   unlink,
@@ -14,8 +15,32 @@ import {
   GithubAuthProvider,
   OAuthProvider, // Note: Yahoo, Microsoft and Apple
 } from 'firebase/auth';
-import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
-import { connectStorageEmulator, getStorage } from 'firebase/storage';
+import {
+  connectFirestoreEmulator,
+  DocumentData,
+  FirestoreDataConverter,
+  getFirestore,
+  QueryDocumentSnapshot,
+  collection,
+  doc,
+  where,
+  query,
+  orderBy,
+  startAt,
+  endAt,
+  limit,
+  getDoc,
+  setDoc,
+  addDoc,
+  getDocs,
+  getCountFromServer,
+} from 'firebase/firestore';
+import {
+  connectStorageEmulator,
+  ref,
+  getStorage,
+  getDownloadURL,
+} from 'firebase/storage';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { getAnalytics } from 'firebase/analytics';
 // TODO: Add SDKs for Firebase products that you want to use
@@ -249,11 +274,63 @@ if (process.env.NODE_ENV === 'development') {
   connectFunctionsEmulator(functions, 'localhost', 5001);
 }
 
+const converter = <
+  T extends Record<string, unknown>
+>(): FirestoreDataConverter<T> => ({
+  toFirestore: (data: T) => {
+    // Note: プロパティの最上位階層のみに対して変換を行う実装としている
+    // Note: ネストさせたプロパティについては変換を行わないので注意が必要
+    const cloneObj = Object.assign(data);
+    Object.keys(cloneObj).forEach((key) => {
+      // Note: undefinedなプロパティが含まれているとエラーになるので取り除く
+      if (cloneObj[key] === undefined) {
+        delete cloneObj[key];
+      }
+    });
+    // Note: 自動的にupdatedAtを現在時刻で更新する
+    cloneObj['updatedAt'] = new Date();
+    return cloneObj;
+  },
+  fromFirestore: (snapshot: QueryDocumentSnapshot<DocumentData>) => {
+    // Note: プロパティの最上位階層のみに対して変換を行う実装としている
+    // Note: ネストさせたプロパティについては変換を行わないので注意が必要
+    const data = snapshot.data();
+    const cloneObj = Object.assign(data);
+    Object.keys(cloneObj).forEach((key) => {
+      // Note: ServerTimestamp型のプロパティをDate型に変換する
+      // Note: ServerTimestamp型の判定は、toString, toDateメソッドが存在するかで行う
+      if (
+        typeof cloneObj[key].toString === 'function' &&
+        typeof cloneObj[key].toDate === 'function'
+      ) {
+        cloneObj[key] = cloneObj[key].toDate();
+      }
+    });
+    return cloneObj;
+  },
+});
+
 export {
   auth,
   storage,
+  ref,
+  getDownloadURL,
   functions,
   analytics,
+  converter,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  addDoc,
+  getDocs,
+  getCountFromServer,
+  where,
+  orderBy,
+  query,
+  startAt,
+  endAt,
+  limit,
   signInWithPopup,
   signOut,
   fetchSignInMethodsForEmail,
@@ -272,4 +349,5 @@ export {
   signInWithMicrosoftPopup,
   signInWithApplePopup,
 };
+export type { AuthUser };
 export default db;

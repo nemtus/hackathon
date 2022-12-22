@@ -1,6 +1,5 @@
-import { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firestore';
 import { db } from '../../../../../utils/firebase';
-import { omitUndefinedProperties } from '../../../../../utils/typescript/omitUndefinedProperties';
+import { converter } from '../../../../../utils/firebase/converter';
 
 export type Chain = {
   id?: 'info';
@@ -9,55 +8,26 @@ export type Chain = {
   defaultDynamicFeeMultiplier?: number;
   harvestingMosaicId?: string;
   latestBlockHeight: number;
+  latestFinalizedBlockHeight: number;
   maxTransactionLifeTime?: number;
   maxTransactionPerBlock?: number;
 };
 
-export const chainConverter = {
-  toFirestore: (chain: Partial<Chain>): DocumentData => {
-    return omitUndefinedProperties({
-      id: chain.id,
-      blockGenerationTargetTime: chain.blockGenerationTargetTime,
-      currencyMosaicId: chain.currencyMosaicId,
-      defaultDynamicFeeMultiplier: chain.defaultDynamicFeeMultiplier,
-      harvestingMosaicId: chain.harvestingMosaicId,
-      latestBlockHeight: chain.latestBlockHeight,
-      maxTransactionLifeTime: chain.maxTransactionLifeTime,
-      maxTransactionPerBlock: chain.maxTransactionPerBlock,
-    });
-  },
-  fromFirestore: (snapshot: QueryDocumentSnapshot): Chain => {
-    const data = snapshot.data();
-    return {
-      id: data.id,
-      blockGenerationTargetTime: data.blockGenerationTargetTime,
-      currencyMosaicId: data.currencyMosaicId,
-      defaultDynamicFeeMultiplier: data.defaultDynamicFeeMultiplier,
-      harvestingMosaicId: data.harvestingMosaicId,
-      latestBlockHeight: data.latestBlockHeight,
-      maxTransactionLifeTime: data.maxTransactionLifeTime,
-      maxTransactionPerBlock: data.maxTransactionPerBlock,
-    } as Chain;
-  },
-};
+export const chainConverter = converter<Chain>();
 
 const collectionPath = '/v/1/configs/symbol/chain';
+// const collectionRef = db
+//   .collection(collectionPath)
+//   .withConverter(converter<Chain>());
 const docPath = `${collectionPath}/info`;
+const docRef = db.doc(docPath).withConverter(converter<Chain>());
 
 export const getChainInfo = async (): Promise<Chain | undefined> => {
-  const nodeSnapshot = await db
-    .doc(docPath)
-    .withConverter(chainConverter)
-    .get();
-  const node = nodeSnapshot.data();
-  return node;
+  return (await docRef.get()).data();
 };
 
 export const setChainInfo = async (
   chainInfo: Partial<Chain>
 ): Promise<void> => {
-  await db
-    .doc(docPath)
-    .withConverter(chainConverter)
-    .set(chainInfo, { merge: true });
+  await docRef.set(chainInfo, { merge: true });
 };

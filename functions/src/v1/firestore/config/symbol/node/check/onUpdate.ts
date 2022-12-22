@@ -9,7 +9,7 @@ const path = '/v/1/configs/symbol/nodes/{nodeID}/checks/{checkID}';
 
 export const onUpdate = () =>
   functions()
-    .runWith({ memory: '8GB', timeoutSeconds: 540 })
+    .runWith({ memory: '128MB', timeoutSeconds: 540 })
     .firestore.document(path)
     .onUpdate(async (changeSnapshot, context) => {
       if (

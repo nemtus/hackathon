@@ -3,7 +3,7 @@ import { auth } from 'utils/firebase';
 import {
   FaBars,
   FaHome,
-  FaFile,
+  // FaFile,
   FaUser,
   FaUserCog,
   FaSignInAlt,
@@ -26,16 +26,16 @@ const appMenuList: AppMenu[] = [
     link: '/',
   },
 ];
-const appMenuListAuthOnly = (userId: string): AppMenu[] => {
-  return [
-    {
-      key: 'files',
-      icon: FaFile,
-      label: 'Files',
-      link: `/users/${userId}/files`,
-    },
-  ];
-};
+// const appMenuListAuthOnly = (userId: string): AppMenu[] => {
+//   return [
+//     {
+//       key: 'files',
+//       icon: FaFile,
+//       label: 'Files',
+//       link: `/users/${userId}/files`,
+//     },
+//   ];
+// };
 
 interface UserMenu {
   key: string;
@@ -49,7 +49,7 @@ const userMenuListAuthOnly = (userId: string): UserMenu[] => {
       key: 'user',
       icon: FaUserCog,
       label: 'User Settings',
-      link: `/users/${userId}`,
+      link: `/private/users/${userId}`,
     },
   ];
 };
@@ -77,7 +77,7 @@ const AppHeader = () => {
                   </a>
                 </li>
               ))}
-              {authUser
+              {/* {authUser
                 ? appMenuListAuthOnly(authUser.uid).map((appMenu) => (
                     <li key={appMenu.key}>
                       <a href={appMenu.link}>
@@ -86,7 +86,7 @@ const AppHeader = () => {
                       </a>
                     </li>
                   ))
-                : null}
+                : null} */}
             </ul>
           </div>
         </div>
@@ -97,7 +97,7 @@ const AppHeader = () => {
               src={SymbolBlockchainLogo}
               alt="Symbol Blockchain Logo"
             />
-            Symbol Playground
+            NEMTUS Hack+
           </a>
         </div>
         <div className="navbar-end">
