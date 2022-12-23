@@ -97,7 +97,6 @@ const supportedProviderNames: SupportedProviderName[] = [
 
 // Note: Convert providerName to Auth provider
 const convertProviderNameToAuthProvider = (providerName: string) => {
-  console.log(providerName);
   switch (providerName) {
     case 'google':
       return googleProvider;

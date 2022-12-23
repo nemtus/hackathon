@@ -13,7 +13,6 @@ const SignInWithGooglePopupButton = () => {
   };
 
   useEffect(() => {
-    console.log({ authUser, authUserLoading });
     if (!authUserLoading && authUser) {
       navigate(`/private/users/${authUser.uid}`);
     }

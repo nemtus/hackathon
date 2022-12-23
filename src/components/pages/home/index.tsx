@@ -68,7 +68,6 @@ const HomePageComponent = () => {
       {
         next: (snapshot) => {
           const data = snapshot.data();
-          console.log(data);
           if (data) {
             setPrivateUser(data);
           }
@@ -89,7 +88,6 @@ const HomePageComponent = () => {
       {
         next: (snapshot) => {
           const data = snapshot.docs.map((doc) => doc.data());
-          console.log(data);
           if (data.length) {
             setPrivateUserTxs(data);
           }
@@ -107,7 +105,6 @@ const HomePageComponent = () => {
       {
         next: (snapshot) => {
           const data = snapshot.data();
-          console.log(data);
           if (data) {
             setPrivateUserYearEntry(data);
           }
