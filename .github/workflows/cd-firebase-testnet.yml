@@ -34,6 +34,8 @@ jobs:
         env:
           REACT_ENV: ${{ secrets.REACT_ENV }}
         run: echo $REACT_ENV | base64 --decode --ignore-garbage > .env.testnet
+      - name: Remove robots.txt
+        run: rm ./public/robots.txt
 
       - run: npm ci
       - run: npm run build:testnet

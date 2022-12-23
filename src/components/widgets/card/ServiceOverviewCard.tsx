@@ -1,6 +1,6 @@
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import XymCityCityspaceImage from '../../../images/xym-city-cityscape-light.png';
+import XymCityCityscapeImage from '../../../images/xym-city-cityscape-light.png';
 
 const ServiceOverviewCardWidgetComponent = () => {
   return (
@@ -8,7 +8,7 @@ const ServiceOverviewCardWidgetComponent = () => {
       <figure>
         <img
           className="max-w-md h-auto"
-          src={XymCityCityspaceImage}
+          src={XymCityCityscapeImage}
           alt="XYM City Cityscape Image"
         />
       </figure>

@@ -10,7 +10,7 @@ import {
 } from 'react-icons/fa';
 import { IconType } from 'react-icons/lib';
 import SignOutButton from 'components/widgets/button/SignOutButton';
-import SymbolBlockchainLogo from 'images/symbol-logo-primary-light-bg-01.png';
+import NemtusLogo from 'images/nemtus-logo.png';
 
 interface AppMenu {
   key: string;
@@ -94,8 +94,8 @@ const AppHeader = () => {
           <a className="btn btn-ghost normal-case text-xl" href="/">
             <img
               className="w-5 h-5 mt-1 mr-2"
-              src={SymbolBlockchainLogo}
-              alt="Symbol Blockchain Logo"
+              src={NemtusLogo}
+              alt="NEMTUS Logo"
             />
             NEMTUS Hack+
           </a>
