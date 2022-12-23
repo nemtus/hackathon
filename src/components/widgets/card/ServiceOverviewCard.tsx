@@ -1,34 +1,34 @@
-import React from 'react';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFile, faFileCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import XymCityCityspaceImage from '../../../images/xym-city-cityscape-light.png';
-import { AuthUser } from '../../../utils/firebase';
 
-const ServiceOverviewCardWidgetComponent = (props: { authUser: AuthUser | null }) => {
-  const { authUser } = props;
-
+const ServiceOverviewCardWidgetComponent = () => {
   return (
-    <div className="card bg-base-100 shadow-xl">
+    <div className="card bg-base-100">
       <figure>
-        <img className="max-w-md h-auto" src={XymCityCityspaceImage} alt="XYM City Cityscape Image" />
+        <img
+          className="max-w-md h-auto"
+          src={XymCityCityspaceImage}
+          alt="XYM City Cityscape Image"
+        />
       </figure>
       <div className="card-body">
-        <h2 className="card-title justify-center">Your Files Forever...</h2>
+        <h2 className="card-title justify-center text-3xl font-bold">
+          Our Hackathon Memories Forever...
+        </h2>
         <p className="card-content flex justify-center">
-          {"Let's engrave your files on the Symbol blockchain forever!"}
+          {"Let's record our hackathon on the blockchain forever!"}
         </p>
-        {authUser ? (
-          <div className="card-actions justify-center">
-            <a className="btn btn-accent" href={`/users/${authUser.uid}/files`}>
-              <FontAwesomeIcon icon={faFile} className="mr-2" />
-              View your files
-            </a>
-            <a className="btn btn-accent" href={`/users/${authUser.uid}/files/create`}>
-              <FontAwesomeIcon icon={faFileCirclePlus} className="mr-2" />
-              Engrave your file
-            </a>
-          </div>
-        ) : null}
+        <div className="card-actions justify-center">
+          <a className="btn btn-link" href="https://hackathon-2022.nemtus.com/">
+            <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
+            View Hackathon Details (2023)
+          </a>
+          <a className="btn btn-link" href="https://hackathon-2022.nemtus.com/">
+            <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
+            {'View History (2022)'}
+          </a>
+        </div>
       </div>
     </div>
   );

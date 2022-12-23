@@ -26,9 +26,10 @@ const AuthSignInPageComponent = () => {
     <div className="hero">
       <div className="hero-content text-center">
         <div className="max-w-5xl">
-          <h1 className="text-5xl font-bold">Sign in</h1>
+          <h2 className="text-5xl font-bold">{"Let's Sign in"}</h2>
           <p className="py-6">
-            You can sign in with your Google, Twitter, GitHub account.
+            You need to sign in with your Google, Twitter or GitHub account to
+            join this hackathon.
           </p>
           <div>
             <SignInWithGooglePopupButton />

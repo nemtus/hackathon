@@ -23,7 +23,7 @@ const EntryButton = (props: {
 
   return (
     <button
-      className="btn border-hidden outline-0 w-64 m-2"
+      className="btn btn-accent border-hidden outline-0 w-64 m-2"
       onClick={handleEntry}
       disabled={props.disabled}
     >

@@ -19,6 +19,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
 
       - name: Create empty env file for development build
         run: touch .env
