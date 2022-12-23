@@ -20,11 +20,12 @@ const PrivateUserCardWidgetComponent = (privateUser: PrivateUser) => {
 
   return (
     <div className="card bg-base-100 shadow-xl">
-      <figure>
-        <ProfileImageComponent imageUrl={photoUrl} />
-      </figure>
       <div className="card-body">
-        <h2 className="card-title justify-start">User</h2>
+        <h2 className="card-title justify-start">User Information</h2>
+
+        <figure>
+          <ProfileImageComponent imageUrl={photoUrl} />
+        </figure>
 
         <div className="card-content flex justify-start">
           <div className="stats">

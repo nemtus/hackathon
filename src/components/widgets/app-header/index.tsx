@@ -6,7 +6,7 @@ import {
   // FaFile,
   FaUser,
   FaUserCog,
-  FaSignInAlt,
+  // FaSignInAlt,
 } from 'react-icons/fa';
 import { IconType } from 'react-icons/lib';
 import SignOutButton from 'components/widgets/button/SignOutButton';
@@ -125,12 +125,11 @@ const AppHeader = () => {
                   </li>
                 </ul>
               </>
-            ) : (
-              <a href="/auth/sign-in">
+            ) : null}
+            {/* <a href="/auth/sign-in">
                 <FaSignInAlt className="inline-block mr-2" />
                 Sign in
-              </a>
-            )}
+              </a> */}
           </div>
         </div>
       </div>
