@@ -17,7 +17,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-admin-user-onUpdate'
+          'v1-firestore-private-user-onUpdate'
         )
       ) {
         return;
