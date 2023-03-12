@@ -1,20 +1,9 @@
 // Todo: Team
 import { useForm, SubmitHandler, useFieldArray } from 'react-hook-form';
 import { PrivateUser } from 'models/private/users';
+import { FaMinus, FaPlus } from 'react-icons/fa';
 
-type TeamInfo = {
-  id?: string;
-  name: string;
-  members: MemberInfo[];
-  addressForPrizeReceipt: string;
-};
-
-type MemberInfo = {
-  id?: string;
-  nickName: string;
-  twitterId: string;
-  githubId: string;
-};
+import { PrivateUserYearTeam } from 'models/private/users/years/teams';
 
 const PrivateUserYearTeamCreateFormWidgetComponent = (props: {
   privateUser: PrivateUser;
@@ -29,12 +18,15 @@ const PrivateUserYearTeamCreateFormWidgetComponent = (props: {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<TeamInfo>({
+  } = useForm<PrivateUserYearTeam>({
     defaultValues: {
+      id: userId,
+      yearId: yearId,
       name: '',
-      members: [
+      users: [
         {
-          nickName: '',
+          id: '',
+          displayName: '',
           twitterId: '',
           githubId: '',
         },
@@ -45,48 +37,185 @@ const PrivateUserYearTeamCreateFormWidgetComponent = (props: {
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'members',
+    name: 'users',
   });
 
   const addMember = () => {
     append({
-      nickName: '',
+      id: '',
+      displayName: '',
       twitterId: '',
       githubId: '',
     });
   };
 
   const removeMember = (index: number) => {
+    console.log(index);
     remove(index);
   };
 
-  const onSubmit: SubmitHandler<TeamInfo> = (teamInfo) => console.log(teamInfo);
+  const onSubmit: SubmitHandler<PrivateUserYearTeam> = (privateUserYearTeam) =>
+    console.log(privateUserYearTeam);
 
   return (
     <div className="card bg-base-100 shadow-xl">
       <div className="card-body">
-        <h2 className="card-title justify-start">NEMTUS Hackathon {yearId}</h2>
-        <div className="card-content flex justify-start">
+        <h2 className="card-title justify-start">
           Create Team of the NEMTUS Hackathon {yearId}.
-        </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <input type="text" {...register('name')} />
-          {fields.map((field, index) => (
-            <div key={field.id}>
-              <input type="text" {...register(`members.${index}.nickName`)} />
-              <input type="text" {...register(`members.${index}.twitterId`)} />
-              <input type="text" {...register(`members.${index}.githubId`)} />
-              <button onClick={() => removeMember(index)} type="button">
-                Remove Member
-              </button>
+        </h2>
+        <div className="card-content flex flex-col justify-start">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="form-control w-full max-w-xs">
+              <label className="label">
+                <span className="label-text">Team name</span>
+                <span className="label-text-alt">Required</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Example: Team NEMTUS"
+                className="input w-full max-w-xs"
+                {...register('name')}
+              />
+              <label className="label">
+                <span className="label-text-alt">Bottom Left label</span>
+                <span className="label-text-alt">
+                  Will be stored in blockchain
+                </span>
+              </label>
             </div>
-          ))}
-          <button onClick={addMember} type="button">
-            Add Member
-          </button>
-          <input type="text" {...register('addressForPrizeReceipt')} />
-          <button type="submit">Create Team</button>
-        </form>
+
+            <div className="card bg-base-100 shadow-xl">
+              <div className="card-body">
+                <h3 className="card-title justify-start">Members List</h3>
+                <div className="card-content flex flex-col justify-start">
+                  {fields.map((field, index) => (
+                    <div key={field.id}>
+                      <div className="card bg-base-100 shadow-xl">
+                        <div className="card-body">
+                          <h4 className="card-title justify-start">
+                            Member {index + 1}
+                          </h4>
+                          <div className="card-content flex flex-col justify-start">
+                            <div className="form-control w-full max-w-xs">
+                              <label className="label">
+                                <span className="label-text">
+                                  Member {index + 1} Nick Name
+                                </span>
+                                <span className="label-text-alt">Required</span>
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="Example: NEMTUS"
+                                className="input w-full max-w-xs"
+                                {...register(`users.${index}.displayName`)}
+                              />
+                              <label className="label">
+                                <span className="label-text-alt">
+                                  Bottom Left label
+                                </span>
+                                <span className="label-text-alt">
+                                  Will be stored in blockchain
+                                </span>
+                              </label>
+                            </div>
+
+                            <div className="form-control w-full max-w-xs">
+                              <label className="label">
+                                <span className="label-text">
+                                  Member {index + 1} Twitter ID
+                                </span>
+                                <span className="label-text-alt">Required</span>
+                              </label>
+                              <input
+                                type="txt"
+                                placeholder="Example: https://twitter.com/NemtusOfficial"
+                                className="input w-full max-w-xs"
+                                {...register(`users.${index}.twitterId`)}
+                              />
+                              <label className="label">
+                                <span className="label-text-alt">
+                                  Bottom Left label
+                                </span>
+                                <span className="label-text-alt">
+                                  Will be stored in blockchain
+                                </span>
+                              </label>
+                            </div>
+
+                            <div className="form-control w-full max-w-xs">
+                              <label className="label">
+                                <span className="label-text">
+                                  Member {index + 1} GitHub ID
+                                </span>
+                                <span className="label-text-alt">Optional</span>
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="Example: https://github.com/nemtus"
+                                className="input w-full max-w-xs"
+                                {...register(`users.${index}.githubId`)}
+                              />
+                              <label className="label">
+                                <span className="label-text-alt">
+                                  Bottom Left label
+                                </span>
+                                <span className="label-text-alt">
+                                  Will be saved only off-chain
+                                </span>
+                              </label>
+
+                              <button
+                                className="btn btn-secondary inline-flex"
+                                onClick={() => removeMember(index)}
+                                type="button"
+                              >
+                                <FaMinus />
+                                Remove Member
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <button
+                    className="btn btn-accent inline-flex w-full max-w-xs"
+                    onClick={addMember}
+                    type="button"
+                  >
+                    <FaPlus />
+                    Add Member
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="form-control w-full max-w-xs">
+              <label className="label">
+                <span className="label-text">
+                  Symbol address for prize receipt
+                </span>
+                <span className="label-text-alt">Required</span>
+              </label>
+              <input
+                type="text"
+                placeholder=""
+                className="input w-full max-w-xs"
+                {...register('addressForPrizeReceipt')}
+              />
+              <label className="label">
+                <span className="label-text-alt">Bottom Left label</span>
+                <span className="label-text-alt">
+                  Will be stored in blockchain
+                </span>
+              </label>
+            </div>
+
+            <button className="btn btn-primary w-full max-w-xs" type="submit">
+              Create Team
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

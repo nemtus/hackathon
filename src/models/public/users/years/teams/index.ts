@@ -1,36 +1,22 @@
-// Todo: Team
-import { AdminUserYearEntry } from 'models/admin/users/years/entries';
-import { PrivateUserYearEntry } from 'models/private/users/years/entries';
 import db, {
   doc,
   converter,
   getDoc,
   setDoc,
   collection,
-  getDocs,
-  query,
-  orderBy,
-  startAt,
-  getCountFromServer,
   addDoc,
 } from 'utils/firebase';
+import { PublicUser } from 'models/public/users';
+import { PrivateUserYearTeam } from 'models/private/users/years/teams';
 
 export type PublicUserYearTeam = {
-  id?: string;
-  userId: string;
+  id: string; // Note: 1 user can create only 1 team with rule userId = teamId
   yearId: string;
   name: string;
-  members: Member[];
+  users: PublicUser[];
   addressForPrizeReceipt: string;
   createdAt?: Date;
   updatedAt?: Date;
-};
-
-export type Member = {
-  id?: string;
-  nickName: string;
-  twitterId: string;
-  githubId: string;
 };
 
 export type PublicUserYearTeams = PublicUserYearTeam[];
@@ -41,17 +27,22 @@ const collectionRef = (userId: string, yearId: string) =>
   collection(db, collectionPath(userId, yearId)).withConverter(
     converter<PublicUserYearTeam>()
   );
-const docPath = (id: string) => `${collectionPath}/${id}`;
-const docRef = (id: string) =>
-  doc(db, docPath(id)).withConverter(converter<PublicUserYearTeam>());
+const docPath = (userId: string, yearId: string, id: string) =>
+  `${collectionPath(userId, yearId)}/${id}`;
+const docRef = (userId: string, yearId: string, id: string) =>
+  doc(db, docPath(userId, yearId, id)).withConverter(
+    converter<PublicUserYearTeam>()
+  );
 
-export const getPublicUserTeam = async (
+export const getPublicUserYearTeam = async (
+  userId: string,
+  yearId: string,
   id: string
 ): Promise<PublicUserYearTeam | undefined> => {
-  return (await getDoc(docRef(id))).data();
+  return (await getDoc(docRef(userId, yearId, id))).data();
 };
 
-export const setPublicUserTeam = async (
+export const setPublicUserYearTeam = async (
   userId: string,
   publicUserYearTeam: PublicUserYearTeam
 ): Promise<PublicUserYearTeam | undefined> => {
@@ -62,133 +53,23 @@ export const setPublicUserTeam = async (
     );
     return (await getDoc(docRef)).data();
   }
-  await setDoc(docRef(publicUserYearTeam.id), publicUserYearTeam, {
-    merge: true,
-  });
-  return (await getDoc(docRef(publicUserYearTeam.id))).data();
-};
-
-export const getAllPublicUserEntries = async (
-  userId: string,
-  yearId: string
-): Promise<PublicUserYearTeams> => {
+  await setDoc(
+    docRef(userId, publicUserYearTeam.yearId, publicUserYearTeam.id),
+    publicUserYearTeam,
+    {
+      merge: true,
+    }
+  );
   return (
-    await getDocs(
-      query(collectionRef(userId, yearId), orderBy('createdAt', 'asc'))
+    await getDoc(
+      docRef(userId, publicUserYearTeam.yearId, publicUserYearTeam.id)
     )
-  ).docs.map((doc) => doc.data());
+  ).data();
 };
 
-export const getCountAllPublicUserEntries = async (
-  userId: string,
-  yearId: string
-): Promise<number> => {
-  return (await getCountFromServer(query(collectionRef(userId, yearId)))).data()
-    .count;
-};
-
-export const queryEntryPublicUserEntries = async (
-  userId: string,
-  yearId: string
-): Promise<PublicUserYearTeams> => {
-  const startDate = new Date('2022-12-17T00:00:00.000Z');
-  return (
-    await getDocs(
-      query(
-        collectionRef(userId, yearId),
-        orderBy('entryAt', 'asc'),
-        startAt(startDate)
-      )
-    )
-  ).docs.map((doc) => doc.data());
-};
-
-export const getCountEntryPublicUserEntries = async (
-  userId: string,
-  yearId: string
-): Promise<number> => {
-  const startDate = new Date('2022-12-17T00:00:00.000Z');
-  return (
-    await getCountFromServer(
-      query(
-        collectionRef(userId, yearId),
-        orderBy('entryAt', 'asc'),
-        startAt(startDate)
-      )
-    )
-  ).data().count;
-};
-
-export const querySubmitPublicUserEntries = async (
-  userId: string,
-  yearId: string
-): Promise<PublicUserYearTeams> => {
-  const startDate = new Date('2022-12-17T00:00:00.000Z');
-  return (
-    await getDocs(
-      query(
-        collectionRef(userId, yearId),
-        orderBy('submitAt', 'asc'),
-        startAt(startDate)
-      )
-    )
-  ).docs.map((doc) => doc.data());
-};
-
-export const getCountSubmitPublicUserEntries = async (
-  userId: string,
-  yearId: string
-): Promise<number> => {
-  const startDate = new Date('2022-12-17T00:00:00.000Z');
-  return (
-    await getCountFromServer(
-      query(
-        collectionRef(userId, yearId),
-        orderBy('submitAt', 'asc'),
-        startAt(startDate)
-      )
-    )
-  ).data().count;
-};
-
-export const queryVotePublicUserEntries = async (
-  userId: string,
-  yearId: string
-): Promise<PublicUserYearTeams> => {
-  const startDate = new Date('2022-12-17T00:00:00.000Z');
-  return (
-    await getDocs(
-      query(
-        collectionRef(userId, yearId),
-        orderBy('voteAt', 'asc'),
-        startAt(startDate)
-      )
-    )
-  ).docs.map((doc) => doc.data());
-};
-
-export const convertAdminUserToPublicUser = (
-  adminUserYearEntry: AdminUserYearEntry
-): PublicUserYearEntry => {
-  const publicUser: PublicUserYearEntry = {
-    id: adminUserYearEntry.id,
-    yearId: adminUserYearEntry.yearId,
-    userId: adminUserYearEntry.userId,
-    createdAt: adminUserYearEntry.createdAt,
-    updatedAt: adminUserYearEntry.updatedAt,
-  };
-  return publicUser;
-};
-
-export const convertPrivateUserToPublicUser = (
-  privateUserYearEntry: PrivateUserYearEntry
-): PublicUserYearEntry => {
-  const publicUser: PublicUserYearEntry = {
-    id: privateUserYearEntry.id,
-    yearId: privateUserYearEntry.yearId,
-    userId: privateUserYearEntry.userId,
-    createdAt: privateUserYearEntry.createdAt,
-    updatedAt: privateUserYearEntry.updatedAt,
-  };
-  return publicUser;
+export const convertPrivateUserYearTeamToPublicUserYearTeam = (
+  privateUserYearTeam: PrivateUserYearTeam
+): PublicUserYearTeam => {
+  const publicUserYearTeam: PublicUserYearTeam = privateUserYearTeam;
+  return publicUserYearTeam;
 };

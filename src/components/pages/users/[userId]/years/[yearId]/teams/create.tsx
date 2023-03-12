@@ -6,11 +6,6 @@ import {
   getPrivateUser,
   PrivateUser,
 } from 'models/private/users';
-import {
-  collectionRef as privateUserTxsCollectionRef,
-  getAllPrivateUserTxs,
-  PrivateUserTxs,
-} from 'models/private/users/txs';
 import PrivateUserCardWidgetComponent from 'components/widgets/card/PrivateUserCard';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, onSnapshot } from 'utils/firebase';
@@ -19,6 +14,12 @@ import {
   getAllPrivateUserEntries,
   PrivateUserYearEntry,
 } from 'models/private/users/years/entries';
+import {
+  docRef as privateUserYearTeamDocRef,
+  getPrivateUserYearTeam,
+  PrivateUserYearTeam,
+} from 'models/private/users/years/teams';
+import PrivateUserYearTeamCreateFormWidgetComponent from 'components/widgets/form/PrivateUserTeamCreateForm';
 
 const TeamCreatePageComponent = () => {
   const { userId, yearId } = useParams();
@@ -57,6 +58,18 @@ const TeamCreatePageComponent = () => {
       .catch((error) => {
         console.error(error);
       });
+    getPrivateUserYearTeam(
+      userId,
+      yearId,
+      userId /* Note: teamId should be userId */
+    )
+      .then((privateUserYearTeam) => {
+        setPrivateUserYearTeam(privateUserYearTeam);
+      })
+      .catch((error) => {
+        console.error(error);
+        setPrivateUserYearTeam(undefined);
+      });
     const unsubscribePrivateUserDocListener = onSnapshot(
       privateUserDocRef(userId),
       {
@@ -94,15 +107,47 @@ const TeamCreatePageComponent = () => {
         },
       }
     );
+    const unsubscribePrivateUserYearTeamDocListener = onSnapshot(
+      privateUserYearTeamDocRef(userId, '2023', userId),
+      {
+        next: (snapshot) => {
+          const data = snapshot.data();
+          if (data) {
+            setPrivateUserYearTeam(data);
+          }
+        },
+        error: (error) => {
+          console.error(error);
+          setPrivateUserYearTeam(undefined);
+        },
+        complete: () => {
+          console.log('complete');
+        },
+      }
+    );
 
     return () => {
       unsubscribePrivateUserDocListener();
       unsubscribePrivateUserYearEntryDocListener();
+      unsubscribePrivateUserYearTeamDocListener();
     };
-  }, [userId, authUser, setPrivateUser, setPrivateUserYearEntry]);
+  }, [
+    userId,
+    yearId,
+    authUser,
+    setPrivateUser,
+    setPrivateUserYearEntry,
+    setPrivateUserYearTeam,
+  ]);
 
   return (
     <>
+      {privateUser && yearId && privateUserYearTeam === undefined ? (
+        <PrivateUserYearTeamCreateFormWidgetComponent
+          privateUser={privateUser}
+          yearId={yearId}
+        />
+      ) : null}
       {privateUser && privateUserYearEntry ? (
         <PrivateUserCardWidgetComponent {...privateUser} />
       ) : null}
