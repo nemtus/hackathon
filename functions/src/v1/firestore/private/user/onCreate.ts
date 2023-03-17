@@ -16,7 +16,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-admin-user-onCreate'
+          'v1-firestore-private-user-onCreate'
         )
       ) {
         return;
@@ -27,7 +27,7 @@ export const onCreate = () =>
         await snapshot.ref.withConverter(privateUserConverter).get()
       ).data();
       if (!privateUser) {
-        throw Error('adminUser is undefined');
+        throw Error('privateUser is undefined');
       }
       logger.debug({ privateUser });
 

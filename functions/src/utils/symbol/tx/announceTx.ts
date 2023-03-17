@@ -126,6 +126,9 @@ export const announceTx = async (
       const listener = repositoryFactory.createListener();
       try {
         await listener.open();
+        listener.status(address).subscribe((txStatusError) => {
+          logger.debug({ txStatusError });
+        });
         listener.unconfirmedAdded(address).subscribe((tx) => {
           logger.debug('unconfirmedAdded', { address, tx });
           if (tx.transactionInfo?.hash === adminUserTx.hash) {

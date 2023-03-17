@@ -57,7 +57,7 @@ const PrivateUserCardWidgetComponent = (privateUser: PrivateUser) => {
               <div className="stat-value">
                 <a
                   className="link link-primary"
-                  href={`https://testnet.symbol.fyi/accounts/${multisigAddress}`}
+                  href={`${process.env.REACT_APP_SYMBOL_BLOCK_EXPLORER_URL}/accounts/${multisigAddress}`}
                 >
                   {multisigAddress}
                 </a>
