@@ -1,17 +1,12 @@
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, onSnapshot } from 'utils/firebase';
-import AuthSignInPageComponent from 'components/pages/auth/sign-in';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   docRef as privateUserDocRef,
   getPrivateUser,
   PrivateUser,
 } from 'models/private/users';
-import {
-  collectionRef as privateUserTxsCollectionRef,
-  getAllPrivateUserTxs,
-  PrivateUserTxs,
-} from 'models/private/users/txs';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, onSnapshot } from 'utils/firebase';
 import {
   docRef as privateUserYearEntryDocRef,
   getAllPrivateUserEntries,
@@ -19,26 +14,21 @@ import {
 } from 'models/private/users/years/entries';
 import {
   docRef as privateUserYearTeamDocRef,
-  getAllPrivateUserYearTeams,
+  getPrivateUserYearTeam,
   PrivateUserYearTeam,
 } from 'models/private/users/years/teams';
-import PrivateUserStatusCardWidgetComponent from 'components/widgets/card/PrivateUserStatusCard';
-import PrivateUserTxsTableCardWidgetComponent from 'components/widgets/card/PrivateUserTxsTableCard';
-import ServiceOverviewCardWidgetComponent from 'components/widgets/card/ServiceOverviewCard';
-import LetsEntryCardWidgetComponent from 'components/widgets/card/LetsEntryCard';
 import {
   docRef as privateUserYearSubmissionDocRef,
-  getAllPrivateUserYearSubmissions,
+  getPrivateUserYearSubmission,
   PrivateUserYearSubmission,
 } from 'models/private/users/years/submissions';
+import PrivateUserYearSubmissionCreateFormWidgetComponent from 'components/widgets/form/PrivateUserSubmissionCreateForm';
 
-const HomePageComponent = () => {
-  const [authUser, authUserLoading] = useAuthState(auth);
+const SubmissionCreatePageComponent = () => {
+  const { userId, yearId } = useParams();
+  const [authUser] = useAuthState(auth);
   const [privateUser, setPrivateUser] = useState<
     PrivateUser | null | undefined
-  >(null);
-  const [privateUserTxs, setPrivateUserTxs] = useState<
-    PrivateUserTxs | null | undefined
   >(null);
   const [privateUserYearEntry, setPrivateUserYearEntry] = useState<
     PrivateUserYearEntry | null | undefined
@@ -51,10 +41,12 @@ const HomePageComponent = () => {
   >(null);
 
   useEffect(() => {
-    if (!authUser) {
+    if (!userId) {
       return;
     }
-    const userId = authUser.uid;
+    if (authUser?.uid !== userId) {
+      return;
+    }
     getPrivateUser(userId)
       .then((privateUser) => {
         setPrivateUser(privateUser);
@@ -62,33 +54,39 @@ const HomePageComponent = () => {
       .catch((error) => {
         console.error(error);
       });
-    getAllPrivateUserTxs(userId)
-      .then((privateUserTxs) => {
-        setPrivateUserTxs(privateUserTxs);
+    if (!yearId) {
+      return;
+    }
+    getAllPrivateUserEntries(userId, yearId)
+      .then((privateUserEntries) => {
+        setPrivateUserYearEntry(privateUserEntries[0]);
       })
       .catch((error) => {
         console.error(error);
       });
-    getAllPrivateUserEntries(userId, '2023')
-      .then((privateUserYearEntries) => {
-        setPrivateUserYearEntry(privateUserYearEntries[0]);
+    getPrivateUserYearTeam(
+      userId,
+      yearId,
+      userId /* Note: teamId should be userId */
+    )
+      .then((privateUserYearTeam) => {
+        setPrivateUserYearTeam(privateUserYearTeam);
       })
       .catch((error) => {
         console.error(error);
+        setPrivateUserYearTeam(undefined);
       });
-    getAllPrivateUserYearTeams(userId, '2023')
-      .then((privateUserYearTeams) => {
-        setPrivateUserYearTeam(privateUserYearTeams[0]);
+    getPrivateUserYearSubmission(
+      userId,
+      yearId,
+      userId /* Note: submissionId should be userId */
+    )
+      .then((privateUserYearSubmission) => {
+        setPrivateUserYearSubmission(privateUserYearSubmission);
       })
       .catch((error) => {
         console.error(error);
-      });
-    getAllPrivateUserYearSubmissions(userId, '2023')
-      .then((privateUserYearSubmissions) => {
-        setPrivateUserYearSubmission(privateUserYearSubmissions[0]);
-      })
-      .catch((error) => {
-        console.error(error);
+        setPrivateUserYearSubmission(undefined);
       });
     const unsubscribePrivateUserDocListener = onSnapshot(
       privateUserDocRef(userId),
@@ -100,26 +98,6 @@ const HomePageComponent = () => {
           const data = snapshot.data();
           if (data) {
             setPrivateUser(data);
-          }
-        },
-        error: (error) => {
-          console.error(error);
-        },
-        complete: () => {
-          console.log('complete');
-        },
-      }
-    );
-    const unsubscribePrivateUserTxsCollectionListener = onSnapshot(
-      privateUserTxsCollectionRef(userId),
-      {
-        includeMetadataChanges: true,
-      },
-      {
-        next: (snapshot) => {
-          const data = snapshot.docs.map((doc) => doc.data());
-          if (data.length) {
-            setPrivateUserTxs(data);
           }
         },
         error: (error) => {
@@ -158,6 +136,7 @@ const HomePageComponent = () => {
         },
         error: (error) => {
           console.error(error);
+          setPrivateUserYearTeam(undefined);
         },
         complete: () => {
           console.log('complete');
@@ -175,6 +154,7 @@ const HomePageComponent = () => {
         },
         error: (error) => {
           console.error(error);
+          setPrivateUserYearSubmission(undefined);
         },
         complete: () => {
           console.log('complete');
@@ -184,15 +164,15 @@ const HomePageComponent = () => {
 
     return () => {
       unsubscribePrivateUserDocListener();
-      unsubscribePrivateUserTxsCollectionListener();
       unsubscribePrivateUserYearEntryDocListener();
       unsubscribePrivateUserYearTeamDocListener();
       unsubscribePrivateUserYearSubmissionDocListener();
     };
   }, [
+    userId,
+    yearId,
     authUser,
     setPrivateUser,
-    setPrivateUserTxs,
     setPrivateUserYearEntry,
     setPrivateUserYearTeam,
     setPrivateUserYearSubmission,
@@ -200,27 +180,19 @@ const HomePageComponent = () => {
 
   return (
     <>
-      <ServiceOverviewCardWidgetComponent />
-      {!authUser && !authUserLoading ? <AuthSignInPageComponent /> : null}
-      <LetsEntryCardWidgetComponent />
-      {authUser ? (
-        <PrivateUserStatusCardWidgetComponent
-          yearId="2023"
-          authUser={authUser}
+      {privateUser &&
+      privateUserYearEntry &&
+      yearId &&
+      privateUserYearTeam &&
+      privateUserYearSubmission === undefined ? (
+        <PrivateUserYearSubmissionCreateFormWidgetComponent
           privateUser={privateUser}
-          privateUserTxs={privateUserTxs}
-          privateUserYearEntry={privateUserYearEntry}
           privateUserYearTeam={privateUserYearTeam}
-          privateUserYearSubmission={privateUserYearSubmission}
-        />
-      ) : null}
-      {authUser && privateUserTxs?.length ? (
-        <PrivateUserTxsTableCardWidgetComponent
-          privateUserTxs={privateUserTxs}
+          yearId={yearId}
         />
       ) : null}
     </>
   );
 };
 
-export default HomePageComponent;
+export default SubmissionCreatePageComponent;

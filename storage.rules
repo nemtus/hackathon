@@ -4,5 +4,12 @@ service firebase.storage {
     match /{allPaths=**} {
       allow read, write: if false;
     }
+
+    match /users/{userId}/years/{yearId}/submissions/{submissionId}/images/{allPaths=**} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if request.auth != null && request.auth.uid == userId && request.auth.uid == submissionId;
+      allow update: if request.auth != null && request.auth.uid == userId && request.auth.uid == submissionId;
+    }
   }
 }

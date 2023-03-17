@@ -50,6 +50,7 @@ service cloud.firestore {
         'updatedAt',
       ]) &&
       team.id == userId &&
+      team.id == teamId &&
       team.yearId == yearId &&
       team.name is string &&
       team.users is list &&
@@ -62,6 +63,42 @@ service cloud.firestore {
     function isCreateableTeam(team, userId, yearId, teamId) {
       return isValidTeam(team, userId, yearId, teamId) &&
       team.approved == false;
+    }
+
+    function isValidSubmission(submission, userId, yearId, submissionId) {
+      return submission.keys().hasAll([
+        'id',
+        'yearId',
+        'teamId',
+        'name',
+        'description',
+        'url',
+        'imageUrl',
+        'repositoryUrl',
+        'storeRepositoryUrlOnChain',
+        'createdAt',
+        'updatedAt',
+        'approved',
+      ]) &&
+      submission.id == userId &&
+      submission.id == submissionId &&
+      submission.yearId == yearId &&
+      submission.teamId == userId &&
+      submission.teamId == submissionId &&
+      submission.name is string &&
+      submission.description is string &&
+      submission.url is string &&
+      submission.imageUrl is string &&
+      submission.repositoryUrl is string &&
+      submission.storeRepositoryUrlOnChain is bool &&
+      submission.createdAt is timestamp &&
+      submission.updatedAt is timestamp &&
+      submission.approved is bool;
+    }
+
+    function isCreateableSubmission(submission, userId, yearId, submissionId) {
+      return isValidSubmission(submission, userId, yearId, submissionId) &&
+      submission.approved == false;
     }
 
     match /{document=**} {
@@ -153,7 +190,7 @@ service cloud.firestore {
     match /v/1/scopes/private/users/{userId}/years/{yearId}/submissions/{submissionId} {
       allow get: if isUserOrAdminAuthenticated(userId);
       allow list: if isAdminAuthenticated();
-      allow create: if isUserOrAdminAuthenticated(userId);
+      allow create: if isUserOrAdminAuthenticated(userId) && isCreateableSubmission(request.resource.data, userId, yearId, submissionId);
       allow update: if false;
       allow delete: if false;
     }
