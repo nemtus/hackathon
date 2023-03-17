@@ -3,8 +3,10 @@ import { PrivateUser } from 'models/private/users';
 import { PrivateUserTx } from 'models/private/users/txs';
 import { PrivateUserYearEntry } from 'models/private/users/years/entries';
 import { PrivateUserYearTeam } from 'models/private/users/years/teams';
+import { PrivateUserYearSubmission } from 'models/private/users/years/submissions';
 import EntryButtonComponent from 'components/widgets/button/EntryButton';
 import TeamCreateButton from 'components/widgets/button/TeamCreateButton';
+import SubmissionCreateButton from 'components/widgets/button/SubmissionCreateButton';
 
 export type PrivateUserStatus = {
   signInStatus?: 'OK' | 'Unknown';
@@ -36,6 +38,17 @@ export type PrivateUserStatus = {
     | 'Tx Unconfirmed'
     | 'Tx Confirmed'
     | 'Unknown';
+  submissionStatus?:
+    | 'Preparing'
+    | 'Waiting Team'
+    | 'Not Yet'
+    | 'Now Under Review'
+    | 'Creating'
+    | 'Created'
+    | 'Tx Announced'
+    | 'Tx Unconfirmed'
+    | 'Tx Confirmed'
+    | 'Unknown';
 };
 
 const PrivateUserStatusTableWidgetComponent = (props: {
@@ -45,6 +58,7 @@ const PrivateUserStatusTableWidgetComponent = (props: {
   privateUserTxs: PrivateUserTx[] | null | undefined;
   privateUserYearEntry: PrivateUserYearEntry | null | undefined;
   privateUserYearTeam: PrivateUserYearTeam | null | undefined;
+  privateUserYearSubmission: PrivateUserYearSubmission | null | undefined;
 }) => {
   const signInStatus: PrivateUserStatus['signInStatus'] = props.authUser
     ? 'OK'
@@ -163,11 +177,66 @@ const PrivateUserStatusTableWidgetComponent = (props: {
       return 'Unknown';
     })();
 
+  const submissionStatus: PrivateUserStatus['submissionStatus'] =
+    ((): PrivateUserStatus['submissionStatus'] => {
+      const createTeamTx = props.privateUserTxs?.filter(
+        (tx) => tx.description === `CreateAndSetUpNewTeam${props.yearId}`
+      )[0];
+      const createSubmissionTx = props.privateUserTxs?.filter(
+        (tx) => tx.description === `CreateNewSubmission${props.yearId}`
+      )[0];
+      const updateSubmissionTx = props.privateUserTxs?.filter(
+        (tx) => tx.description === `UpdateSubmissionInfo${props.yearId}`
+      )[0];
+      if (!createTeamTx || !createTeamTx.confirmed) {
+        return 'Waiting Team';
+      }
+      if (createTeamTx?.confirmed && !props.privateUserYearSubmission) {
+        return 'Not Yet';
+      }
+      if (
+        createTeamTx?.confirmed &&
+        props.privateUserYearSubmission &&
+        props.privateUserYearSubmission.approved === false
+      ) {
+        return 'Now Under Review';
+      }
+      if (updateSubmissionTx?.confirmed) {
+        return 'Tx Confirmed';
+      }
+      if (updateSubmissionTx?.unconfirmed) {
+        return 'Tx Unconfirmed';
+      }
+      if (updateSubmissionTx?.announced) {
+        return 'Tx Announced';
+      }
+      if (updateSubmissionTx?.createdAt) {
+        return 'Created';
+      }
+      if (!createSubmissionTx) {
+        return 'Creating';
+      }
+      if (createSubmissionTx.confirmed) {
+        return 'Tx Confirmed';
+      }
+      if (createSubmissionTx.unconfirmed) {
+        return 'Tx Unconfirmed';
+      }
+      if (createSubmissionTx.announced) {
+        return 'Tx Announced';
+      }
+      if (createSubmissionTx.createdAt) {
+        return 'Created';
+      }
+      return 'Unknown';
+    })();
+
   const privateUserStatus: PrivateUserStatus = {
     signInStatus,
     accountStatus,
     entryStatus,
     teamStatus,
+    submissionStatus,
   };
 
   return (
@@ -250,6 +319,32 @@ const PrivateUserStatusTableWidgetComponent = (props: {
             <span>{privateUserStatus.teamStatus}</span>
             <span>
               {privateUserStatus.teamStatus === 'Now Under Review'
+                ? ' : This process is manually executed by NEMTUS internal members and may take up to a day to complete.'
+                : null}
+            </span>
+          </td>
+        </tr>
+        <tr key="submissionStatus">
+          <td>Submission</td>
+          <td>
+            {privateUserStatus.submissionStatus === 'Tx Confirmed' ? (
+              <span className="text-success">✔</span>
+            ) : privateUserStatus.submissionStatus === 'Unknown' ? (
+              <span>?</span>
+            ) : privateUserStatus.submissionStatus === 'Not Yet' ? (
+              <SubmissionCreateButton
+                userId={props.privateUser?.id ?? ''}
+                yearId={props.yearId}
+                disabled={false}
+              />
+            ) : (
+              <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+            )}
+          </td>
+          <td>
+            <span>{privateUserStatus.submissionStatus}</span>
+            <span>
+              {privateUserStatus.submissionStatus === 'Now Under Review'
                 ? ' : This process is manually executed by NEMTUS internal members and may take up to a day to complete.'
                 : null}
             </span>

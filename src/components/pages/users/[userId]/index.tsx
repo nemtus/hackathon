@@ -27,6 +27,12 @@ import { auth, onSnapshot } from 'utils/firebase';
 import PrivateUserStatusCardWidgetComponent from 'components/widgets/card/PrivateUserStatusCard';
 import PrivateUserTeamCardWidgetComponent from 'components/widgets/card/PrivateUserTeamCard';
 import PrivateUserTeamMembersTableCardWidgetComponent from 'components/widgets/card/PrivateUserTeamMembersTableCard';
+import {
+  docRef as privateUserYearSubmissionDocRef,
+  getAllPrivateUserYearSubmissions,
+  PrivateUserYearSubmission,
+} from 'models/private/users/years/submissions';
+import PrivateUserSubmissionCardWidgetComponent from 'components/widgets/card/PrivateUserSubmissionCard';
 
 const UserPageComponent = () => {
   const { userId } = useParams();
@@ -42,6 +48,9 @@ const UserPageComponent = () => {
   >(null);
   const [privateUserYearTeam, setPrivateUserYearTeam] = useState<
     PrivateUserYearTeam | null | undefined
+  >(null);
+  const [privateUserYearSubmission, setPrivateUserYearSubmission] = useState<
+    PrivateUserYearSubmission | null | undefined
   >(null);
 
   useEffect(() => {
@@ -75,6 +84,13 @@ const UserPageComponent = () => {
     getAllPrivateUserYearTeams(userId, '2023')
       .then((privateUserYearTeams) => {
         setPrivateUserYearTeam(privateUserYearTeams[0]);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    getAllPrivateUserYearSubmissions(userId, '2023')
+      .then((privateUserYearSubmissions) => {
+        setPrivateUserYearSubmission(privateUserYearSubmissions[0]);
       })
       .catch((error) => {
         console.error(error);
@@ -153,12 +169,30 @@ const UserPageComponent = () => {
         },
       }
     );
+    const unsubscribePrivateUserYearSubmissionDocListener = onSnapshot(
+      privateUserYearSubmissionDocRef(userId, '2023', userId),
+      {
+        next: (snapshot) => {
+          const data = snapshot.data();
+          if (data) {
+            setPrivateUserYearSubmission(data);
+          }
+        },
+        error: (error) => {
+          console.error(error);
+        },
+        complete: () => {
+          console.log('complete');
+        },
+      }
+    );
 
     return () => {
       unsubscribePrivateUserDocListener();
       unsubscribePrivateUserTxsCollectionListener();
       unsubscribePrivateUserYearEntryDocListener();
       unsubscribePrivateUserYearTeamDocListener();
+      unsubscribePrivateUserYearSubmissionDocListener();
     };
   }, [
     userId,
@@ -167,6 +201,7 @@ const UserPageComponent = () => {
     setPrivateUserTxs,
     setPrivateUserYearEntry,
     setPrivateUserYearTeam,
+    setPrivateUserYearSubmission,
   ]);
 
   return (
@@ -178,6 +213,7 @@ const UserPageComponent = () => {
         privateUserTxs={privateUserTxs}
         privateUserYearEntry={privateUserYearEntry}
         privateUserYearTeam={privateUserYearTeam}
+        privateUserYearSubmission={privateUserYearSubmission}
       />
       {privateUser ? <PrivateUserCardWidgetComponent {...privateUser} /> : null}
       {privateUserYearTeam ? (
@@ -186,6 +222,11 @@ const UserPageComponent = () => {
       {privateUserYearTeam?.users ? (
         <PrivateUserTeamMembersTableCardWidgetComponent
           {...{ publicUsers: privateUserYearTeam.users }}
+        />
+      ) : null}
+      {privateUserYearSubmission ? (
+        <PrivateUserSubmissionCardWidgetComponent
+          {...privateUserYearSubmission}
         />
       ) : null}
       {privateUserTxs?.length ? (

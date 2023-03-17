@@ -2,11 +2,17 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import loadable from '@loadable/component';
 import './App.css';
 import AppHeader from 'components/widgets/app-header';
-import TeamCreatePageComponent from 'components/pages/users/[userId]/years/[yearId]/teams/create';
 
 const HomePageComponent = loadable(() => import('components/pages/home'));
 const UserPageComponent = loadable(
   () => import('components/pages/users/[userId]')
+);
+const TeamCreatePageComponent = loadable(
+  () => import('components/pages/users/[userId]/years/[yearId]/teams/create')
+);
+const SubmissionCreatePageComponent = loadable(
+  () =>
+    import('components/pages/users/[userId]/years/[yearId]/submissions/create')
 );
 
 function App() {
@@ -19,7 +25,11 @@ function App() {
         <Route
           path="/private/users/:userId/years/:yearId/teams/create"
           element={<TeamCreatePageComponent />}
-        ></Route>
+        />
+        <Route
+          path="/private/users/:userId/years/:yearId/submissions/create"
+          element={<SubmissionCreatePageComponent />}
+        />
       </Routes>
     </BrowserRouter>
   );
