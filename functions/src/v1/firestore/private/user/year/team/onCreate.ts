@@ -26,7 +26,11 @@ const path = '/v/1/scopes/private/users/{userID}/years/{yearID}/teams/{teamID}';
 export const onCreate = () =>
   functions()
     .runWith({
-      secrets: ['DATA_ENCRYPTION_KEY', 'SLACK_BOT_USER_OAUTH_TOKEN'],
+      secrets: [
+        'DATA_ENCRYPTION_KEY',
+        'SLACK_BOT_USER_OAUTH_TOKEN',
+        'SLACK_NOTIFY_CHANNEL',
+      ],
     })
     .firestore.document(path)
     .onCreate(async (snapshot, context) => {
