@@ -1,6 +1,5 @@
 import { db } from '../../../../utils/firebase';
 import { converter } from '../../../../utils/firebase/converter';
-import { AdminTeam } from '../../admin/teams';
 import { PublicTeam } from '../../public/years/teams';
 
 export type PrivateTeam = {
@@ -61,19 +60,4 @@ export const queryVotePrivateTeams = async (): Promise<PrivateTeams> => {
       .orderBy('entryAt', 'asc')
       .get()
   ).docs.map((snapshot) => snapshot.data());
-};
-
-export const convertAdminTeamToPrivateTeam = (
-  adminTeam: AdminTeam
-): PrivateTeam => {
-  const privateTeam: PrivateTeam = {
-    id: adminTeam.id,
-    name: adminTeam.name,
-    createdAt: adminTeam.createdAt,
-    updatedAt: adminTeam.updatedAt,
-    submitAt: adminTeam.submitAt,
-    multisigAddress: adminTeam.multisigAddress,
-    multisigPublicKey: adminTeam.multisigPublicKey,
-  };
-  return privateTeam;
 };
