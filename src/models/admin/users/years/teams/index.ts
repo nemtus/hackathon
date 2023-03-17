@@ -9,7 +9,11 @@ import db, {
   addDoc,
 } from 'utils/firebase';
 
-export type AdminUserYearTeam = PrivateUserYearTeam;
+export type AdminUserYearTeam = {
+  teamSaltHexString?: string;
+  teamIvHexString?: string;
+  teamEncryptedPrivateKey?: string;
+} & PrivateUserYearTeam;
 
 export type AdminUserYearTeams = AdminUserYearTeam[];
 

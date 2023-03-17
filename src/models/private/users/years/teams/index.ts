@@ -5,12 +5,18 @@ import db, {
   doc,
   converter,
   getDoc,
-  setDoc,
+  getDocs,
+  // setDoc,
   collection,
   addDoc,
+  runTransaction,
+  query,
+  orderBy,
 } from 'utils/firebase';
 
-export type PrivateUserYearTeam = PublicUserYearTeam;
+export type PrivateUserYearTeam = {
+  teamPublicKey?: string;
+} & PublicUserYearTeam;
 
 export type PrivateUserYearTeams = PrivateUserYearTeam[];
 
@@ -46,18 +52,46 @@ export const setPrivateUserYearTeam = async (
     );
     return (await getDoc(docRef)).data();
   }
-  await setDoc(
-    docRef(userId, privateUserYearTeam.yearId, privateUserYearTeam.id),
-    privateUserYearTeam,
-    {
-      merge: true,
-    }
-  );
+
+  try {
+    await runTransaction(db, async (transaction) => {
+      const privateUserYearTeamDocRef = docRef(
+        userId,
+        privateUserYearTeam.yearId,
+        privateUserYearTeam.id
+      );
+      const privateUserYearTeamDoc = await transaction.get(
+        privateUserYearTeamDocRef
+      );
+      if (!privateUserYearTeamDoc.exists()) {
+        transaction.set(privateUserYearTeamDocRef, privateUserYearTeam);
+        return (
+          await getDoc(
+            docRef(userId, privateUserYearTeam.yearId, privateUserYearTeam.id)
+          )
+        ).data();
+      }
+      transaction.update(privateUserYearTeamDocRef, privateUserYearTeam);
+      return (
+        await getDoc(
+          docRef(userId, privateUserYearTeam.yearId, privateUserYearTeam.id)
+        )
+      ).data();
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getAllPrivateUserYearTeams = async (
+  userId: string,
+  yearId: string
+): Promise<PrivateUserYearTeams> => {
   return (
-    await getDoc(
-      docRef(userId, privateUserYearTeam.yearId, privateUserYearTeam.id)
+    await getDocs(
+      query(collectionRef(userId, yearId), orderBy('createdAt', 'asc'))
     )
-  ).data();
+  ).docs.map((doc) => doc.data());
 };
 
 export const convertPrivateUserYearTeamToPublicUserYearTeam = (

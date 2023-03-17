@@ -35,6 +35,7 @@ import {
   getDocs,
   getCountFromServer,
   onSnapshot,
+  runTransaction,
 } from 'firebase/firestore';
 import {
   connectStorageEmulator,
@@ -326,6 +327,7 @@ export {
   getDocs,
   getCountFromServer,
   onSnapshot,
+  runTransaction,
   where,
   orderBy,
   query,

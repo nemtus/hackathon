@@ -17,6 +17,11 @@ import {
   getAllPrivateUserEntries,
   PrivateUserYearEntry,
 } from 'models/private/users/years/entries';
+import {
+  docRef as privateUserYearTeamDocRef,
+  getAllPrivateUserYearTeams,
+  PrivateUserYearTeam,
+} from 'models/private/users/years/teams';
 import PrivateUserStatusCardWidgetComponent from 'components/widgets/card/PrivateUserStatusCard';
 import PrivateUserTxsTableCardWidgetComponent from 'components/widgets/card/PrivateUserTxsTableCard';
 import ServiceOverviewCardWidgetComponent from 'components/widgets/card/ServiceOverviewCard';
@@ -32,6 +37,9 @@ const HomePageComponent = () => {
   >(null);
   const [privateUserYearEntry, setPrivateUserYearEntry] = useState<
     PrivateUserYearEntry | null | undefined
+  >(null);
+  const [privateUserYearTeam, setPrivateUserYearTeam] = useState<
+    PrivateUserYearTeam | null | undefined
   >(null);
 
   useEffect(() => {
@@ -56,6 +64,13 @@ const HomePageComponent = () => {
     getAllPrivateUserEntries(userId, '2023')
       .then((privateUserYearEntries) => {
         setPrivateUserYearEntry(privateUserYearEntries[0]);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    getAllPrivateUserYearTeams(userId, '2023')
+      .then((privateUserYearTeams) => {
+        setPrivateUserYearTeam(privateUserYearTeams[0]);
       })
       .catch((error) => {
         console.error(error);
@@ -117,13 +132,37 @@ const HomePageComponent = () => {
         },
       }
     );
+    const unsubscribePrivateUserYearTeamDocListener = onSnapshot(
+      privateUserYearTeamDocRef(userId, '2023', userId),
+      {
+        next: (snapshot) => {
+          const data = snapshot.data();
+          if (data) {
+            setPrivateUserYearTeam(data);
+          }
+        },
+        error: (error) => {
+          console.error(error);
+        },
+        complete: () => {
+          console.log('complete');
+        },
+      }
+    );
 
     return () => {
       unsubscribePrivateUserDocListener();
       unsubscribePrivateUserTxsCollectionListener();
       unsubscribePrivateUserYearEntryDocListener();
+      unsubscribePrivateUserYearTeamDocListener();
     };
-  }, [authUser, setPrivateUser, setPrivateUserTxs, setPrivateUserYearEntry]);
+  }, [
+    authUser,
+    setPrivateUser,
+    setPrivateUserTxs,
+    setPrivateUserYearEntry,
+    setPrivateUserYearTeam,
+  ]);
 
   return (
     <>
@@ -137,6 +176,7 @@ const HomePageComponent = () => {
           privateUser={privateUser}
           privateUserTxs={privateUserTxs}
           privateUserYearEntry={privateUserYearEntry}
+          privateUserYearTeam={privateUserYearTeam}
         />
       ) : null}
       {authUser && privateUserTxs?.length ? (

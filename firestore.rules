@@ -38,6 +38,32 @@ service cloud.firestore {
       entry.updatedAt is timestamp;
     }
 
+    function isValidTeam(team, userId, yearId, teamId) {
+      return team.keys().hasAll([
+        'id',
+        'yearId',
+        'name',
+        'users',
+        'addressForPrizeReceipt',
+        'approved',
+        'createdAt',
+        'updatedAt',
+      ]) &&
+      team.id == userId &&
+      team.yearId == yearId &&
+      team.name is string &&
+      team.users is list &&
+      team.addressForPrizeReceipt is string &&
+      team.approved is bool &&
+      team.createdAt is timestamp &&
+      team.updatedAt is timestamp;
+    }
+
+    function isCreateableTeam(team, userId, yearId, teamId) {
+      return isValidTeam(team, userId, yearId, teamId) &&
+      team.approved == false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
@@ -116,7 +142,15 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    match /v/1/scopes/private/users/{userId}/years/{year}/submissions/{submissionId} {
+    match /v/1/scopes/private/users/{userId}/years/{yearId}/teams/{teamId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isUserOrAdminAuthenticated(userId);
+      allow create: if isUserOrAdminAuthenticated(userId) && isCreateableTeam(request.resource.data, userId, yearId, teamId);
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/private/users/{userId}/years/{yearId}/submissions/{submissionId} {
       allow get: if isUserOrAdminAuthenticated(userId);
       allow list: if isAdminAuthenticated();
       allow create: if isUserOrAdminAuthenticated(userId);

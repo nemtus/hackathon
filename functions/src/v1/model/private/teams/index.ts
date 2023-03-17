@@ -1,7 +1,7 @@
 import { db } from '../../../../utils/firebase';
 import { converter } from '../../../../utils/firebase/converter';
 import { AdminTeam } from '../../admin/teams';
-import { PublicTeam } from '../../public/teams';
+import { PublicTeam } from '../../public/years/teams';
 
 export type PrivateTeam = {
   multisigPublicKey?: string;

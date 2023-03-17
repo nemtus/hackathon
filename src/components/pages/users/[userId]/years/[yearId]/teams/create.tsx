@@ -6,7 +6,6 @@ import {
   getPrivateUser,
   PrivateUser,
 } from 'models/private/users';
-import PrivateUserCardWidgetComponent from 'components/widgets/card/PrivateUserCard';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, onSnapshot } from 'utils/firebase';
 import {
@@ -142,14 +141,14 @@ const TeamCreatePageComponent = () => {
 
   return (
     <>
-      {privateUser && yearId && privateUserYearTeam === undefined ? (
+      {privateUser &&
+      privateUserYearEntry &&
+      yearId &&
+      privateUserYearTeam === undefined ? (
         <PrivateUserYearTeamCreateFormWidgetComponent
           privateUser={privateUser}
           yearId={yearId}
         />
-      ) : null}
-      {privateUser && privateUserYearEntry ? (
-        <PrivateUserCardWidgetComponent {...privateUser} />
       ) : null}
     </>
   );

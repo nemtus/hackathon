@@ -10,16 +10,23 @@ import {
   getAllPrivateUserTxs,
   PrivateUserTxs,
 } from 'models/private/users/txs';
-import PrivateUserCardWidgetComponent from 'components/widgets/card/PrivateUserCard';
-import PrivateUserTxsTableCardWidgetComponent from 'components/widgets/card/PrivateUserTxsTableCard';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, onSnapshot } from 'utils/firebase';
 import {
   docRef as privateUserYearEntryDocRef,
   getAllPrivateUserEntries,
   PrivateUserYearEntry,
 } from 'models/private/users/years/entries';
+import {
+  docRef as privateUserYearTeamDocRef,
+  getAllPrivateUserYearTeams,
+  PrivateUserYearTeam,
+} from 'models/private/users/years/teams';
+import PrivateUserCardWidgetComponent from 'components/widgets/card/PrivateUserCard';
+import PrivateUserTxsTableCardWidgetComponent from 'components/widgets/card/PrivateUserTxsTableCard';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, onSnapshot } from 'utils/firebase';
 import PrivateUserStatusCardWidgetComponent from 'components/widgets/card/PrivateUserStatusCard';
+import PrivateUserTeamCardWidgetComponent from 'components/widgets/card/PrivateUserTeamCard';
+import PrivateUserTeamMembersTableCardWidgetComponent from 'components/widgets/card/PrivateUserTeamMembersTableCard';
 
 const UserPageComponent = () => {
   const { userId } = useParams();
@@ -32,6 +39,9 @@ const UserPageComponent = () => {
   >(null);
   const [privateUserYearEntry, setPrivateUserYearEntry] = useState<
     PrivateUserYearEntry | null | undefined
+  >(null);
+  const [privateUserYearTeam, setPrivateUserYearTeam] = useState<
+    PrivateUserYearTeam | null | undefined
   >(null);
 
   useEffect(() => {
@@ -58,6 +68,13 @@ const UserPageComponent = () => {
     getAllPrivateUserEntries(userId, '2023')
       .then((privateUserEntries) => {
         setPrivateUserYearEntry(privateUserEntries[0]);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    getAllPrivateUserYearTeams(userId, '2023')
+      .then((privateUserYearTeams) => {
+        setPrivateUserYearTeam(privateUserYearTeams[0]);
       })
       .catch((error) => {
         console.error(error);
@@ -119,11 +136,29 @@ const UserPageComponent = () => {
         },
       }
     );
+    const unsubscribePrivateUserYearTeamDocListener = onSnapshot(
+      privateUserYearTeamDocRef(userId, '2023', userId),
+      {
+        next: (snapshot) => {
+          const data = snapshot.data();
+          if (data) {
+            setPrivateUserYearTeam(data);
+          }
+        },
+        error: (error) => {
+          console.error(error);
+        },
+        complete: () => {
+          console.log('complete');
+        },
+      }
+    );
 
     return () => {
       unsubscribePrivateUserDocListener();
       unsubscribePrivateUserTxsCollectionListener();
       unsubscribePrivateUserYearEntryDocListener();
+      unsubscribePrivateUserYearTeamDocListener();
     };
   }, [
     userId,
@@ -131,6 +166,7 @@ const UserPageComponent = () => {
     setPrivateUser,
     setPrivateUserTxs,
     setPrivateUserYearEntry,
+    setPrivateUserYearTeam,
   ]);
 
   return (
@@ -141,8 +177,17 @@ const UserPageComponent = () => {
         privateUser={privateUser}
         privateUserTxs={privateUserTxs}
         privateUserYearEntry={privateUserYearEntry}
+        privateUserYearTeam={privateUserYearTeam}
       />
       {privateUser ? <PrivateUserCardWidgetComponent {...privateUser} /> : null}
+      {privateUserYearTeam ? (
+        <PrivateUserTeamCardWidgetComponent {...privateUserYearTeam} />
+      ) : null}
+      {privateUserYearTeam?.users ? (
+        <PrivateUserTeamMembersTableCardWidgetComponent
+          {...{ publicUsers: privateUserYearTeam.users }}
+        />
+      ) : null}
       {privateUserTxs?.length ? (
         <PrivateUserTxsTableCardWidgetComponent
           privateUserTxs={privateUserTxs}
