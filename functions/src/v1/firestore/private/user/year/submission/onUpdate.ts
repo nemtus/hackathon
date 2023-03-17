@@ -15,6 +15,7 @@ import {
 } from '../../../../../model/public/users/years/submissions';
 
 const SLACK_BOT_USER_OAUTH_TOKEN = defineSecret('SLACK_BOT_USER_OAUTH_TOKEN');
+const SLACK_NOTIFY_CHANNEL = defineSecret('SLACK_NOTIFY_CHANNEL');
 
 const path =
   '/v/1/scopes/private/users/{userID}/years/{yearID}/submissions/{submissionID}';
@@ -22,7 +23,7 @@ const path =
 export const onUpdate = () =>
   functions()
     .runWith({
-      secrets: ['SLACK_BOT_USER_OAUTH_TOKEN'],
+      secrets: ['SLACK_BOT_USER_OAUTH_TOKEN', 'SLACK_NOTIFY_CHANNEL'],
     })
     .firestore.document(path)
     .onUpdate(async (changeSnapshot, context) => {
@@ -99,10 +100,11 @@ export const onUpdate = () =>
         afterPrivateUserYearSubmission.approved === false
       ) {
         const slackBotUserOAuthToken = SLACK_BOT_USER_OAUTH_TOKEN.value();
+        const slackNotifyChannel = SLACK_NOTIFY_CHANNEL.value();
         const postMessageResponse = await postMessage(
           slackBotUserOAuthToken,
           JSON.stringify(publicUserYearSubmission, null, 2),
-          '#hackathon'
+          `#${slackNotifyChannel}`
         );
         logger.debug({ postMessageResponse });
       }

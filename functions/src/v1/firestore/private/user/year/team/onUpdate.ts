@@ -15,6 +15,7 @@ import {
 } from '../../../../../model/public/users/years/teams';
 
 const SLACK_BOT_USER_OAUTH_TOKEN = defineSecret('SLACK_BOT_USER_OAUTH_TOKEN');
+const SLACK_NOTIFY_CHANNEL = defineSecret('SLACK_NOTIFY_CHANNEL');
 
 const path = '/v/1/scopes/private/users/{userID}/years/{yearID}/teams/{teamID}';
 
@@ -93,10 +94,11 @@ export const onUpdate = () =>
         afterPrivateUserYearTeam.approved === false
       ) {
         const slackBotUserOAuthToken = SLACK_BOT_USER_OAUTH_TOKEN.value();
+        const slackNotifyChannel = SLACK_NOTIFY_CHANNEL.value();
         const postMessageResponse = await postMessage(
           slackBotUserOAuthToken,
           JSON.stringify(publicUserYearTeam, null, 2),
-          '#hackathon'
+          `#${slackNotifyChannel}`
         );
         logger.debug({ postMessageResponse });
       }
