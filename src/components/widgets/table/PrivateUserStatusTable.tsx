@@ -65,9 +65,16 @@ const PrivateUserStatusTableWidgetComponent = (props: {
     : 'Unknown';
   const accountStatus: PrivateUserStatus['accountStatus'] =
     ((): PrivateUserStatus['accountStatus'] => {
-      const createAndSetUpNewAccountTx = props.privateUserTxs?.filter(
-        (tx) => tx.description === 'CreateAndSetUpNewAccount'
-      )[0];
+      const createAndSetUpNewAccountTx = props.privateUserTxs
+        ?.sort((a, b) => {
+          if (!a.createdAt || !b.createdAt) {
+            return 0;
+          }
+          if (a.createdAt > b.createdAt) return -1;
+          if (b.createdAt < a.createdAt) return 1;
+          return 0;
+        })
+        .filter((tx) => tx.description === 'CreateAndSetUpNewAccount')[0];
       if (!createAndSetUpNewAccountTx) {
         return 'Creating';
       }
@@ -87,12 +94,26 @@ const PrivateUserStatusTableWidgetComponent = (props: {
     })();
   const entryStatus: PrivateUserStatus['entryStatus'] =
     ((): PrivateUserStatus['entryStatus'] => {
-      const createAndSetUpNewAccountTx = props.privateUserTxs?.filter(
-        (tx) => tx.description === 'CreateAndSetUpNewAccount'
-      )[0];
-      const entryTx = props.privateUserTxs?.filter(
-        (tx) => tx.description === `Entry${props.yearId}`
-      )[0];
+      const createAndSetUpNewAccountTx = props.privateUserTxs
+        ?.sort((a, b) => {
+          if (!a.createdAt || !b.createdAt) {
+            return 0;
+          }
+          if (a.createdAt > b.createdAt) return -1;
+          if (b.createdAt < a.createdAt) return 1;
+          return 0;
+        })
+        .filter((tx) => tx.description === 'CreateAndSetUpNewAccount')[0];
+      const entryTx = props.privateUserTxs
+        ?.sort((a, b) => {
+          if (!a.createdAt || !b.createdAt) {
+            return 0;
+          }
+          if (a.createdAt > b.createdAt) return -1;
+          if (b.createdAt < a.createdAt) return 1;
+          return 0;
+        })
+        .filter((tx) => tx.description === `Entry${props.yearId}`)[0];
       if (
         !createAndSetUpNewAccountTx ||
         !createAndSetUpNewAccountTx.confirmed
@@ -125,15 +146,38 @@ const PrivateUserStatusTableWidgetComponent = (props: {
 
   const teamStatus: PrivateUserStatus['teamStatus'] =
     ((): PrivateUserStatus['teamStatus'] => {
-      const entryTx = props.privateUserTxs?.filter(
-        (tx) => tx.description === `Entry${props.yearId}`
-      )[0];
-      const createTeamTx = props.privateUserTxs?.filter(
-        (tx) => tx.description === `CreateAndSetUpNewTeam${props.yearId}`
-      )[0];
-      const updateTeamTx = props.privateUserTxs?.filter(
-        (tx) => tx.description === `UpdateTeamInfo${props.yearId}`
-      )[0];
+      const entryTx = props.privateUserTxs
+        ?.sort((a, b) => {
+          if (!a.createdAt || !b.createdAt) {
+            return 0;
+          }
+          if (a.createdAt > b.createdAt) return -1;
+          if (b.createdAt < a.createdAt) return 1;
+          return 0;
+        })
+        .filter((tx) => tx.description === `Entry${props.yearId}`)[0];
+      const createTeamTx = props.privateUserTxs
+        ?.sort((a, b) => {
+          if (!a.createdAt || !b.createdAt) {
+            return 0;
+          }
+          if (a.createdAt > b.createdAt) return -1;
+          if (b.createdAt < a.createdAt) return 1;
+          return 0;
+        })
+        .filter(
+          (tx) => tx.description === `CreateAndSetUpNewTeam${props.yearId}`
+        )[0];
+      const updateTeamTx = props.privateUserTxs
+        ?.sort((a, b) => {
+          if (!a.createdAt || !b.createdAt) {
+            return 0;
+          }
+          if (a.createdAt > b.createdAt) return -1;
+          if (b.createdAt < a.createdAt) return 1;
+          return 0;
+        })
+        .filter((tx) => tx.description === `UpdateTeamInfo${props.yearId}`)[0];
       if (!entryTx || !entryTx.confirmed) {
         return 'Waiting Entry';
       }
@@ -179,15 +223,42 @@ const PrivateUserStatusTableWidgetComponent = (props: {
 
   const submissionStatus: PrivateUserStatus['submissionStatus'] =
     ((): PrivateUserStatus['submissionStatus'] => {
-      const createTeamTx = props.privateUserTxs?.filter(
-        (tx) => tx.description === `CreateAndSetUpNewTeam${props.yearId}`
-      )[0];
-      const createSubmissionTx = props.privateUserTxs?.filter(
-        (tx) => tx.description === `CreateNewSubmission${props.yearId}`
-      )[0];
-      const updateSubmissionTx = props.privateUserTxs?.filter(
-        (tx) => tx.description === `UpdateSubmissionInfo${props.yearId}`
-      )[0];
+      const createTeamTx = props.privateUserTxs
+        ?.sort((a, b) => {
+          if (!a.createdAt || !b.createdAt) {
+            return 0;
+          }
+          if (a.createdAt > b.createdAt) return -1;
+          if (b.createdAt < a.createdAt) return 1;
+          return 0;
+        })
+        .filter(
+          (tx) => tx.description === `CreateAndSetUpNewTeam${props.yearId}`
+        )[0];
+      const createSubmissionTx = props.privateUserTxs
+        ?.sort((a, b) => {
+          if (!a.createdAt || !b.createdAt) {
+            return 0;
+          }
+          if (a.createdAt > b.createdAt) return -1;
+          if (b.createdAt < a.createdAt) return 1;
+          return 0;
+        })
+        .filter(
+          (tx) => tx.description === `CreateNewSubmission${props.yearId}`
+        )[0];
+      const updateSubmissionTx = props.privateUserTxs
+        ?.sort((a, b) => {
+          if (!a.createdAt || !b.createdAt) {
+            return 0;
+          }
+          if (a.createdAt > b.createdAt) return -1;
+          if (b.createdAt < a.createdAt) return 1;
+          return 0;
+        })
+        .filter(
+          (tx) => tx.description === `UpdateSubmission${props.yearId}`
+        )[0];
       if (!createTeamTx || !createTeamTx.confirmed) {
         return 'Waiting Team';
       }
