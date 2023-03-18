@@ -165,6 +165,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewTeam = async (
 
   const copiedPublicUserYearTeam = Object.assign({}, publicUserYearTeam) as any;
   delete copiedPublicUserYearTeam.users;
+  delete copiedPublicUserYearTeam.addressForPrizeReceipt;
   const message4Json = { team: copiedPublicUserYearTeam };
   logger.debug('message4Json', { message4Json });
   const message4String = JSON.stringify(message4Json);
