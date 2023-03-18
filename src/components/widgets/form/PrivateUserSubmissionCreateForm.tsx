@@ -87,9 +87,14 @@ const PrivateUserYearSubmissionCreateFormWidgetComponent = (props: {
       setImageDownloadUrl('');
       return;
     }
+    const fileExtension = files[0].name.split('.').pop();
+    if (!fileExtension) {
+      alert('File extension does not exist');
+      return;
+    }
     const storageRef = ref(
       storage,
-      `users/${userId}/years/${yearId}/submissions/${userId}/images/${files[0].name}`
+      `users/${userId}/years/${yearId}/submissions/${userId}/images/image.${fileExtension}`
     );
     const snapshot = await uploadBytes(storageRef, files[0]);
     const downloadUrl = await getDownloadURL(snapshot.ref);

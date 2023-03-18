@@ -148,10 +148,11 @@ export const createAggregateCompleteTransactionToUpdateSubmission = async (
   if (!publicUserYearSubmission) {
     throw Error('publicUserYearSubmission is undefined');
   }
-  const message3Json = publicUserYearSubmission as any;
+  const message3Json = Object.assign({}, publicUserYearSubmission) as any;
   if (!publicUserYearSubmission.storeRepositoryUrlOnChain) {
     delete message3Json.repositoryUrl;
   }
+  delete message3Json.imageUrl;
   logger.debug('message3Json', { message3Json });
   const message3String = JSON.stringify(message3Json);
   logger.debug('message3String', { message3String });
@@ -163,11 +164,24 @@ export const createAggregateCompleteTransactionToUpdateSubmission = async (
     networkType
   ).toAggregate(teamAccount.publicAccount);
 
+  const message4Json = { imageUrl: publicUserYearSubmission.imageUrl };
+  logger.debug('message4Json', { message4Json });
+  const message4String = JSON.stringify(message4Json);
+  logger.debug('message4String', { message4String });
+  const embeddedTransferTransaction4 = TransferTransaction.create(
+    deadline,
+    messageReceivingAccount.address,
+    [],
+    PlainMessage.create(message4String),
+    networkType
+  ).toAggregate(teamAccount.publicAccount);
+
   logger.debug('aggregateTransaction');
   const embeddedTransactions = [
     embeddedTransferTransaction,
     embeddedTransferTransaction2,
     embeddedTransferTransaction3,
+    embeddedTransferTransaction4,
   ];
   const initialEmptyCosignatures: AggregateTransactionCosignature[] = [];
   const feeMultiplier = 100;
