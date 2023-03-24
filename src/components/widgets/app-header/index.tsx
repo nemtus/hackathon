@@ -4,6 +4,7 @@ import {
   FaBars,
   FaHome,
   // FaFile,
+  FaList,
   FaUser,
   FaUserCog,
   // FaSignInAlt,
@@ -24,6 +25,12 @@ const appMenuList: AppMenu[] = [
     icon: FaHome,
     label: 'Home',
     link: '/',
+  },
+  {
+    key: '2023',
+    icon: FaList,
+    label: '2023 Submission List',
+    link: '/years/2023/results',
   },
 ];
 // const appMenuListAuthOnly = (userId: string): AppMenu[] => {

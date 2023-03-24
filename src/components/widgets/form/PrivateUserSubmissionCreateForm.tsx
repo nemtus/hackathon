@@ -104,7 +104,6 @@ const PrivateUserYearSubmissionCreateFormWidgetComponent = (props: {
   const onSubmit: SubmitHandler<PrivateUserYearSubmission> = async (
     privateUserYearSubmission
   ): Promise<void> => {
-    console.log(privateUserYearSubmission);
     if (!imageDownloadUrl) {
       alert('Please upload image!');
     }
