@@ -19,7 +19,7 @@ export type PublicUserYearJudge = {
   yearId: string;
   judges: Judge[];
   totalPoints: number;
-  isDraft: boolean;
+  // isDraft: boolean;
   createdAt?: Date;
   updatedAt?: Date;
   approved: boolean;

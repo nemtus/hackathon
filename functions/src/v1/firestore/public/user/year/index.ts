@@ -1,7 +1,7 @@
 import { exportFunctionsModule } from '../../../../../utils/firebase/deploy';
 
 // Note: Register sub-directories
-const domains: string[] = ['team', 'submission'];
+const domains: string[] = ['team', 'submission', 'judge', 'vote'];
 
 domains.forEach((domain) =>
   exportFunctionsModule(

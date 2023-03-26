@@ -10,6 +10,7 @@ import {
   MosaicId,
   Mosaic,
   UInt64,
+  EmptyMessage,
 } from 'symbol-sdk';
 import { logger } from '../../firebase/logger';
 import { getAdminUser } from '../../../v1/model/admin/users';
@@ -237,11 +238,21 @@ export const createAggregateCompleteTransactionToUpdateVote = async (
     networkType
   ).toAggregate(multisigAccount.publicAccount);
 
+  logger.debug('embeddedTransferTransaction4');
+  const embeddedTransferTransaction4 = TransferTransaction.create(
+    deadline,
+    multisigAccount.address,
+    [new Mosaic(mosaicId, UInt64.fromUint(adminUserYearVote.totalPoints))],
+    EmptyMessage,
+    networkType
+  ).toAggregate(feeBillingAccount.publicAccount);
+
   logger.debug('aggregateTransaction');
   const embeddedTransactions = [
     embeddedTransferTransaction,
     embeddedTransferTransaction2,
     embeddedTransferTransaction3,
+    embeddedTransferTransaction4,
     ...embeddedVoteTransactions,
   ];
   const initialEmptyCosignatures: AggregateTransactionCosignature[] = [];

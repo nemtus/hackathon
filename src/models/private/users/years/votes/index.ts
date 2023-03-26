@@ -21,7 +21,7 @@ const collectionRef = (userId: string, yearId: string) =>
   );
 const docPath = (userId: string, yearId: string, id: string) =>
   `${collectionPath(userId, yearId)}/${id}`;
-const docRef = (userId: string, yearId: string, id: string) =>
+export const docRef = (userId: string, yearId: string, id: string) =>
   doc(db, docPath(userId, yearId, id)).withConverter(
     converter<PrivateUserYearVote>()
   );

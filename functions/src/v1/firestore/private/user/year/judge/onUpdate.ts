@@ -10,6 +10,7 @@ import {
   setAdminUserYearJudge,
 } from '../../../../../model/admin/users/years/judges';
 import { getAdminUserYearTeam } from '../../../../../model/admin/users/years/teams';
+import { getConfigHackathonYearJudge } from '../../../../../model/configs/hackathon/years/judge';
 import { PrivateUserYearJudge } from '../../../../../model/private/users/years/judges';
 import {
   PublicUserYearJudge,
@@ -57,6 +58,13 @@ export const onUpdate = () =>
         throw Error('judgeId is undefined');
       }
 
+      const configHackathonYearJudge = await getConfigHackathonYearJudge(
+        yearId
+      );
+      if (!configHackathonYearJudge) {
+        throw Error('configHackathonYearJudge is undefined');
+      }
+
       const beforePrivateUserYearJudge =
         converter<PrivateUserYearJudge>().fromFirestore(changeSnapshot.before);
       logger.debug({ beforePrivateUserYearJudge });
@@ -96,15 +104,22 @@ export const onUpdate = () =>
         }
         if (
           !(
-            afterPrivateUserYearJudge.isDraft === false && // Note: should not be draft
+            afterPrivateUserYearJudge.createdAt &&
+            configHackathonYearJudge.startAt <=
+              afterPrivateUserYearJudge.createdAt &&
+            afterPrivateUserYearJudge.createdAt <=
+              configHackathonYearJudge.endAt &&
+            configHackathonYearJudge.users.some(
+              (userId) => userId === afterPrivateUserYearJudge.userId
+            ) &&
             judge.userId && // Note: voting user
             judge.yearId === '2023' && // Todo: convert to env
             judge.teamId &&
             judge.submissionId &&
             Number.isInteger(judge.point) &&
             judge.point >= 0 &&
-            judge.point <= afterPrivateUserYearJudge.judges.length * 5 &&
-            totalPoints <= afterPrivateUserYearJudge.judges.length * 5 &&
+            judge.point <= afterPrivateUserYearJudge.judges.length * 100 &&
+            totalPoints <= afterPrivateUserYearJudge.judges.length * 100 &&
             typeof judge.message === 'string'
           )
         ) {

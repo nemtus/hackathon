@@ -19,7 +19,7 @@ export type PublicUserYearVote = {
   yearId: string;
   votes: Vote[];
   totalPoints: number;
-  isDraft: boolean;
+  // isDraft: boolean;
   createdAt?: Date;
   updatedAt?: Date;
   approved: boolean;

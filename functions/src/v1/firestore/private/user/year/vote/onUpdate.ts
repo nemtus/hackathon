@@ -10,6 +10,8 @@ import {
   AdminUserYearVote,
   setAdminUserYearVote,
 } from '../../../../../model/admin/users/years/votes';
+import { getConfigHackathonYearVote } from '../../../../../model/configs/hackathon/years/vote';
+import { getPrivateUserYearJudge } from '../../../../../model/private/users/years/judges';
 import { PrivateUserYearVote } from '../../../../../model/private/users/years/votes';
 import {
   PublicUserYearVote,
@@ -56,6 +58,22 @@ export const onUpdate = () =>
         throw Error('voteId is undefined');
       }
 
+      const configHackathonYearVote = await getConfigHackathonYearVote(yearId);
+      if (!configHackathonYearVote) {
+        throw Error('configHackathonYearVote is undefined');
+      }
+
+      const privateUserYearJudge = await getPrivateUserYearJudge(
+        userId,
+        yearId,
+        userId
+      );
+      if (privateUserYearJudge) {
+        throw Error(
+          'privateUserYearJudge should be undefined. Judge cannot vote'
+        );
+      }
+
       const beforePrivateUserYearVote =
         converter<PrivateUserYearVote>().fromFirestore(changeSnapshot.before);
       logger.debug({ beforePrivateUserYearVote });
@@ -93,7 +111,11 @@ export const onUpdate = () =>
         }
         if (
           !(
-            afterPrivateUserYearVote.isDraft === false && // Note: should not be draft
+            afterPrivateUserYearVote.createdAt &&
+            configHackathonYearVote.startAt <=
+              afterPrivateUserYearVote.createdAt &&
+            afterPrivateUserYearVote.createdAt <=
+              configHackathonYearVote.endAt &&
             vote.userId && // Note: voting user
             vote.yearId === '2023' && // Todo: convert to env
             vote.teamId &&

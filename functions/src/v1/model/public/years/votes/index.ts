@@ -62,7 +62,6 @@ export const getAllPublicVotes = async (
 // };
 
 export const convertPublicUserYearVoteToPublicVote = (
-  userId: string,
   publicUserYearVote: PublicUserYearVote
 ): PublicVote => {
   const publicVote: PublicVote = publicUserYearVote;

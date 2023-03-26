@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import loadable from '@loadable/component';
 import './App.css';
 import AppHeader from 'components/widgets/app-header';
+import JudgeCreatePageComponent from 'components/pages/users/[userId]/years/[yearId]/judges/create';
 
 const HomePageComponent = loadable(() => import('components/pages/home'));
 const UserPageComponent = loadable(
@@ -35,6 +36,14 @@ function App() {
         <Route
           path="/private/users/:userId/years/:yearId/submissions/create"
           element={<SubmissionCreatePageComponent />}
+        />
+        <Route
+          path="/private/users/:userId/years/:yearId/judges/create"
+          element={<JudgeCreatePageComponent />}
+        />
+        <Route
+          path="/private/users/:userId/years/:yearId/votes/:voteId/update"
+          element={null}
         />
         <Route
           path="/private/users/:userId/years/:yearId/votes/create"

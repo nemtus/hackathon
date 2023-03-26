@@ -9,6 +9,7 @@ import {
   setAdminUserYearJudge,
 } from '../../../../../model/admin/users/years/judges';
 import { getAdminUserYearTeam } from '../../../../../model/admin/users/years/teams';
+import { getConfigHackathonYearJudge } from '../../../../../model/configs/hackathon/years/judge';
 import { privateUserYearJudgeConverter } from '../../../../../model/private/users/years/judges';
 import {
   PublicUserYearJudge,
@@ -60,6 +61,13 @@ export const onCreate = () =>
         throw Error('judgeId is undefined');
       }
 
+      const configHackathonYearJudge = await getConfigHackathonYearJudge(
+        yearId
+      );
+      if (!configHackathonYearJudge) {
+        throw Error('configHackathonYearJudge is undefined');
+      }
+
       const privateUserYearJudge =
         privateUserYearJudgeConverter.fromFirestore(snapshot);
       if (!privateUserYearJudge) {
@@ -90,15 +98,21 @@ export const onCreate = () =>
         }
         if (
           !(
-            privateUserYearJudge.isDraft === false && // Note: should not be draft
+            privateUserYearJudge.createdAt &&
+            configHackathonYearJudge.startAt <=
+              privateUserYearJudge.createdAt &&
+            privateUserYearJudge.createdAt <= configHackathonYearJudge.endAt &&
+            configHackathonYearJudge.users.some(
+              (userId) => userId === privateUserYearJudge.userId
+            ) &&
             judge.userId && // Note: voting user
             judge.yearId === '2023' && // Todo: convert to env
             judge.teamId &&
             judge.submissionId &&
             Number.isInteger(judge.point) &&
             judge.point >= 0 &&
-            judge.point <= privateUserYearJudge.judges.length * 5 &&
-            totalPoints <= privateUserYearJudge.judges.length * 5 &&
+            judge.point <= privateUserYearJudge.judges.length * 100 &&
+            totalPoints <= privateUserYearJudge.judges.length * 100 &&
             typeof judge.message === 'string'
           )
         ) {

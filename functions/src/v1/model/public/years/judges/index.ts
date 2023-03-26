@@ -64,7 +64,6 @@ export const getAllPublicJudges = async (
 // };
 
 export const convertPublicUserYearJudgeToPublicJudge = (
-  userId: string,
   publicUserYearJudge: PublicUserYearJudge
 ): PublicJudge => {
   const publicJudge: PublicJudge = publicUserYearJudge;

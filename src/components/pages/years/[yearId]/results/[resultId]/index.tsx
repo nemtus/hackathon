@@ -44,7 +44,9 @@ const PublicResultPageComponent = () => {
       });
   }, [yearId, teamId, submissionId, setPublicResult]);
 
-  return publicResult ? (
+  return publicResult === null ? (
+    <progress className="progress"></progress>
+  ) : publicResult ? (
     <>
       <div className="card bg-base-100 shadow-xl">
         <div className="card-body">

@@ -10,7 +10,7 @@ import PublicTeamMembersTableCardWidgetComponent from 'components/widgets/card/P
 
 const PublicResultsPageComponent = () => {
   const { yearId } = useParams();
-  const [order, setOrder] = useState<'createdTimeAsc' | 'totalPointsDesc'>(
+  const [order] = useState<'createdTimeAsc' | 'totalPointsDesc'>(
     'createdTimeAsc'
   );
   const [publicResults, setPublicResults] = useState<PublicResults | null>(
