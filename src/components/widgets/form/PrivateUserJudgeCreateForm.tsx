@@ -129,9 +129,12 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
       );
     });
     console.log({ isValidMessage });
-    const totalPoints = privateUserYearJudge.judges
-      .map((judge) => parseInt(judge.point.toString()))
-      .reduce((acc, cur) => acc + cur);
+    const judges = privateUserYearJudge.judges.map((judge) =>
+      parseInt(judge.point.toString())
+    );
+    const totalPoints = judges.length
+      ? judges.reduce((acc, cur) => acc + cur)
+      : 0;
     console.log({ totalPoints });
     console.log({ publicResultsLength: props.publicResults.length });
     const isValidTotalPoints = totalPoints === props.publicResults.length * 100;
@@ -198,18 +201,20 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
 
     const newJudges = getValues('judges');
     console.log({ newJudges });
-    const totalPoints = newJudges
-      .map((judge) => parseInt(judge.point.toString()))
-      .reduce((acc, cur) => acc + cur);
+    const judges = newJudges.map((judge) => parseInt(judge.point.toString()));
+    const totalPoints = judges.length
+      ? judges.reduce((acc, cur) => acc + cur)
+      : 0;
     console.log({ totalPoints });
     if (totalPoints > newJudges.length * 100) {
       alert('Total points must be less than or equal to 5 x entry counts.');
       setValue(`judges.${index}.point`, currentPoint);
       const newJudges = getValues('judges');
       console.log({ newJudges });
-      const totalPoints = newJudges
-        .map((judge) => parseInt(judge.point.toString()))
-        .reduce((acc, cur) => acc + cur);
+      const judges = newJudges.map((judge) => parseInt(judge.point.toString()));
+      const totalPoints = judges.length
+        ? judges.reduce((acc, cur) => acc + cur)
+        : 0;
       console.log({ totalPoints });
       return;
     }
@@ -234,10 +239,12 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
     privateUserYearJudge.createdAt = now;
     privateUserYearJudge.updatedAt = now;
     privateUserYearJudge.approvedAt = undefined;
-    const judges = getValues('judges');
-    privateUserYearJudge.totalPoints = judges
-      .map((judge) => parseInt(judge.point.toString()))
-      .reduce((acc, cur) => acc + cur);
+    const judges = getValues('judges').map((judge) =>
+      parseInt(judge.point.toString())
+    );
+    privateUserYearJudge.totalPoints = judges.length
+      ? judges.reduce((acc, cur) => acc + cur)
+      : 0;
     await setPrivateUserYearJudge(userId, privateUserYearJudge);
     navigate(`/private/users/${userId}`);
   };
