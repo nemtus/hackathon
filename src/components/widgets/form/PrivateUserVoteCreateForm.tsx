@@ -123,9 +123,12 @@ const PrivateUserYearVoteCreateFormWidgetComponent = (props: {
       return typeof vote.message !== 'string';
     });
     console.log({ isValidMessage });
-    const totalPoints = privateUserYearVote.votes
-      .map((vote) => parseInt(vote.point.toString()))
-      .reduce((acc, cur) => acc + cur);
+    const votes = privateUserYearVote.votes.map((vote) =>
+      parseInt(vote.point.toString())
+    );
+    const totalPoints = votes.length
+      ? votes.reduce((acc, cur) => acc + cur)
+      : 0;
     console.log({ totalPoints });
     console.log({ publicResultsLength: props.publicResults.length });
     const isValidTotalPoints = totalPoints === props.publicResults.length * 5;
@@ -190,18 +193,20 @@ const PrivateUserYearVoteCreateFormWidgetComponent = (props: {
 
     const newVotes = getValues('votes');
     console.log({ newVotes });
-    const totalPoints = newVotes
-      .map((vote) => parseInt(vote.point.toString()))
-      .reduce((acc, cur) => acc + cur);
+    const votes = newVotes.map((vote) => parseInt(vote.point.toString()));
+    const totalPoints = votes.length
+      ? votes.reduce((acc, cur) => acc + cur)
+      : 0;
     console.log({ totalPoints });
     if (totalPoints > newVotes.length * 5) {
       alert('Total points must be less than or equal to 5 x entry counts.');
       setValue(`votes.${index}.point`, currentPoint);
       const newVotes = getValues('votes');
       console.log({ newVotes });
-      const totalPoints = newVotes
-        .map((vote) => parseInt(vote.point.toString()))
-        .reduce((acc, cur) => acc + cur);
+      const votes = newVotes.map((vote) => parseInt(vote.point.toString()));
+      const totalPoints = votes.length
+        ? votes.reduce((acc, cur) => acc + cur)
+        : 0;
       console.log({ totalPoints });
       return;
     }
@@ -226,10 +231,12 @@ const PrivateUserYearVoteCreateFormWidgetComponent = (props: {
     privateUserYearVote.createdAt = now;
     privateUserYearVote.updatedAt = now;
     privateUserYearVote.approvedAt = undefined;
-    const votes = getValues('votes');
-    privateUserYearVote.totalPoints = votes
-      .map((vote) => parseInt(vote.point.toString()))
-      .reduce((acc, cur) => acc + cur);
+    const votes = getValues('votes').map((vote) =>
+      parseInt(vote.point.toString())
+    );
+    privateUserYearVote.totalPoints = votes.length
+      ? votes.reduce((acc, cur) => acc + cur)
+      : 0;
     await setPrivateUserYearVote(userId, privateUserYearVote);
     navigate(`/private/users/${userId}`);
   };

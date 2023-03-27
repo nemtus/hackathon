@@ -57,7 +57,7 @@ const createPublicResultData = (
   publicJudges: PublicJudge[],
   publicVotes: PublicVote[]
 ): PublicResult => {
-  const judgesTotalPoints = publicJudges
+  const judges = publicJudges
     .map((publicJudge) => {
       return publicJudge.judges.find(
         (judge) =>
@@ -67,10 +67,12 @@ const createPublicResultData = (
       );
     })
     .filter((judge) => judge !== undefined)
-    .map((judge) => judge?.point ?? 0)
-    .reduce((acc, cur) => acc + cur);
+    .map((judge) => judge?.point ?? 0);
+  const judgesTotalPoints = judges.length
+    ? judges.reduce((acc, cur) => acc + cur)
+    : 0;
 
-  const votesTotalPoints = publicVotes
+  const votes = publicVotes
     .map((publicVote) => {
       return publicVote.votes.find(
         (vote) =>
@@ -80,8 +82,11 @@ const createPublicResultData = (
       );
     })
     .filter((vote) => vote !== undefined)
-    .map((vote) => vote?.point ?? 0)
-    .reduce((acc, cur) => acc + cur);
+    .map((vote) => vote?.point ?? 0);
+  const votesTotalPoints = votes.length
+    ? votes.reduce((acc, cur) => acc + cur)
+    : 0;
+
   const totalPoints = judgesTotalPoints + votesTotalPoints ?? 0;
 
   return {
