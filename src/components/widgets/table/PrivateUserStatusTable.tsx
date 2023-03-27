@@ -185,6 +185,18 @@ const PrivateUserStatusTableWidgetComponent = (props: {
         props.configHackathonYearEntry &&
         props.configHackathonYearEntry.endAt < now
       ) {
+        if (entryTx?.confirmed) {
+          return 'Tx Confirmed';
+        }
+        if (entryTx?.unconfirmed) {
+          return 'Tx Unconfirmed';
+        }
+        if (entryTx?.announced) {
+          return 'Tx Announced';
+        }
+        if (entryTx?.createdAt) {
+          return 'Created';
+        }
         return 'Closed';
       }
       if (
@@ -255,6 +267,37 @@ const PrivateUserStatusTableWidgetComponent = (props: {
         props.configHackathonYearTeam &&
         props.configHackathonYearTeam.endAt < now
       ) {
+        if (
+          entryTx?.confirmed &&
+          props.privateUserYearTeam &&
+          props.privateUserYearTeam.approved === false
+        ) {
+          return 'Now Under Review';
+        }
+        if (updateTeamTx?.confirmed) {
+          return 'Tx Confirmed';
+        }
+        if (updateTeamTx?.unconfirmed) {
+          return 'Tx Unconfirmed';
+        }
+        if (updateTeamTx?.announced) {
+          return 'Tx Announced';
+        }
+        if (updateTeamTx?.createdAt) {
+          return 'Created';
+        }
+        if (createTeamTx?.confirmed) {
+          return 'Tx Confirmed';
+        }
+        if (createTeamTx?.unconfirmed) {
+          return 'Tx Unconfirmed';
+        }
+        if (createTeamTx?.announced) {
+          return 'Tx Announced';
+        }
+        if (createTeamTx?.createdAt) {
+          return 'Created';
+        }
         return 'Closed';
       }
       if (!entryTx || !entryTx.confirmed) {
@@ -348,6 +391,37 @@ const PrivateUserStatusTableWidgetComponent = (props: {
         props.configHackathonYearSubmission &&
         props.configHackathonYearSubmission.endAt < now
       ) {
+        if (
+          createTeamTx?.confirmed &&
+          props.privateUserYearSubmission &&
+          props.privateUserYearSubmission.approved === false
+        ) {
+          return 'Now Under Review';
+        }
+        if (updateSubmissionTx?.confirmed) {
+          return 'Tx Confirmed';
+        }
+        if (updateSubmissionTx?.unconfirmed) {
+          return 'Tx Unconfirmed';
+        }
+        if (updateSubmissionTx?.announced) {
+          return 'Tx Announced';
+        }
+        if (updateSubmissionTx?.createdAt) {
+          return 'Created';
+        }
+        if (createSubmissionTx?.confirmed) {
+          return 'Tx Confirmed';
+        }
+        if (createSubmissionTx?.unconfirmed) {
+          return 'Tx Unconfirmed';
+        }
+        if (createSubmissionTx?.announced) {
+          return 'Tx Announced';
+        }
+        if (createSubmissionTx?.createdAt) {
+          return 'Created';
+        }
         return 'Closed';
       }
       if (!createTeamTx || !createTeamTx.confirmed) {
@@ -438,6 +512,25 @@ const PrivateUserStatusTableWidgetComponent = (props: {
         props.configHackathonYearJudge &&
         props.configHackathonYearJudge.endAt < now
       ) {
+        if (
+          createAndSetUpNewAccountTx?.confirmed &&
+          props.privateUserYearJudge &&
+          props.privateUserYearJudge.approved === false
+        ) {
+          return 'Now Under Review';
+        }
+        if (createJudgeTx?.confirmed) {
+          return 'Tx Confirmed';
+        }
+        if (createJudgeTx?.unconfirmed) {
+          return 'Tx Unconfirmed';
+        }
+        if (createJudgeTx?.announced) {
+          return 'Tx Announced';
+        }
+        if (createJudgeTx?.createdAt) {
+          return 'Created';
+        }
         return 'Closed';
       }
       if (
@@ -519,6 +612,25 @@ const PrivateUserStatusTableWidgetComponent = (props: {
         props.configHackathonYearVote &&
         props.configHackathonYearVote.endAt < now
       ) {
+        if (
+          createAndSetUpNewAccountTx?.confirmed &&
+          props.privateUserYearVote &&
+          props.privateUserYearVote.approved === false
+        ) {
+          return 'Now Under Review';
+        }
+        if (createVoteTx?.confirmed) {
+          return 'Tx Confirmed';
+        }
+        if (createVoteTx?.unconfirmed) {
+          return 'Tx Unconfirmed';
+        }
+        if (createVoteTx?.announced) {
+          return 'Tx Announced';
+        }
+        if (createVoteTx?.createdAt) {
+          return 'Created';
+        }
         return 'Closed';
       }
       if (createAndSetUpNewAccountTx?.confirmed && !props.privateUserYearVote) {
