@@ -14,6 +14,18 @@ const SubmissionCreatePageComponent = loadable(
   () =>
     import('components/pages/users/[userId]/years/[yearId]/submissions/create')
 );
+const JudgeCreatePageComponent = loadable(
+  () => import('components/pages/users/[userId]/years/[yearId]/judges/create')
+);
+const VoteCreatePageComponent = loadable(
+  () => import('components/pages/users/[userId]/years/[yearId]/votes/create')
+);
+const PublicResultPageComponent = loadable(
+  () => import('components/pages/years/[yearId]/results/[resultId]')
+);
+const PublicResultsPageComponent = loadable(
+  () => import('components/pages/years/[yearId]/results')
+);
 
 function App() {
   return (
@@ -29,6 +41,22 @@ function App() {
         <Route
           path="/private/users/:userId/years/:yearId/submissions/create"
           element={<SubmissionCreatePageComponent />}
+        />
+        <Route
+          path="/private/users/:userId/years/:yearId/judges/create"
+          element={<JudgeCreatePageComponent />}
+        />
+        <Route
+          path="/private/users/:userId/years/:yearId/votes/create"
+          element={<VoteCreatePageComponent />}
+        />
+        <Route
+          path="/years/:yearId/results/:resultId"
+          element={<PublicResultPageComponent />}
+        />
+        <Route
+          path="/years/:yearId/results"
+          element={<PublicResultsPageComponent />}
         />
       </Routes>
     </BrowserRouter>
