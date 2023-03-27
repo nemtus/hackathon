@@ -7,6 +7,8 @@ import {
 import PublicSubmissionCardWidgetComponent from 'components/widgets/card/PublicSubmissionCard';
 import PublicTeamCardWidgetComponent from 'components/widgets/card/PublicTeamCard';
 import PublicTeamMembersTableCardWidgetComponent from 'components/widgets/card/PublicTeamMembersTableCard';
+import PublicJudgesCardWidgetComponent from 'components/widgets/card/PublicJudgesCard';
+import PublicVotesCardWidgetComponent from 'components/widgets/card/PublicVotesCard';
 
 const PublicResultsPageComponent = () => {
   const { yearId } = useParams();
@@ -47,7 +49,14 @@ const PublicResultsPageComponent = () => {
             <div className="card-body">
               {order === 'createdTimeAsc' ? (
                 <h2 className="card-title justify-start">
-                  Entry No. {index + 1}
+                  <a
+                    className="link link-primary"
+                    href={`/years/${yearId}/results/${publicResult.submissionId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Entry No. {index + 1}
+                  </a>
                 </h2>
               ) : null}
               <PublicSubmissionCardWidgetComponent
@@ -56,6 +65,14 @@ const PublicResultsPageComponent = () => {
               <PublicTeamCardWidgetComponent {...publicResult.team} />
               <PublicTeamMembersTableCardWidgetComponent
                 {...{ publicUsers: publicResult.team.users }}
+              />
+              <PublicJudgesCardWidgetComponent
+                submissionId={publicResult.submissionId}
+                publicUserYearJudges={publicResult.judges}
+              />
+              <PublicVotesCardWidgetComponent
+                submissionId={publicResult.submissionId}
+                publicUserYearVotes={publicResult.votes}
               />
             </div>
           </div>

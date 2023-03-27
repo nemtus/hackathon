@@ -144,9 +144,9 @@ service cloud.firestore {
       vote.id == voteId &&
       vote.userId == userId &&
       vote.yearId == yearId &&
-      vote.votes is list &&
+      // vote.votes is list &&
       vote.totalPoints is number &&
-      vote.totalPoints == vote.votes.length * 5 &&
+      // vote.totalPoints == vote.votes.length * 5 &&
       vote.approved is bool &&
       vote.createdAt is timestamp &&
       vote.updatedAt is timestamp;

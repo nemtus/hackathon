@@ -8,12 +8,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { PrivateUser } from 'models/private/users';
 import { FaMinus, FaPlus } from 'react-icons/fa';
-import {
-  PrivateUserYearJudge,
-  setPrivateUserYearJudge,
-} from 'models/private/users/years/judges';
+import { PrivateUserYearJudge } from 'models/private/users/years/judges';
+import { setPrivateUserYearVote } from 'models/private/users/years/votes';
 import { useNavigate } from 'react-router-dom';
-import { Judge } from 'models/public/users/years/judges';
 import { useEffect, useState } from 'react';
 import { PublicResults } from 'models/public/years/results';
 import { AuthUser } from 'utils/firebase';
@@ -26,25 +23,26 @@ import { ConfigHackathonYearTeam } from 'models/configs/hackathon/years/team';
 import { ConfigHackathonYearSubmission } from 'models/configs/hackathon/years/submission';
 import { ConfigHackathonYearJudge } from 'models/configs/hackathon/years/judge';
 import { ConfigHackathonYearVote } from 'models/configs/hackathon/years/vote';
+import { Vote } from 'models/public/users/years/votes';
 
 const schema = yup.object().shape({
   id: yup.string(),
   userId: yup.string(),
   yearId: yup.string(),
-  judges: yup.array(
+  votes: yup.array(
     yup.object().shape({
       id: yup.string(),
       userId: yup.string(),
       yearId: yup.string(),
       teamId: yup.string(),
       submissionId: yup.string(),
-      point: yup.number().required().integer().min(0).max(200),
-      message: yup.string().required().max(140),
+      point: yup.number().required().integer().min(0),
+      message: yup.string().max(140),
     })
   ),
 });
 
-const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
+const PrivateUserYearVoteCreateFormWidgetComponent = (props: {
   yearId: string;
   authUser: AuthUser;
   privateUser: PrivateUser;
@@ -73,12 +71,12 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
       propsPrivateUserYearSubmission: props.privateUserYearSubmission,
       propsPrivateUserYearJudge: props.privateUserYearJudge,
       propsPrivateUserYearVote: props.privateUserYearVote,
-      propsConfigHackathonYearJudgeStartAt:
-        props.configHackathonYearJudge.startAt,
+      propsConfigHackathonYearVoteStartAt:
+        props.configHackathonYearVote.startAt,
       now,
-      propsConfigHackathonYearJudgeEndAt: props.configHackathonYearJudge.endAt,
+      propsConfigHackathonYearVoteEndAt: props.configHackathonYearVote.endAt,
       propsConfigHackathonYearJudgeUsers: props.configHackathonYearJudge.users,
-      userIsJudge: props.configHackathonYearJudge.users.some(
+      userIsNotJudge: !props.configHackathonYearJudge.users.some(
         (userId) =>
           userId === props.authUser.uid && userId === props.privateUser.id
       ),
@@ -90,10 +88,10 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
         props.privateUserYearSubmission === undefined,
       propsPrivateUserYearJudge: props.privateUserYearJudge === undefined,
       propsPrivateUserYearVote: props.privateUserYearVote === undefined,
-      propsConfigHackathonYearJudgeStartAt:
-        props.configHackathonYearJudge.startAt <= now,
-      now: now <= props.configHackathonYearJudge.endAt,
-      userIsJudge: props.configHackathonYearJudge.users.some(
+      propsConfigHackathonYearVoteStartAt:
+        props.configHackathonYearVote.startAt <= now,
+      now: now <= props.configHackathonYearVote.endAt,
+      userIsNotJudge: !props.configHackathonYearJudge.users.some(
         (userId) =>
           userId === props.authUser.uid && userId === props.privateUser.id
       ),
@@ -104,45 +102,39 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
       props.privateUserYearSubmission === undefined &&
       props.privateUserYearJudge === undefined &&
       props.privateUserYearVote === undefined &&
-      props.configHackathonYearJudge.startAt <= now &&
-      now <= props.configHackathonYearJudge.endAt &&
-      props.configHackathonYearJudge.users.some(
+      props.configHackathonYearVote.startAt <= now &&
+      now <= props.configHackathonYearVote.endAt &&
+      !props.configHackathonYearJudge.users.some(
         (userId) =>
           userId === props.authUser.uid && userId === props.privateUser.id
       )
     );
   };
 
-  const isCreateablePrivateUserYearJudge = (
-    privateUserYearJudge: PrivateUserYearJudge
+  const isCreateablePrivateUserYearVote = (
+    privateUserYearVote: PrivateUserYearVote
   ) => {
-    const isPositive = !privateUserYearJudge.judges.some(
-      (judge) => judge.point < 0 || !Number.isInteger(judge.point)
+    const isPositive = !privateUserYearVote.votes.some(
+      (vote) => vote.point < 0 || !Number.isInteger(vote.point)
     );
     console.log({ isPositive });
-    const isValidMessage = privateUserYearJudge.judges.some((judge) => {
-      console.log({ type: typeof judge.message, length: judge.message.length });
-      return !(
-        !(typeof judge.message === 'string') ||
-        !judge.message.length ||
-        judge.message.length > 140
-      );
+    const isValidMessage = !privateUserYearVote.votes.some((vote) => {
+      console.log({ type: typeof vote.message });
+      return typeof vote.message !== 'string';
     });
     console.log({ isValidMessage });
-    const totalPoints = privateUserYearJudge.judges
-      .map((judge) => parseInt(judge.point.toString()))
+    const totalPoints = privateUserYearVote.votes
+      .map((vote) => parseInt(vote.point.toString()))
       .reduce((acc, cur) => acc + cur);
     console.log({ totalPoints });
     console.log({ publicResultsLength: props.publicResults.length });
-    const isValidTotalPoints = totalPoints === props.publicResults.length * 100;
+    const isValidTotalPoints = totalPoints === props.publicResults.length * 5;
     console.log({ isValidTotalPoints });
     return isPositive && isValidMessage && isValidTotalPoints;
   };
 
-  const convertPublicResultsToInitialJudges = (
-    publicResults: PublicResults
-  ) => {
-    const judges: Judge[] = publicResults.map((publicResult) => {
+  const convertPublicResultsToInitialVotes = (publicResults: PublicResults) => {
+    const votes: Vote[] = publicResults.map((publicResult) => {
       return {
         id: publicResult.teamId,
         userId: props.authUser.uid,
@@ -153,7 +145,7 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
         message: '',
       };
     });
-    return judges;
+    return votes;
   };
 
   const {
@@ -163,13 +155,13 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<PrivateUserYearJudge>({
+  } = useForm<PrivateUserYearVote>({
     mode: 'onChange',
     defaultValues: {
       id: userId,
       userId: userId,
       yearId: yearId,
-      judges: convertPublicResultsToInitialJudges(props.publicResults),
+      votes: convertPublicResultsToInitialVotes(props.publicResults),
       totalPoints: 0,
       approved: false,
       createdAt: undefined,
@@ -181,11 +173,11 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
 
   const { fields } = useFieldArray({
     control,
-    name: 'judges',
+    name: 'votes',
   });
 
   const handleIncrementPoint = (index: number, increment: number) => {
-    const currentPoint = getValues(`judges.${index}.point`);
+    const currentPoint = getValues(`votes.${index}.point`);
     console.log({ currentPoint });
     const newPoint =
       parseInt(currentPoint.toString()) + parseInt(increment.toString());
@@ -194,51 +186,51 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
       alert('Point cannot be negative.');
       return;
     }
-    setValue(`judges.${index}.point`, newPoint);
+    setValue(`votes.${index}.point`, newPoint);
 
-    const newJudges = getValues('judges');
-    console.log({ newJudges });
-    const totalPoints = newJudges
-      .map((judge) => parseInt(judge.point.toString()))
+    const newVotes = getValues('votes');
+    console.log({ newVotes });
+    const totalPoints = newVotes
+      .map((vote) => parseInt(vote.point.toString()))
       .reduce((acc, cur) => acc + cur);
     console.log({ totalPoints });
-    if (totalPoints > newJudges.length * 100) {
+    if (totalPoints > newVotes.length * 5) {
       alert('Total points must be less than or equal to 5 x entry counts.');
-      setValue(`judges.${index}.point`, currentPoint);
-      const newJudges = getValues('judges');
-      console.log({ newJudges });
-      const totalPoints = newJudges
-        .map((judge) => parseInt(judge.point.toString()))
+      setValue(`votes.${index}.point`, currentPoint);
+      const newVotes = getValues('votes');
+      console.log({ newVotes });
+      const totalPoints = newVotes
+        .map((vote) => parseInt(vote.point.toString()))
         .reduce((acc, cur) => acc + cur);
       console.log({ totalPoints });
       return;
     }
   };
 
-  const onSubmit: SubmitHandler<PrivateUserYearJudge> = async (
-    privateUserYearJudge
+  const onSubmit: SubmitHandler<PrivateUserYearVote> = async (
+    privateUserYearVote
   ): Promise<void> => {
     if (!isCreateableUser()) {
       alert(
-        "You can't create a judge. Because you are not a judge or the deadline has passed or you have already created a judge."
+        "You can't create a vote. Because you are not a submitter or the deadline has passed or you have already created a vote."
       );
       return;
     }
-    if (!isCreateablePrivateUserYearJudge(privateUserYearJudge)) {
+    if (!isCreateablePrivateUserYearVote(privateUserYearVote)) {
       alert(
-        "You can't create a judge. Because the judge is invalid. Please make sure that the number of points you have and the total number of points scored match. Please use up all the points you have."
+        "You can't create a vote. Because the vote is invalid. Please make sure that the number of points you have and the total number of points scored match. Please use up all the points you have."
       );
       return;
     }
     const now = new Date();
-    privateUserYearJudge.createdAt = now;
-    privateUserYearJudge.updatedAt = now;
-    privateUserYearJudge.approvedAt = undefined;
-    const judges = getValues('judges');
-    privateUserYearJudge.totalPoints = judges
-      .map((judge) => parseInt(judge.point.toString()))
+    privateUserYearVote.createdAt = now;
+    privateUserYearVote.updatedAt = now;
+    privateUserYearVote.approvedAt = undefined;
+    const votes = getValues('votes');
+    privateUserYearVote.totalPoints = votes
+      .map((vote) => parseInt(vote.point.toString()))
       .reduce((acc, cur) => acc + cur);
-    await setPrivateUserYearJudge(userId, privateUserYearJudge);
+    await setPrivateUserYearVote(userId, privateUserYearVote);
     navigate(`/private/users/${userId}`);
   };
 
@@ -252,7 +244,7 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
     <div className="card bg-base-100 shadow-xl">
       <div className="card-body">
         <h2 className="card-title justify-start">
-          Create Judge of the NEMTUS Hackathon {yearId}.
+          Create Vote of the NEMTUS Hackathon {yearId}.
         </h2>
         <div className="card-content flex flex-col justify-start">
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -321,28 +313,28 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
                                 <label className="label">
                                   <span className="label-text">Point</span>
                                   <span className="label-text-alt">
-                                    Required(0-200)
+                                    Required
                                   </span>
                                 </label>
                                 <input
                                   type="number"
                                   placeholder="Example: 0"
                                   className="input input-bordered w-full max-w-xs"
-                                  {...register(`judges.${index}.point`)}
+                                  {...register(`votes.${index}.point`)}
                                 />
                                 <label className="label">
                                   <span className="label-text-alt text-error">
                                     {(() => {
-                                      if (!errors.judges) {
+                                      if (!errors.votes) {
                                         return;
                                       }
-                                      if (!errors.judges.length) {
+                                      if (!errors.votes.length) {
                                         return;
                                       }
-                                      if (errors.judges.length <= index) {
+                                      if (errors.votes.length <= index) {
                                         return;
                                       }
-                                      const fieldErrors = errors.judges[index]
+                                      const fieldErrors = errors.votes[index]
                                         ?.point as FieldError | undefined;
                                       if (!fieldErrors) {
                                         return;
@@ -375,27 +367,27 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
                               <label className="label">
                                 <span className="label-text">Message</span>
                                 <span className="label-text-alt">
-                                  Required(Max: 140)
+                                  Optional(Max: 140)
                                 </span>
                               </label>
                               <textarea
                                 placeholder="Example: Great works! I love it!"
                                 className="textarea textarea-bordered w-full"
-                                {...register(`judges.${index}.message`)}
+                                {...register(`votes.${index}.message`)}
                               />
                               <label className="label">
                                 <span className="label-text-alt text-error">
                                   {(() => {
-                                    if (!errors.judges) {
+                                    if (!errors.votes) {
                                       return;
                                     }
-                                    if (!errors.judges.length) {
+                                    if (!errors.votes.length) {
                                       return;
                                     }
-                                    if (errors.judges.length <= index) {
+                                    if (errors.votes.length <= index) {
                                       return;
                                     }
-                                    const fieldErrors = errors.judges[index]
+                                    const fieldErrors = errors.votes[index]
                                       ?.message as FieldError | undefined;
                                     if (!fieldErrors) {
                                       return;
@@ -418,7 +410,7 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
             </div>
 
             <button className="btn btn-primary w-full max-w-xs" type="submit">
-              Create Judge
+              Create Vote
             </button>
           </form>
         </div>
@@ -427,4 +419,4 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
   );
 };
 
-export default PrivateUserYearJudgeCreateFormWidgetComponent;
+export default PrivateUserYearVoteCreateFormWidgetComponent;

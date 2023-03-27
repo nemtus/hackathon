@@ -4,6 +4,8 @@ import { getPublicResult, PublicResult } from 'models/public/years/results';
 import PublicSubmissionCardWidgetComponent from 'components/widgets/card/PublicSubmissionCard';
 import PublicTeamCardWidgetComponent from 'components/widgets/card/PublicTeamCard';
 import PublicTeamMembersTableCardWidgetComponent from 'components/widgets/card/PublicTeamMembersTableCard';
+import PublicJudgesCardWidgetComponent from 'components/widgets/card/PublicJudgesCard';
+import PublicVotesCardWidgetComponent from 'components/widgets/card/PublicVotesCard';
 
 const PublicResultPageComponent = () => {
   const { yearId, resultId } = useParams();
@@ -56,6 +58,14 @@ const PublicResultPageComponent = () => {
             <PublicTeamCardWidgetComponent {...publicResult.team} />
             <PublicTeamMembersTableCardWidgetComponent
               {...{ publicUsers: publicResult.team.users }}
+            />
+            <PublicJudgesCardWidgetComponent
+              submissionId={publicResult.submissionId}
+              publicUserYearJudges={publicResult.judges}
+            />
+            <PublicVotesCardWidgetComponent
+              submissionId={publicResult.submissionId}
+              publicUserYearVotes={publicResult.votes}
             />
           </div>
         </div>

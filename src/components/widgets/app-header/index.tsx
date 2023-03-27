@@ -29,7 +29,7 @@ const appMenuList: AppMenu[] = [
   {
     key: '2023',
     icon: FaList,
-    label: '2023 Submission List',
+    label: '2023 Entry List',
     link: '/years/2023/results',
   },
 ];

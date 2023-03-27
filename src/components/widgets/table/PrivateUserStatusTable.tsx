@@ -492,7 +492,7 @@ const PrivateUserStatusTableWidgetComponent = (props: {
           if (b.createdAt < a.createdAt) return 1;
           return 0;
         })
-        .filter((tx) => tx.description === `createNewVote${props.yearId}`)[0];
+        .filter((tx) => tx.description === `CreateNewVote${props.yearId}`)[0];
       if (
         !createAndSetUpNewAccountTx ||
         !createAndSetUpNewAccountTx.confirmed

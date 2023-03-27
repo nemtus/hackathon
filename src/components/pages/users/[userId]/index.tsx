@@ -68,6 +68,8 @@ import {
   getPrivateUserYearVote,
   PrivateUserYearVote,
 } from 'models/private/users/years/votes';
+import PrivateUserJudgeCardWidgetComponent from 'components/widgets/card/PrivateUserJudgeCard';
+import PrivateUserVoteCardWidgetComponent from 'components/widgets/card/PrivateUserVoteCard';
 
 const UserPageComponent = () => {
   const { userId } = useParams();
@@ -487,6 +489,12 @@ const UserPageComponent = () => {
         <PrivateUserSubmissionCardWidgetComponent
           {...privateUserYearSubmission}
         />
+      ) : null}
+      {privateUserYearJudge ? (
+        <PrivateUserJudgeCardWidgetComponent {...privateUserYearJudge} />
+      ) : null}
+      {privateUserYearVote ? (
+        <PrivateUserVoteCardWidgetComponent {...privateUserYearVote} />
       ) : null}
       {privateUserTxs?.length ? (
         <PrivateUserTxsTableCardWidgetComponent
