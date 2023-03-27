@@ -27,62 +27,62 @@ export const getPublicResult = async (
   teamId: string,
   submissionId: string
 ): Promise<PublicResult | undefined> => {
-  const publicTeam = await getPublicTeam(yearId, teamId);
-  if (!publicTeam) {
+  const [publicTeam, publicSubmission, publicJudges, publicVotes] =
+    await Promise.all([
+      getPublicTeam(yearId, teamId),
+      getPublicSubmission(yearId, submissionId),
+      getAllPublicJudges(yearId),
+      getAllPublicVotes(yearId),
+    ]);
+  if (!publicTeam || !publicSubmission) {
     return undefined;
   }
+  return createPublicResultData(
+    yearId,
+    teamId,
+    submissionId,
+    publicTeam,
+    publicSubmission,
+    publicJudges,
+    publicVotes
+  );
+};
 
-  const publicSubmission = await getPublicSubmission(yearId, submissionId);
-  if (!publicSubmission) {
-    return undefined;
-  }
-
-  const publicJudges = await getAllPublicJudges(yearId);
-
-  const publicVotes = await getAllPublicVotes(yearId);
-
-  let judgesTotalPoints = 0;
-  const judges = publicJudges
+const createPublicResultData = (
+  yearId: string,
+  teamId: string,
+  submissionId: string,
+  publicTeam: PublicTeam,
+  publicSubmission: PublicSubmission,
+  publicJudges: PublicJudge[],
+  publicVotes: PublicVote[]
+): PublicResult => {
+  const judgesTotalPoints = publicJudges
     .map((publicJudge) => {
-      const judge = publicJudge.judges.find(
+      return publicJudge.judges.find(
         (judge) =>
           judge.yearId === yearId &&
           judge.teamId === teamId &&
           judge.submissionId === submissionId
       );
-      if (judge) {
-        return judge;
-      }
-      return undefined;
     })
-    .filter((judge) => judge !== undefined);
-  judges.forEach((judge) => {
-    if (judge) {
-      judgesTotalPoints += judge.point;
-    }
-  });
+    .filter((judge) => judge !== undefined)
+    .map((judge) => judge?.point ?? 0)
+    .reduce((acc, cur) => acc + cur);
 
-  let votesTotalPoints = 0;
-  const votes = publicVotes
+  const votesTotalPoints = publicVotes
     .map((publicVote) => {
-      const vote = publicVote.votes.find(
+      return publicVote.votes.find(
         (vote) =>
           vote.yearId === yearId &&
           vote.teamId === teamId &&
           vote.submissionId === submissionId
       );
-      if (vote) {
-        return vote;
-      }
-      return undefined;
     })
-    .filter((vote) => vote !== undefined);
-  votes.forEach((vote) => {
-    if (vote) {
-      votesTotalPoints += vote.point;
-    }
-  });
-  const totalPoints = judgesTotalPoints + votesTotalPoints;
+    .filter((vote) => vote !== undefined)
+    .map((vote) => vote?.point ?? 0)
+    .reduce((acc, cur) => acc + cur);
+  const totalPoints = judgesTotalPoints + votesTotalPoints ?? 0;
 
   return {
     yearId,
@@ -103,9 +103,15 @@ export const getAllPublicResults = async (
   yearId: string,
   order: 'createdTimeAsc' | 'totalPointsDesc'
 ): Promise<PublicResults> => {
-  const publicTeams = await getAllPublicTeams(yearId);
-  const publicSubmissions = await getAllPublicSubmissions(yearId);
-  const publicResultsWithoutJudgesAndVotes = publicSubmissions
+  const [publicTeams, publicSubmissions, publicJudges, publicVotes] =
+    await Promise.all([
+      getAllPublicTeams(yearId),
+      getAllPublicSubmissions(yearId),
+      getAllPublicJudges(yearId),
+      getAllPublicVotes(yearId),
+    ]);
+
+  const publicResults = publicSubmissions
     .map((publicSubmission) => {
       const publicTeam = publicTeams.find(
         (publicTeam) => publicTeam.id === publicSubmission.teamId
@@ -113,33 +119,17 @@ export const getAllPublicResults = async (
       if (!publicTeam) {
         return undefined;
       }
-      return {
-        yearId: publicSubmission.yearId,
-        teamId: publicTeam.id,
-        team: publicTeam,
-        submissionId: publicSubmission.id,
-        submission: publicSubmission,
-      };
+      return createPublicResultData(
+        yearId,
+        publicTeam.id,
+        publicSubmission.id,
+        publicTeam,
+        publicSubmission,
+        publicJudges,
+        publicVotes
+      );
     })
-    .filter(
-      (publicResultWithoutJudgesAndVotes) =>
-        publicResultWithoutJudgesAndVotes !== undefined
-    );
-  const publicResults: PublicResults = [];
-  for (const publicResultWithoutJudgesAndVotes of publicResultsWithoutJudgesAndVotes) {
-    if (!publicResultWithoutJudgesAndVotes) {
-      continue;
-    }
-    const publicResult = await getPublicResult(
-      publicResultWithoutJudgesAndVotes.yearId,
-      publicResultWithoutJudgesAndVotes.teamId,
-      publicResultWithoutJudgesAndVotes.submissionId
-    );
-    if (!publicResult) {
-      continue;
-    }
-    publicResults.push(publicResult);
-  }
+    .filter((publicResult) => publicResult) as PublicResults;
   if (order === 'createdTimeAsc') {
     return sortPublicResultsWithCreatedTime(publicResults, 'asc');
   }
