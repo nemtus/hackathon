@@ -524,6 +524,13 @@ const PrivateUserStatusTableWidgetComponent = (props: {
       if (createAndSetUpNewAccountTx?.confirmed && !props.privateUserYearVote) {
         return 'Not Yet';
       }
+      if (
+        createAndSetUpNewAccountTx?.confirmed &&
+        props.privateUserYearVote &&
+        props.privateUserYearVote.approved === false
+      ) {
+        return 'Now Under Review';
+      }
       if (!createVoteTx) {
         return 'Creating';
       }
@@ -732,6 +739,11 @@ const PrivateUserStatusTableWidgetComponent = (props: {
           </td>
           <td>
             <span>{privateUserStatus.voteStatus}</span>
+            <span>
+              {privateUserStatus.voteStatus === 'Now Under Review'
+                ? ' : This process is manually executed by NEMTUS internal members and may take up to a day to complete.'
+                : null}
+            </span>
           </td>
         </tr>
       </tbody>
