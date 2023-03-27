@@ -245,7 +245,7 @@ service cloud.firestore {
 
     match /v/1/scopes/private/users/{userId}/years/{yearId}/submissions/{submissionId} {
       allow get: if isUserOrAdminAuthenticated(userId);
-      allow list: if isAdminAuthenticated();
+      allow list: if isUserOrAdminAuthenticated(userId);
       allow create: if isUserOrAdminAuthenticated(userId) && isCreateableSubmission(request.resource.data, userId, yearId, submissionId);
       allow update: if false;
       allow delete: if false;
@@ -253,7 +253,7 @@ service cloud.firestore {
 
     match /v/1/scopes/private/users/{userId}/years/{yearId}/judges/{judgeId} {
       allow get: if isUserOrAdminAuthenticated(userId);
-      allow list: if isAdminAuthenticated();
+      allow list: if isUserOrAdminAuthenticated(userId);
       allow create: if isUserOrAdminAuthenticated(userId) && isCreateableJudge(request.resource.data, userId, yearId, judgeId);
       allow update: if false;
       allow delete: if false;
@@ -261,7 +261,7 @@ service cloud.firestore {
 
     match /v/1/scopes/private/users/{userId}/years/{yearId}/votes/{voteId} {
       allow get: if isUserOrAdminAuthenticated(userId);
-      allow list: if isAdminAuthenticated();
+      allow list: if isUserOrAdminAuthenticated(userId);
       allow create: if isUserOrAdminAuthenticated(userId) && isCreateableVote(request.resource.data, userId, yearId, voteId);
       allow update: if false;
       allow delete: if false;
