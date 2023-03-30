@@ -26,11 +26,7 @@ const PublicSubmissionCardWidgetComponent = (
         <h2 className="card-title justify-start">Submission Information</h2>
         {imageUrl ? (
           <figure>
-            <img
-              className="max-w-xl h-auto"
-              src={imageUrl}
-              alt="Submission Image"
-            />
+            <img className="w-full" src={imageUrl} alt="Submission Image" />
           </figure>
         ) : null}
         <div className="card-content flex justify-start">
