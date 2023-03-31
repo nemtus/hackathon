@@ -8,7 +8,7 @@ const PublicTeamMembersTableWidgetComponent = (props: {
   const { publicUsers } = props;
 
   return (
-    <table className="table table-compact w-full">
+    <table className="table table-compact w-full table-fixed">
       <thead>
         <tr>
           <th>Nick Name</th>
@@ -19,7 +19,9 @@ const PublicTeamMembersTableWidgetComponent = (props: {
       <tbody>
         {publicUsers.map((publicUser) => (
           <tr key={publicUser.displayName}>
-            <td>{publicUser.displayName}</td>
+            <td className="xs:w-32 sm:w-32 md:w-auto lg:w-auto xl:w-auto 2xl:w-auto truncate">
+              <span className="truncate">{publicUser.displayName}</span>
+            </td>
             <td>
               {publicUser.twitterId ? (
                 <div
