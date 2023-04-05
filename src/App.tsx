@@ -26,6 +26,12 @@ const PublicResultPageComponent = loadable(
 const PublicResultsPageComponent = loadable(
   () => import('components/pages/years/[yearId]/results')
 );
+const PublicAwardPageComponent = loadable(
+  () => import('components/pages/years/[yearId]/awards/[awardId]')
+);
+const PublicAwardsPageComponent = loadable(
+  () => import('components/pages/years/[yearId]/awards')
+);
 
 function App() {
   return (
@@ -57,6 +63,14 @@ function App() {
         <Route
           path="/years/:yearId/results"
           element={<PublicResultsPageComponent />}
+        />
+        <Route
+          path="/years/:yearId/awards/:awardId"
+          element={<PublicAwardPageComponent />}
+        />
+        <Route
+          path="/years/:yearId/awards"
+          element={<PublicAwardsPageComponent />}
         />
       </Routes>
     </BrowserRouter>
