@@ -1,3 +1,9 @@
+import {
+  Award,
+  ConfigHackathonYearAward,
+  getConfigHackathonYearAward,
+} from 'models/configs/hackathon/years/award';
+import { PublicUser } from 'models/public/users';
 import { getAllPublicJudges, PublicJudge } from '../judges';
 import {
   getAllPublicSubmissions,
@@ -15,6 +21,8 @@ export type PublicResult = {
   submission: PublicSubmission;
   judges: PublicJudge[];
   votes: PublicVote[];
+  awards: Award[];
+  judgeUsers: PublicUser[];
   judgesTotalPoints: number;
   votesTotalPoints: number;
   totalPoints: number;
@@ -27,14 +35,20 @@ export const getPublicResult = async (
   teamId: string,
   submissionId: string
 ): Promise<PublicResult | undefined> => {
-  const [publicTeam, publicSubmission, publicJudges, publicVotes] =
-    await Promise.all([
-      getPublicTeam(yearId, teamId),
-      getPublicSubmission(yearId, submissionId),
-      getAllPublicJudges(yearId),
-      getAllPublicVotes(yearId),
-    ]);
-  if (!publicTeam || !publicSubmission) {
+  const [
+    publicTeam,
+    publicSubmission,
+    publicJudges,
+    publicVotes,
+    configHackathonYearAward,
+  ] = await Promise.all([
+    getPublicTeam(yearId, teamId),
+    getPublicSubmission(yearId, submissionId),
+    getAllPublicJudges(yearId),
+    getAllPublicVotes(yearId),
+    getConfigHackathonYearAward(yearId),
+  ]);
+  if (!publicTeam || !publicSubmission || !configHackathonYearAward) {
     return undefined;
   }
   return createPublicResultData(
@@ -44,7 +58,8 @@ export const getPublicResult = async (
     publicTeam,
     publicSubmission,
     publicJudges,
-    publicVotes
+    publicVotes,
+    configHackathonYearAward
   );
 };
 
@@ -55,7 +70,8 @@ const createPublicResultData = (
   publicTeam: PublicTeam,
   publicSubmission: PublicSubmission,
   publicJudges: PublicJudge[],
-  publicVotes: PublicVote[]
+  publicVotes: PublicVote[],
+  configHackathonYearAward: ConfigHackathonYearAward
 ): PublicResult => {
   const judges = publicJudges
     .map((publicJudge) => {
@@ -89,6 +105,12 @@ const createPublicResultData = (
 
   const totalPoints = judgesTotalPoints + votesTotalPoints ?? 0;
 
+  const awards = configHackathonYearAward.awards.filter((award) => {
+    return award.submissionId === publicSubmission.id;
+  });
+
+  const judgeUsers = configHackathonYearAward.judgeUsers;
+
   return {
     yearId,
     teamId,
@@ -97,6 +119,8 @@ const createPublicResultData = (
     submission: publicSubmission,
     judges: publicJudges,
     votes: publicVotes,
+    awards,
+    judgeUsers,
     judgesTotalPoints,
     votesTotalPoints,
     totalPoints,
@@ -108,20 +132,26 @@ export const getAllPublicResults = async (
   yearId: string,
   order: 'createdTimeAsc' | 'totalPointsDesc'
 ): Promise<PublicResults> => {
-  const [publicTeams, publicSubmissions, publicJudges, publicVotes] =
-    await Promise.all([
-      getAllPublicTeams(yearId),
-      getAllPublicSubmissions(yearId),
-      getAllPublicJudges(yearId),
-      getAllPublicVotes(yearId),
-    ]);
+  const [
+    publicTeams,
+    publicSubmissions,
+    publicJudges,
+    publicVotes,
+    configHackathonYearAward,
+  ] = await Promise.all([
+    getAllPublicTeams(yearId),
+    getAllPublicSubmissions(yearId),
+    getAllPublicJudges(yearId),
+    getAllPublicVotes(yearId),
+    getConfigHackathonYearAward(yearId),
+  ]);
 
   const publicResults = publicSubmissions
     .map((publicSubmission) => {
       const publicTeam = publicTeams.find(
         (publicTeam) => publicTeam.id === publicSubmission.teamId
       );
-      if (!publicTeam) {
+      if (!publicTeam || !configHackathonYearAward) {
         return undefined;
       }
       return createPublicResultData(
@@ -131,7 +161,8 @@ export const getAllPublicResults = async (
         publicTeam,
         publicSubmission,
         publicJudges,
-        publicVotes
+        publicVotes,
+        configHackathonYearAward
       );
     })
     .filter((publicResult) => publicResult) as PublicResults;
