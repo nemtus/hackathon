@@ -3,14 +3,14 @@ import { Award } from 'models/configs/hackathon/years/award';
 const AwardImageComponent = (props: { award: Award }) => {
   if (!props.award.message) {
     return (
-      <div className="max-w-xs">
+      <div className="w-48">
         <img className="w-full" src={props.award.imageUrl} alt="Award Image" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-xs">
+    <div className="w-48">
       <label htmlFor={`award-message-modal-${props.award.id}`}>
         <img className="w-full" src={props.award.imageUrl} alt="Award Image" />
       </label>
