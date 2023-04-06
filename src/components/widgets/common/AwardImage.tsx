@@ -3,7 +3,7 @@ import { Award } from 'models/configs/hackathon/years/award';
 const AwardImageComponent = (props: { award: Award }) => {
   if (!props.award.message) {
     return (
-      <div className="w-48">
+      <div className="btn btn-square btn-ghost w-48 h-60">
         <img className="w-full" src={props.award.imageUrl} alt="Award Image" />
       </div>
     );
@@ -11,7 +11,10 @@ const AwardImageComponent = (props: { award: Award }) => {
 
   return (
     <div className="w-48">
-      <label htmlFor={`award-message-modal-${props.award.id}`}>
+      <label
+        className="btn btn-square btn-ghost w-48 h-60"
+        htmlFor={`award-message-modal-${props.award.id}`}
+      >
         <img className="w-full" src={props.award.imageUrl} alt="Award Image" />
       </label>
 
