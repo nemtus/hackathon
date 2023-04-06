@@ -1,31 +1,34 @@
 import { Award } from 'models/configs/hackathon/years/award';
-import ordinal from 'ordinal';
-import AwardImage from '../../../images/award-image.png';
 
 const AwardImageComponent = (props: { award: Award }) => {
+  if (!props.award.message) {
+    return (
+      <div className="max-w-xs">
+        <img className="w-full" src={props.award.imageUrl} alt="Award Image" />
+      </div>
+    );
+  }
+
   return (
-    <div
-      className="tooltip tooltip-bottom w-48 z-50"
-      data-tip={props.award.message}
-    >
-      <a
-        className="relative"
-        href={props.award.link}
-        target="_blank"
-        rel="noopener noreferrer"
+    <div className="max-w-xs">
+      <label htmlFor={`award-message-modal-${props.award.id}`}>
+        <img className="w-full" src={props.award.imageUrl} alt="Award Image" />
+      </label>
+
+      <input
+        type="checkbox"
+        id={`award-message-modal-${props.award.id}`}
+        className="modal-toggle"
+      />
+      <label
+        htmlFor={`award-message-modal-${props.award.id}`}
+        className="modal cursor-pointer"
       >
-        <img className="w-full" src={AwardImage} alt="Award Image" />
-        <div className="absolute left-0 top-1/2 -translate-x-2/4 -translate-y-14">
-          <div className="flex flex-col justify-center">
-            <div>
-              {props.award.type === 'Award'
-                ? `${ordinal(props.award.index)} Prize`
-                : props.award.name}
-            </div>
-            <div>{props.award.award}</div>
-          </div>
-        </div>
-      </a>
+        <label htmlFor="" className="modal-box relative">
+          <h3 className="text-lg font-bold">Award Message</h3>
+          <p className="py-4">{props.award.message}</p>
+        </label>
+      </label>
     </div>
   );
 };
