@@ -22,7 +22,7 @@ const PublicJudgeForAwardCardWidgetComponent = (props: {
         {user?.photoUrl ? (
           <a href={user.twitterId} target="_blank" rel="noopener noreferrer">
             <figure>
-              <img src={user.photoUrl} alt="Judge's photo" />
+              <img className="w-48" src={user.photoUrl} alt="Judge's photo" />
             </figure>
           </a>
         ) : null}
