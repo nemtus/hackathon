@@ -4,8 +4,8 @@ import { getPublicResult, PublicResult } from 'models/public/years/results';
 import PublicSubmissionCardWidgetComponent from 'components/widgets/card/PublicSubmissionCard';
 import PublicTeamCardWidgetComponent from 'components/widgets/card/PublicTeamCard';
 import PublicTeamMembersTableCardWidgetComponent from 'components/widgets/card/PublicTeamMembersTableCard';
-import PublicJudgesCardWidgetComponent from 'components/widgets/card/PublicJudgesCard';
-import PublicVotesCardWidgetComponent from 'components/widgets/card/PublicVotesCard';
+import PublicJudgesForAwardCardWidgetComponent from 'components/widgets/card/PublicJudgesForAwardCard';
+import PublicVotesForAwardCardWidgetComponent from 'components/widgets/card/PublicVotesForAwardCard';
 
 const PublicResultPageComponent = () => {
   const { yearId, resultId } = useParams();
@@ -14,6 +14,7 @@ const PublicResultPageComponent = () => {
   const [publicResult, setPublicResult] = useState<
     PublicResult | null | undefined
   >(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (!yearId) {
@@ -36,34 +37,47 @@ const PublicResultPageComponent = () => {
     if (!submissionId) {
       return;
     }
+    setLoading(true);
     getPublicResult(yearId, teamId, submissionId)
       .then((publicResult) => {
+        console.log(publicResult);
         setPublicResult(publicResult);
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
         setPublicResult(undefined);
+        setLoading(false);
       });
-  }, [yearId, teamId, submissionId, setPublicResult]);
+  }, [yearId, teamId, submissionId, setPublicResult, setLoading]);
 
   return publicResult === null ? (
     <progress className="progress"></progress>
   ) : publicResult ? (
     <>
+      {loading ? <progress className="progress"></progress> : null}
       <div className="card bg-base-100 shadow-xl">
         <div className="card-body">
-          <h2 className="card-title justify-start"></h2>
+          <div className="flex flex-wrap justify-between">
+            <h2 className="card-title justify-start"></h2>
+            <div className="card-title justify-end">
+              Total Points:{publicResult.totalPoints} = Judge Points:
+              {publicResult.judgesTotalPoints} + Vote Points:
+              {publicResult.votesTotalPoints}
+            </div>
+          </div>
           <div className="card-content flex flex-col justify-start">
             <PublicSubmissionCardWidgetComponent {...publicResult.submission} />
             <PublicTeamCardWidgetComponent {...publicResult.team} />
             <PublicTeamMembersTableCardWidgetComponent
               {...{ publicUsers: publicResult.team.users }}
             />
-            <PublicJudgesCardWidgetComponent
+            <PublicJudgesForAwardCardWidgetComponent
               submissionId={publicResult.submissionId}
               publicUserYearJudges={publicResult.judges}
+              judgeUsers={publicResult.judgeUsers}
             />
-            <PublicVotesCardWidgetComponent
+            <PublicVotesForAwardCardWidgetComponent
               submissionId={publicResult.submissionId}
               publicUserYearVotes={publicResult.votes}
             />

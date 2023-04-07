@@ -7,8 +7,9 @@ import {
 import PublicSubmissionCardWidgetComponent from 'components/widgets/card/PublicSubmissionCard';
 import PublicTeamCardWidgetComponent from 'components/widgets/card/PublicTeamCard';
 import PublicTeamMembersTableCardWidgetComponent from 'components/widgets/card/PublicTeamMembersTableCard';
-import PublicJudgesCardWidgetComponent from 'components/widgets/card/PublicJudgesCard';
-import PublicVotesCardWidgetComponent from 'components/widgets/card/PublicVotesCard';
+import PublicJudgesForAwardCardWidgetComponent from 'components/widgets/card/PublicJudgesForAwardCard';
+import PublicVotesForAwardCardWidgetComponent from 'components/widgets/card/PublicVotesForAwardCard';
+// import AwardImageComponent from 'components/widgets/common/AwardImage';
 
 const PublicResultsPageComponent = () => {
   const { yearId } = useParams();
@@ -27,6 +28,7 @@ const PublicResultsPageComponent = () => {
     setLoading(true);
     getAllPublicResults(yearId, order)
       .then((publicResults) => {
+        console.log(publicResults);
         setPublicResults(publicResults);
         setLoading(false);
       })
@@ -47,18 +49,35 @@ const PublicResultsPageComponent = () => {
             key={publicResult.submissionId}
           >
             <div className="card-body">
-              {order === 'createdTimeAsc' ? (
-                <h2 className="card-title justify-start">
-                  <a
-                    className="link link-primary"
-                    href={`/years/${yearId}/results/${publicResult.submissionId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Entry No. {index + 1}
-                  </a>
-                </h2>
-              ) : null}
+              <div className="flex flex-wrap justify-between">
+                {order === 'createdTimeAsc' ? (
+                  <h2 className="card-title justify-start">
+                    <a
+                      className="link link-primary"
+                      href={`/years/${yearId}/results/${publicResult.submissionId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Entry No. {index + 1}
+                    </a>
+                  </h2>
+                ) : null}
+                {/* <div className="card-title flex flex-wrap justify-start">
+                  {publicResult.awards
+                    .filter(
+                      (award) =>
+                        award.submissionId === publicResult.submissionId
+                    )
+                    .map((award) => (
+                      <AwardImageComponent award={award} key={award.index} />
+                    ))}
+                </div> */}
+                <div className="card-title justify-end">
+                  Total Points:{publicResult.totalPoints} = Judge Points:
+                  {publicResult.judgesTotalPoints} + Vote Points:
+                  {publicResult.votesTotalPoints}
+                </div>
+              </div>
               <PublicSubmissionCardWidgetComponent
                 {...publicResult.submission}
               />
@@ -66,11 +85,12 @@ const PublicResultsPageComponent = () => {
               <PublicTeamMembersTableCardWidgetComponent
                 {...{ publicUsers: publicResult.team.users }}
               />
-              <PublicJudgesCardWidgetComponent
+              <PublicJudgesForAwardCardWidgetComponent
                 submissionId={publicResult.submissionId}
                 publicUserYearJudges={publicResult.judges}
+                judgeUsers={publicResult.judgeUsers}
               />
-              <PublicVotesCardWidgetComponent
+              <PublicVotesForAwardCardWidgetComponent
                 submissionId={publicResult.submissionId}
                 publicUserYearVotes={publicResult.votes}
               />
