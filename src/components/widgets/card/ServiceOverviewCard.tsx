@@ -22,11 +22,19 @@ const ServiceOverviewCardWidgetComponent = () => {
         <div className="card-actions justify-center">
           <a className="btn btn-link" href="https://hackathon-2023.nemtus.com/">
             <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
-            View Hackathon Details (2023)
+            Details (2023)
+          </a>
+          <a className="btn btn-link" href="/years/2023/results">
+            <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
+            Entry List (2023)
+          </a>
+          <a className="btn btn-link" href="/years/2023/awards">
+            <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
+            Award List (2023)
           </a>
           <a className="btn btn-link" href="https://hackathon-2022.nemtus.com/">
             <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
-            {'View History (2022)'}
+            {'History (2022)'}
           </a>
         </div>
       </div>
