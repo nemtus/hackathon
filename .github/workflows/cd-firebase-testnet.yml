@@ -49,11 +49,12 @@ jobs:
         working-directory: ./functions
       - run: npm run build
         working-directory: ./functions
-      - run: npx firebase deploy --project=testnet --token=${{ secrets.FIREBASE_TOKEN }} --force
+      - run: npx firebase use testnet --token=${{ secrets.FIREBASE_TOKEN }}
+      - run: npx firebase deploy --token=${{ secrets.FIREBASE_TOKEN }} --force
 
       - name: Clear env file
         if: always()
-        run: rm .env
+        run: rm .env.testnet
       - name: Clear functions env file
         if: always()
         run: rm ./functions/.env
