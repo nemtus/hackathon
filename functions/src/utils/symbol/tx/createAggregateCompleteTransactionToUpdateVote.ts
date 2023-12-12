@@ -30,6 +30,8 @@ import {
 import { getAdminUserYearTeam } from '../../../v1/model/admin/users/years/teams';
 import { AdminUserYearVote } from '../../../v1/model/admin/users/years/votes';
 
+const CURRENT_YEAR = process.env.CURRENT_YEAR;
+
 export const createAggregateCompleteTransactionToUpdateVote = async (
   feeBillingAccountPrivateKey: string,
   messageReceivingAccountPrivateKey: string,
@@ -133,7 +135,7 @@ export const createAggregateCompleteTransactionToUpdateVote = async (
     if (
       !(
         vote.userId && // Note: voting user
-        vote.yearId === '2023' && // Todo: convert to env
+        vote.yearId === CURRENT_YEAR &&
         vote.teamId &&
         vote.submissionId &&
         Number.isInteger(vote.point) &&

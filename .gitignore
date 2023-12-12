@@ -23,8 +23,14 @@ yarn-debug.log*
 yarn-error.log*
 
 .env
+.env.encoded
+.env.decoded
 .env.mainnet
+.env.mainnet.encoded
+.env.mainnet.decoded
 .env.testnet
+.env.testnet.encoded
+.env.testnet.decoded
 
 *.log
 

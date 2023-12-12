@@ -8,6 +8,11 @@ import { AdminUserYearJudge } from '../../../../../model/admin/users/years/judge
 import { createAggregateCompleteTransactionToCreateNewJudge } from '../../../../../../utils/symbol/tx/createAggregateCompleteTransactionToCreateNewJudge';
 import { createAggregateCompleteTransactionToUpdateJudge } from '../../../../../../utils/symbol/tx/createAggregateCompleteTransactionToUpdateJudge';
 
+const MOSAIC_ID_2023 = process.env.MOSAIC_ID_2023;
+const MOSAIC_ID_2024 = process.env.MOSAIC_ID_2024;
+const CURRENT_YEAR = process.env.CURRENT_YEAR;
+const CURRENT_YEAR_MOSAIC_ID = process.env[`MOSAIC_ID_${CURRENT_YEAR}`];
+
 const FEE_BILLING_ACCOUNT_PRIVATE_KEY = defineSecret(
   'FEE_BILLING_ACCOUNT_PRIVATE_KEY'
 );
@@ -15,7 +20,6 @@ const MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY = defineSecret(
   'MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY'
 );
 const DATA_ENCRYPTION_KEY = defineSecret('DATA_ENCRYPTION_KEY');
-const MOSAIC_ID_2023 = defineSecret(`MOSAIC_ID_2023`);
 
 const path = '/v/1/scopes/admin/users/{userID}/years/{yearID}/judges/{judgeID}';
 
@@ -26,7 +30,6 @@ export const onUpdate = () =>
         'FEE_BILLING_ACCOUNT_PRIVATE_KEY',
         'MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY',
         'DATA_ENCRYPTION_KEY',
-        'MOSAIC_ID_2023',
       ],
     })
     .firestore.document(path)
@@ -46,7 +49,23 @@ export const onUpdate = () =>
       const messageReceivingAccountPrivateKey =
         MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY.value();
       const dataEncryptionKey = DATA_ENCRYPTION_KEY.value();
-      const mosaicId2023 = MOSAIC_ID_2023.value();
+      const mosaicId2023 = MOSAIC_ID_2023;
+      const mosaicId2024 = MOSAIC_ID_2024;
+      const currentYearMosaicId = CURRENT_YEAR_MOSAIC_ID;
+      if (!mosaicId2023) {
+        throw Error('mosaicId2023 is undefined');
+      }
+      if (!mosaicId2024) {
+        throw Error('mosaicId2024 is undefined');
+      }
+      if (
+        !currentYearMosaicId ||
+        currentYearMosaicId === 'MOSAIC_ID_' ||
+        currentYearMosaicId === 'MOSAIC_ID_undefined'
+      ) {
+        throw Error('currentYearMosaicId is undefined');
+      }
+      logger.debug({ mosaicId2023, mosaicId2024, currentYearMosaicId });
 
       const userId = context.params.userID;
       const yearId = context.params.yearID;
@@ -103,7 +122,7 @@ export const onUpdate = () =>
             dataEncryptionKey,
             userId,
             afterAdminUserYearJudge,
-            mosaicId2023
+            currentYearMosaicId
           );
         await setAdminUserTx(
           userId,
@@ -120,7 +139,7 @@ export const onUpdate = () =>
             dataEncryptionKey,
             userId,
             afterAdminUserYearJudge,
-            mosaicId2023
+            currentYearMosaicId
           );
         await setAdminUserTx(userId, aggregateCompleteTransactionToUpdateJudge);
       }

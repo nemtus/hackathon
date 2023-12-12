@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        node: ['16.x']
+        node: ['18.x']
 
     name: Node ${{ matrix.node }} CD Firebase testnet
     steps:
@@ -34,6 +34,12 @@ jobs:
         env:
           REACT_ENV: ${{ secrets.REACT_ENV }}
         run: echo $REACT_ENV | base64 --decode --ignore-garbage > .env.testnet
+      - name: Create empty env file for testnet functions build
+        run: touch ./functions/.env
+      - name: Restore testnet env file content from secret
+        env:
+          FUNCTIONS_ENV: ${{ secrets.FUNCTIONS_ENV }}
+        run: echo $FUNCTIONS_ENV | base64 --decode --ignore-garbage > ./functions.env
       - name: Remove robots.txt
         run: rm ./public/robots.txt
 
@@ -47,4 +53,7 @@ jobs:
 
       - name: Clear env file
         if: always()
-        run: rm .env.testnet
+        run: rm .env
+      - name: Clear functions env file
+        if: always()
+        run: rm ./functions/.env

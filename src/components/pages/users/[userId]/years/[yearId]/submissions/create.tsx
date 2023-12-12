@@ -24,6 +24,11 @@ import {
 } from 'models/private/users/years/submissions';
 import PrivateUserYearSubmissionCreateFormWidgetComponent from 'components/widgets/form/PrivateUserSubmissionCreateForm';
 
+const CURRENT_YEAR = process.env.REACT_APP_CURRENT_YEAR;
+if (!CURRENT_YEAR) {
+  throw Error('REACT_APP_CURRENT_YEAR is not defined');
+}
+
 const SubmissionCreatePageComponent = () => {
   const { userId, yearId } = useParams();
   const [authUser] = useAuthState(auth);
@@ -109,7 +114,7 @@ const SubmissionCreatePageComponent = () => {
       }
     );
     const unsubscribePrivateUserYearEntryDocListener = onSnapshot(
-      privateUserYearEntryDocRef(userId, '2023', userId),
+      privateUserYearEntryDocRef(userId, CURRENT_YEAR, userId),
       {
         next: (snapshot) => {
           const data = snapshot.data();
@@ -126,7 +131,7 @@ const SubmissionCreatePageComponent = () => {
       }
     );
     const unsubscribePrivateUserYearTeamDocListener = onSnapshot(
-      privateUserYearTeamDocRef(userId, '2023', userId),
+      privateUserYearTeamDocRef(userId, CURRENT_YEAR, userId),
       {
         next: (snapshot) => {
           const data = snapshot.data();
@@ -144,7 +149,7 @@ const SubmissionCreatePageComponent = () => {
       }
     );
     const unsubscribePrivateUserYearSubmissionDocListener = onSnapshot(
-      privateUserYearSubmissionDocRef(userId, '2023', userId),
+      privateUserYearSubmissionDocRef(userId, CURRENT_YEAR, userId),
       {
         next: (snapshot) => {
           const data = snapshot.data();

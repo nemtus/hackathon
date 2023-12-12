@@ -20,6 +20,11 @@ import {
 } from 'models/private/users/years/teams';
 import PrivateUserYearTeamCreateFormWidgetComponent from 'components/widgets/form/PrivateUserTeamCreateForm';
 
+const CURRENT_YEAR = process.env.REACT_APP_CURRENT_YEAR;
+if (!CURRENT_YEAR) {
+  throw Error('REACT_APP_CURRENT_YEAR is not defined');
+}
+
 const TeamCreatePageComponent = () => {
   const { userId, yearId } = useParams();
   const [authUser] = useAuthState(auth);
@@ -90,7 +95,7 @@ const TeamCreatePageComponent = () => {
       }
     );
     const unsubscribePrivateUserYearEntryDocListener = onSnapshot(
-      privateUserYearEntryDocRef(userId, '2023', userId),
+      privateUserYearEntryDocRef(userId, CURRENT_YEAR, userId),
       {
         next: (snapshot) => {
           const data = snapshot.data();
@@ -107,7 +112,7 @@ const TeamCreatePageComponent = () => {
       }
     );
     const unsubscribePrivateUserYearTeamDocListener = onSnapshot(
-      privateUserYearTeamDocRef(userId, '2023', userId),
+      privateUserYearTeamDocRef(userId, CURRENT_YEAR, userId),
       {
         next: (snapshot) => {
           const data = snapshot.data();

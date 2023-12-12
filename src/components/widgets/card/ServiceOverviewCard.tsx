@@ -2,6 +2,11 @@ import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import XymCityCityscapeImage from '../../../images/xym-city-cityscape-light.png';
 
+const CURRENT_YEAR = process.env.REACT_APP_CURRENT_YEAR;
+if (!CURRENT_YEAR) {
+  throw Error('REACT_APP_CURRENT_YEAR is not defined');
+}
+
 const ServiceOverviewCardWidgetComponent = () => {
   return (
     <div className="card bg-base-100">
@@ -20,21 +25,24 @@ const ServiceOverviewCardWidgetComponent = () => {
           {"Let's record our hackathon on the blockchain forever!"}
         </p>
         <div className="card-actions justify-center">
-          <a className="btn btn-link" href="https://hackathon-2023.nemtus.com/">
+          <a
+            className="btn btn-link"
+            href={`https://hackathon-${CURRENT_YEAR}.nemtus.com/`}
+          >
             <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
-            Details (2023)
+            Details ({CURRENT_YEAR})
           </a>
-          <a className="btn btn-link" href="/years/2023/results">
+          {/* <a className="btn btn-link" href={`/years/${CURRENT_YEAR}/results`}>
             <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
-            Entry List (2023)
-          </a>
-          <a className="btn btn-link" href="/years/2023/awards">
+            Entry List ({CURRENT_YEAR})
+          </a> */}
+          {/* <a className="btn btn-link" href={`/years/${CURRENT_YEAR}/awards`}>
             <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
-            Award List (2023)
-          </a>
-          <a className="btn btn-link" href="https://hackathon-2022.nemtus.com/">
+            Award List ({CURRENT_YEAR})
+          </a> */}
+          <a className="btn btn-link" href="https://hackathon.nemtus.com">
             <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
-            {'History (2022)'}
+            History
           </a>
         </div>
       </div>

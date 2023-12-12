@@ -67,6 +67,11 @@ import {
   PrivateUserYearVote,
 } from 'models/private/users/years/votes';
 
+const CURRENT_YEAR = process.env.REACT_APP_CURRENT_YEAR;
+if (!CURRENT_YEAR) {
+  throw Error('REACT_APP_CURRENT_YEAR is not defined');
+}
+
 const HomePageComponent = () => {
   const [authUser, authUserLoading] = useAuthState(auth);
   const [configHackathonYearEntry, setConfigHackathonYearEntry] = useState<
@@ -110,35 +115,35 @@ const HomePageComponent = () => {
       return;
     }
     const userId = authUser.uid;
-    getConfigHackathonYearEntry('2023')
+    getConfigHackathonYearEntry(CURRENT_YEAR)
       .then((configHackathonYearEntry) => {
         setConfigHackathonYearEntry(configHackathonYearEntry);
       })
       .catch((error) => {
         console.error(error);
       });
-    getConfigHackathonYearTeam('2023')
+    getConfigHackathonYearTeam(CURRENT_YEAR)
       .then((configHackathonYearTeam) => {
         setConfigHackathonYearTeam(configHackathonYearTeam);
       })
       .catch((error) => {
         console.error(error);
       });
-    getConfigHackathonYearSubmission('2023')
+    getConfigHackathonYearSubmission(CURRENT_YEAR)
       .then((configHackathonYearSubmission) => {
         setConfigHackathonYearSubmission(configHackathonYearSubmission);
       })
       .catch((error) => {
         console.error(error);
       });
-    getConfigHackathonYearJudge('2023')
+    getConfigHackathonYearJudge(CURRENT_YEAR)
       .then((configHackathonYearJudge) => {
         setConfigHackathonYearJudge(configHackathonYearJudge);
       })
       .catch((error) => {
         console.error(error);
       });
-    getConfigHackathonYearVote('2023')
+    getConfigHackathonYearVote(CURRENT_YEAR)
       .then((configHackathonYearVote) => {
         setConfigHackathonYearVote(configHackathonYearVote);
       })
@@ -159,35 +164,35 @@ const HomePageComponent = () => {
       .catch((error) => {
         console.error(error);
       });
-    getAllPrivateUserEntries(userId, '2023')
+    getAllPrivateUserEntries(userId, CURRENT_YEAR)
       .then((privateUserYearEntries) => {
         setPrivateUserYearEntry(privateUserYearEntries[0]);
       })
       .catch((error) => {
         console.error(error);
       });
-    getAllPrivateUserYearTeams(userId, '2023')
+    getAllPrivateUserYearTeams(userId, CURRENT_YEAR)
       .then((privateUserYearTeams) => {
         setPrivateUserYearTeam(privateUserYearTeams[0]);
       })
       .catch((error) => {
         console.error(error);
       });
-    getAllPrivateUserYearSubmissions(userId, '2023')
+    getAllPrivateUserYearSubmissions(userId, CURRENT_YEAR)
       .then((privateUserYearSubmissions) => {
         setPrivateUserYearSubmission(privateUserYearSubmissions[0]);
       })
       .catch((error) => {
         console.error(error);
       });
-    getPrivateUserYearJudge(userId, '2023', userId)
+    getPrivateUserYearJudge(userId, CURRENT_YEAR, userId)
       .then((privateUserYearJudge) => {
         setPrivateUserYearJudge(privateUserYearJudge);
       })
       .catch((error) => {
         console.error(error);
       });
-    getPrivateUserYearVote(userId, '2023', userId)
+    getPrivateUserYearVote(userId, CURRENT_YEAR, userId)
       .then((privateUserYearVote) => {
         setPrivateUserYearVote(privateUserYearVote);
       })
@@ -195,7 +200,7 @@ const HomePageComponent = () => {
         console.error(error);
       });
     const unsubscribeConfigHackathonYearEntryDocListener = onSnapshot(
-      configHackathonYearEntryDocRef('2023'),
+      configHackathonYearEntryDocRef(CURRENT_YEAR),
       {
         includeMetadataChanges: true,
       },
@@ -215,7 +220,7 @@ const HomePageComponent = () => {
       }
     );
     const unsubscribeConfigHackathonYearTeamDocListener = onSnapshot(
-      configHackathonYearTeamDocRef('2023'),
+      configHackathonYearTeamDocRef(CURRENT_YEAR),
       {
         includeMetadataChanges: true,
       },
@@ -235,7 +240,7 @@ const HomePageComponent = () => {
       }
     );
     const unsubscribeConfigHackathonYearSubmissionDocListener = onSnapshot(
-      configHackathonYearSubmissionDocRef('2023'),
+      configHackathonYearSubmissionDocRef(CURRENT_YEAR),
       {
         includeMetadataChanges: true,
       },
@@ -255,7 +260,7 @@ const HomePageComponent = () => {
       }
     );
     const unsubscribeConfigHackathonYearJudgeDocListener = onSnapshot(
-      configHackathonYearJudgeDocRef('2023'),
+      configHackathonYearJudgeDocRef(CURRENT_YEAR),
       {
         includeMetadataChanges: true,
       },
@@ -275,7 +280,7 @@ const HomePageComponent = () => {
       }
     );
     const unsubscribeConfigHackathonYearVoteDocListener = onSnapshot(
-      configHackathonYearVoteDocRef('2023'),
+      configHackathonYearVoteDocRef(CURRENT_YEAR),
       {
         includeMetadataChanges: true,
       },
@@ -335,7 +340,7 @@ const HomePageComponent = () => {
       }
     );
     const unsubscribePrivateUserYearEntryDocListener = onSnapshot(
-      privateUserYearEntryDocRef(userId, '2023', userId),
+      privateUserYearEntryDocRef(userId, CURRENT_YEAR, userId),
       {
         next: (snapshot) => {
           const data = snapshot.data();
@@ -352,7 +357,7 @@ const HomePageComponent = () => {
       }
     );
     const unsubscribePrivateUserYearTeamDocListener = onSnapshot(
-      privateUserYearTeamDocRef(userId, '2023', userId),
+      privateUserYearTeamDocRef(userId, CURRENT_YEAR, userId),
       {
         next: (snapshot) => {
           const data = snapshot.data();
@@ -369,7 +374,7 @@ const HomePageComponent = () => {
       }
     );
     const unsubscribePrivateUserYearSubmissionDocListener = onSnapshot(
-      privateUserYearSubmissionDocRef(userId, '2023', userId),
+      privateUserYearSubmissionDocRef(userId, CURRENT_YEAR, userId),
       {
         next: (snapshot) => {
           const data = snapshot.data();
@@ -386,7 +391,7 @@ const HomePageComponent = () => {
       }
     );
     const unsubscribePrivateUserYearJudgeDocListener = onSnapshot(
-      privateUserYearJudgeDocRef(userId, '2023', userId),
+      privateUserYearJudgeDocRef(userId, CURRENT_YEAR, userId),
       {
         next: (snapshot) => {
           const data = snapshot.data();
@@ -403,7 +408,7 @@ const HomePageComponent = () => {
       }
     );
     const unsubscribePrivateUserYearVoteDocListener = onSnapshot(
-      privateUserYearVoteDocRef(userId, '2023', userId),
+      privateUserYearVoteDocRef(userId, CURRENT_YEAR, userId),
       {
         next: (snapshot) => {
           const data = snapshot.data();
@@ -457,7 +462,7 @@ const HomePageComponent = () => {
       <LetsEntryCardWidgetComponent />
       {authUser ? (
         <PrivateUserStatusCardWidgetComponent
-          yearId="2023"
+          yearId={CURRENT_YEAR}
           authUser={authUser}
           configHackathonYearEntry={configHackathonYearEntry}
           configHackathonYearTeam={configHackathonYearTeam}

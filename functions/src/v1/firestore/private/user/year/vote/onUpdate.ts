@@ -18,6 +18,8 @@ import {
   setPublicUserYearVote,
 } from '../../../../../model/public/users/years/votes';
 
+const CURRENT_YEAR = process.env.CURRENT_YEAR;
+
 const SLACK_BOT_USER_OAUTH_TOKEN = defineSecret('SLACK_BOT_USER_OAUTH_TOKEN');
 const SLACK_NOTIFY_CHANNEL = defineSecret('SLACK_NOTIFY_CHANNEL');
 
@@ -117,7 +119,7 @@ export const onUpdate = () =>
             afterPrivateUserYearVote.createdAt <=
               configHackathonYearVote.endAt &&
             vote.userId && // Note: voting user
-            vote.yearId === '2023' && // Todo: convert to env
+            vote.yearId === CURRENT_YEAR &&
             vote.teamId &&
             vote.submissionId &&
             Number.isInteger(vote.point) &&

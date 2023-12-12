@@ -25,6 +25,8 @@ import { ConfigHackathonYearJudge } from 'models/configs/hackathon/years/judge';
 import { ConfigHackathonYearVote } from 'models/configs/hackathon/years/vote';
 import { Vote } from 'models/public/users/years/votes';
 
+const CURRENT_YEAR = process.env.REACT_APP_CURRENT_YEAR;
+
 const schema = yup.object().shape({
   id: yup.string(),
   userId: yup.string(),
@@ -83,7 +85,7 @@ const PrivateUserYearVoteCreateFormWidgetComponent = (props: {
     });
     console.log({
       propsAuthUserUid: props.authUser.uid === userId,
-      propsYearId: props.yearId === '2023',
+      propsYearId: props.yearId === CURRENT_YEAR,
       propsPrivateUserYearSubmission:
         props.privateUserYearSubmission === undefined,
       propsPrivateUserYearJudge: props.privateUserYearJudge === undefined,
@@ -98,7 +100,7 @@ const PrivateUserYearVoteCreateFormWidgetComponent = (props: {
     });
     return (
       props.authUser.uid === userId &&
-      props.yearId === '2023' &&
+      props.yearId === CURRENT_YEAR &&
       props.privateUserYearSubmission === undefined &&
       props.privateUserYearJudge === undefined &&
       props.privateUserYearVote === undefined &&
