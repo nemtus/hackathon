@@ -16,6 +16,8 @@ import {
   setPublicUserYearJudge,
 } from '../../../../../model/public/users/years/judges';
 
+const CURRENT_YEAR = process.env.CURRENT_YEAR;
+
 const SLACK_BOT_USER_OAUTH_TOKEN = defineSecret('SLACK_BOT_USER_OAUTH_TOKEN');
 const SLACK_NOTIFY_CHANNEL = defineSecret('SLACK_NOTIFY_CHANNEL');
 
@@ -106,7 +108,7 @@ export const onCreate = () =>
               (userId) => userId === privateUserYearJudge.userId
             ) &&
             judge.userId && // Note: voting user
-            judge.yearId === '2023' && // Todo: convert to env
+            judge.yearId === CURRENT_YEAR &&
             judge.teamId &&
             judge.submissionId &&
             Number.isInteger(judge.point) &&

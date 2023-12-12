@@ -30,6 +30,8 @@ import {
 import { getAdminUserYearTeam } from '../../../v1/model/admin/users/years/teams';
 import { AdminUserYearJudge } from '../../../v1/model/admin/users/years/judges';
 
+const CURRENT_YEAR = process.env.CURRENT_YEAR;
+
 export const createAggregateCompleteTransactionToUpdateJudge = async (
   feeBillingAccountPrivateKey: string,
   messageReceivingAccountPrivateKey: string,
@@ -133,7 +135,7 @@ export const createAggregateCompleteTransactionToUpdateJudge = async (
     if (
       !(
         judge.userId && // Note: judging user
-        judge.yearId === '2023' && // Todo: convert to env
+        judge.yearId === CURRENT_YEAR &&
         judge.teamId &&
         judge.submissionId &&
         Number.isInteger(judge.point) &&
