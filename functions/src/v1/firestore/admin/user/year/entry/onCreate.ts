@@ -21,6 +21,7 @@ const path =
 export const onCreate = () =>
   functions()
     .runWith({
+      memory: '256MB',
       secrets: [
         'FEE_BILLING_ACCOUNT_PRIVATE_KEY',
         'MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY',
