@@ -21,6 +21,7 @@ const path = '/v/1/scopes/admin/users/{userID}/years/{yearID}/teams/{teamID}';
 export const onUpdate = () =>
   functions()
     .runWith({
+      memory: '256MB',
       secrets: [
         'FEE_BILLING_ACCOUNT_PRIVATE_KEY',
         'MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY',
