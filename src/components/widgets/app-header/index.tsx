@@ -28,6 +28,12 @@ const appMenuList: AppMenu[] = [
     link: '/',
   },
   {
+    key: '2024',
+    icon: FaList,
+    label: '2024 Entry List',
+    link: '/years/2024/results',
+  },
+  {
     key: '2023',
     icon: FaList,
     label: '2023 Entry List',
