@@ -18,6 +18,8 @@ import {
 } from '../../../../../model/public/users/years/votes';
 
 const CURRENT_YEAR = process.env.CURRENT_YEAR;
+const MOSAIC_ID_2023 = process.env.MOSAIC_ID_2023;
+const MOSAIC_ID_2024 = process.env.MOSAIC_ID_2024;
 
 const SLACK_BOT_USER_OAUTH_TOKEN = defineSecret('SLACK_BOT_USER_OAUTH_TOKEN');
 const SLACK_NOTIFY_CHANNEL = defineSecret('SLACK_NOTIFY_CHANNEL');
@@ -45,7 +47,11 @@ export const onCreate = () =>
       }
       logger.debug({ snapshot, context });
 
-      logger.debug({ CURRENT_YEAR });
+      logger.debug({
+        CURRENT_YEAR: CURRENT_YEAR,
+        MOSAIC_ID_2023: MOSAIC_ID_2023,
+        MOSAIC_ID_2024: MOSAIC_ID_2024,
+      });
 
       const userId = context.params.userID;
       const yearId = context.params.yearID;
