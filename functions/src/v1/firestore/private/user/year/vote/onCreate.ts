@@ -1,4 +1,4 @@
-import { defineSecret } from 'firebase-functions/params';
+import { defineSecret, defineString } from 'firebase-functions/params';
 import functions from '../../../../../../utils/firebase/baseFunction';
 import { hasAlreadyTriggered } from '../../../../../../utils/firebase/hasAlreadyTriggered';
 import { logger } from '../../../../../../utils/firebase/logger';
@@ -20,6 +20,10 @@ import {
 const CURRENT_YEAR = process.env.CURRENT_YEAR;
 const MOSAIC_ID_2023 = process.env.MOSAIC_ID_2023;
 const MOSAIC_ID_2024 = process.env.MOSAIC_ID_2024;
+
+const DEBUG_CURRENT_YEAR = defineString('CURRENT_YEAR');
+const DEBUG_MOSAIC_ID_2023 = defineString('MOSAIC_ID_2023');
+const DEBUG_MOSAIC_ID_2024 = defineString('MOSAIC_ID_2024');
 
 const SLACK_BOT_USER_OAUTH_TOKEN = defineSecret('SLACK_BOT_USER_OAUTH_TOKEN');
 const SLACK_NOTIFY_CHANNEL = defineSecret('SLACK_NOTIFY_CHANNEL');
@@ -46,6 +50,20 @@ export const onCreate = () =>
         return;
       }
       logger.debug({ snapshot, context });
+
+      logger.debug(DEBUG_CURRENT_YEAR.value());
+      logger.debug(DEBUG_MOSAIC_ID_2023.value());
+      logger.debug(DEBUG_MOSAIC_ID_2024.value());
+
+      logger.debug({
+        DEBUG_CURRENT_YEAR: DEBUG_CURRENT_YEAR.value(),
+        DEBUG_MOSAIC_ID_2023: DEBUG_MOSAIC_ID_2023.value(),
+        DEBUG_MOSAIC_ID_2024: DEBUG_MOSAIC_ID_2024.value(),
+      });
+
+      logger.debug(CURRENT_YEAR);
+      logger.debug(MOSAIC_ID_2023);
+      logger.debug(MOSAIC_ID_2024);
 
       logger.debug({
         CURRENT_YEAR: CURRENT_YEAR,
