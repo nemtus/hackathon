@@ -40,6 +40,7 @@ jobs:
         env:
           FUNCTIONS_ENV: ${{ secrets.FUNCTIONS_ENV }}
         run: echo $FUNCTIONS_ENV | base64 --decode --ignore-garbage > ./functions.env
+      - run: ls functions -la
       - run: cat ./functions/.env
       - name: Remove robots.txt
         run: rm ./public/robots.txt
