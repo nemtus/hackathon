@@ -45,6 +45,8 @@ export const onCreate = () =>
       }
       logger.debug({ snapshot, context });
 
+      logger.debug({ CURRENT_YEAR });
+
       const userId = context.params.userID;
       const yearId = context.params.yearID;
       const voteId = context.params.voteID;
@@ -67,6 +69,7 @@ export const onCreate = () =>
       if (!configHackathonYearVote) {
         throw Error('configHackathonYearVote is undefined');
       }
+      logger.debug({ configHackathonYearVote });
 
       const privateUserYearJudge = await getPrivateUserYearJudge(
         userId,
@@ -107,6 +110,37 @@ export const onCreate = () =>
         if (vote.userId !== userId) {
           throw Error('vote.userId is not matched to userId');
         }
+        const flag1 = privateUserYearVote.createdAt;
+        const flag2 = privateUserYearVote.createdAt
+          ? configHackathonYearVote.startAt <= privateUserYearVote.createdAt
+          : false;
+        const flag3 = privateUserYearVote.createdAt
+          ? privateUserYearVote.createdAt <= configHackathonYearVote.endAt
+          : false;
+        const flag4 = vote.userId;
+        const flag5 = vote.yearId === CURRENT_YEAR;
+        const flag6 = vote.teamId;
+        const flag7 = vote.submissionId;
+        const flag8 = Number.isInteger(vote.point);
+        const flag9 = vote.point >= 0;
+        const flag10 = vote.point <= privateUserYearVote.votes.length * 5;
+        const flag11 = totalPoints <= privateUserYearVote.votes.length * 5;
+        const flag12 = typeof vote.message === 'string';
+        logger.debug({
+          flag1,
+          flag2,
+          flag3,
+          flag4,
+          flag5,
+          flag6,
+          flag7,
+          flag8,
+          flag9,
+          flag10,
+          flag11,
+          flag12,
+        });
+
         if (
           !(
             privateUserYearVote.createdAt &&
