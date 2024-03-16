@@ -27,11 +27,7 @@ const path =
 export const onCreate = () =>
   functions()
     .runWith({
-      secrets: [
-        'DATA_ENCRYPTION_KEY',
-        'SLACK_BOT_USER_OAUTH_TOKEN',
-        'SLACK_NOTIFY_CHANNEL',
-      ],
+      secrets: ['SLACK_BOT_USER_OAUTH_TOKEN', 'SLACK_NOTIFY_CHANNEL'],
     })
     .firestore.document(path)
     .onCreate(async (snapshot, context) => {
