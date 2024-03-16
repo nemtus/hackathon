@@ -36,7 +36,8 @@ jobs:
       - name: Restore testnet env file content from secret
         env:
           FUNCTIONS_ENV: ${{ secrets.FUNCTIONS_ENV }}
-        run: echo $FUNCTIONS_ENV | base64 --decode --ignore-garbage > ./functions.env
+        run: echo $FUNCTIONS_ENV | base64 --decode --ignore-garbage > ./functions/.env
+      - run: ls functions -la
 
       - run: npm ci
       - run: npm run build:mainnet
