@@ -189,7 +189,7 @@ const HomePageComponent = () => {
       });
     getConfigHackathonYearFinalVote(CURRENT_YEAR)
       .then((configHackathonYearFinalVote) => {
-        setConfigHackathonYearVote(configHackathonYearFinalVote);
+        setConfigHackathonYearFinalVote(configHackathonYearFinalVote);
       })
       .catch((error) => {
         console.error(error);
@@ -545,7 +545,7 @@ const HomePageComponent = () => {
         next: (snapshot) => {
           const data = snapshot.data();
           if (data) {
-            setPrivateUserYearVote(data);
+            setPrivateUserYearFinalVote(data);
           }
         },
         error: (error) => {
