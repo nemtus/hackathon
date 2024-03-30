@@ -20,6 +20,14 @@ const JudgeCreatePageComponent = loadable(
 const VoteCreatePageComponent = loadable(
   () => import('components/pages/users/[userId]/years/[yearId]/votes/create')
 );
+const FinalJudgeCreatePageComponent = loadable(
+  () =>
+    import('components/pages/users/[userId]/years/[yearId]/final-judges/create')
+);
+const FinalVoteCreatePageComponent = loadable(
+  () =>
+    import('components/pages/users/[userId]/years/[yearId]/final-votes/create')
+);
 const PublicResultPageComponent = loadable(
   () => import('components/pages/years/[yearId]/results/[resultId]')
 );
@@ -55,6 +63,14 @@ function App() {
         <Route
           path="/private/users/:userId/years/:yearId/votes/create"
           element={<VoteCreatePageComponent />}
+        />
+        <Route
+          path="/private/users/:userId/years/:yearId/final-judges/create"
+          element={<FinalJudgeCreatePageComponent />}
+        />
+        <Route
+          path="/private/users/:userId/years/:yearId/final-votes/create"
+          element={<FinalVoteCreatePageComponent />}
         />
         <Route
           path="/years/:yearId/results/:resultId"

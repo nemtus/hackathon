@@ -6,6 +6,8 @@ import PublicTeamCardWidgetComponent from 'components/widgets/card/PublicTeamCar
 import PublicTeamMembersTableCardWidgetComponent from 'components/widgets/card/PublicTeamMembersTableCard';
 import PublicJudgesForAwardCardWidgetComponent from 'components/widgets/card/PublicJudgesForAwardCard';
 import PublicVotesForAwardCardWidgetComponent from 'components/widgets/card/PublicVotesForAwardCard';
+import PublicFinalJudgesForAwardCardWidgetComponent from 'components/widgets/card/PublicFinalJudgesForAwardCard';
+import PublicFinalVotesForAwardCardWidgetComponent from 'components/widgets/card/PublicFinalVotesForAwardCard';
 
 const PublicResultPageComponent = () => {
   const { yearId, resultId } = useParams();
@@ -63,7 +65,9 @@ const PublicResultPageComponent = () => {
             <div className="card-title justify-end">
               Total Points:{publicResult.totalPoints} = Judge Points:
               {publicResult.judgesTotalPoints} + Vote Points:
-              {publicResult.votesTotalPoints}
+              {publicResult.votesTotalPoints} + Final Judge Points:
+              {publicResult.finalJudgesTotalPoints} + Final Vote Points:
+              {publicResult.finalVotesTotalPoints}
             </div>
           </div>
           <div className="card-content flex flex-col justify-start">
@@ -80,6 +84,15 @@ const PublicResultPageComponent = () => {
             <PublicVotesForAwardCardWidgetComponent
               submissionId={publicResult.submissionId}
               publicUserYearVotes={publicResult.votes}
+            />
+            <PublicFinalJudgesForAwardCardWidgetComponent
+              submissionId={publicResult.submissionId}
+              publicUserYearFinalJudges={publicResult.finalJudges}
+              judgeUsers={publicResult.judgeUsers}
+            />
+            <PublicFinalVotesForAwardCardWidgetComponent
+              submissionId={publicResult.submissionId}
+              publicUserYearFinalVotes={publicResult.finalVotes}
             />
           </div>
         </div>

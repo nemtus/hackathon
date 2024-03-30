@@ -10,6 +10,8 @@ import PublicTeamMembersTableCardWidgetComponent from 'components/widgets/card/P
 import PublicJudgesForAwardCardWidgetComponent from 'components/widgets/card/PublicJudgesForAwardCard';
 import PublicVotesForAwardCardWidgetComponent from 'components/widgets/card/PublicVotesForAwardCard';
 import AwardImageComponent from 'components/widgets/common/AwardImage';
+import PublicFinalJudgesForAwardCardWidgetComponent from 'components/widgets/card/PublicFinalJudgesForAwardCard';
+import PublicFinalVotesForAwardCardWidgetComponent from 'components/widgets/card/PublicFinalVotesForAwardCard';
 
 const PublicAwardsPageComponent = () => {
   const { yearId } = useParams();
@@ -83,6 +85,15 @@ const PublicAwardsPageComponent = () => {
                 <PublicVotesForAwardCardWidgetComponent
                   submissionId={publicResult.submissionId}
                   publicUserYearVotes={publicResult.votes}
+                />
+                <PublicFinalJudgesForAwardCardWidgetComponent
+                  submissionId={publicResult.submissionId}
+                  publicUserYearFinalJudges={publicResult.finalJudges}
+                  judgeUsers={publicResult.judgeUsers}
+                />
+                <PublicFinalVotesForAwardCardWidgetComponent
+                  submissionId={publicResult.submissionId}
+                  publicUserYearFinalVotes={publicResult.finalVotes}
                 />
               </div>
             </div>

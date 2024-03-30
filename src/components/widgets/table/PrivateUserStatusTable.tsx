@@ -7,16 +7,22 @@ import { PrivateUserYearTeam } from 'models/private/users/years/teams';
 import { PrivateUserYearSubmission } from 'models/private/users/years/submissions';
 import { PrivateUserYearVote } from 'models/private/users/years/votes';
 import { PrivateUserYearJudge } from 'models/private/users/years/judges';
+import { PrivateUserYearFinalVote } from 'models/private/users/years/final-votes';
+import { PrivateUserYearFinalJudge } from 'models/private/users/years/final-judges';
 import EntryButtonComponent from 'components/widgets/button/EntryButton';
 import TeamCreateButton from 'components/widgets/button/TeamCreateButton';
 import SubmissionCreateButton from 'components/widgets/button/SubmissionCreateButton';
 import JudgeCreateButton from 'components/widgets/button/JudgeCreateButton';
 import VoteCreateButton from 'components/widgets/button/VoteCreateButton';
+import FinalJudgeCreateButton from 'components/widgets/button/FinalJudgeCreateButton';
+import FinalVoteCreateButton from 'components/widgets/button/FinalVoteCreateButton';
 import { ConfigHackathonYearEntry } from 'models/configs/hackathon/years/entry';
 import { ConfigHackathonYearTeam } from 'models/configs/hackathon/years/team';
 import { ConfigHackathonYearSubmission } from 'models/configs/hackathon/years/submission';
 import { ConfigHackathonYearJudge } from 'models/configs/hackathon/years/judge';
 import { ConfigHackathonYearVote } from 'models/configs/hackathon/years/vote';
+import { ConfigHackathonYearFinalJudge } from 'models/configs/hackathon/years/final-judge';
+import { ConfigHackathonYearFinalVote } from 'models/configs/hackathon/years/final-vote';
 
 export type PrivateUserStatus = {
   signInStatus?: 'OK' | 'Unknown';
@@ -88,6 +94,32 @@ export type PrivateUserStatus = {
     | 'Tx Unconfirmed'
     | 'Tx Confirmed'
     | 'Unknown';
+  finalJudgeStatus?:
+    | 'Closed'
+    | 'Limited'
+    | 'Preparing'
+    | 'Waiting Account Set Up'
+    | 'Not Yet'
+    | 'Now Under Review'
+    | 'Creating'
+    | 'Created'
+    | 'Tx Announced'
+    | 'Tx Unconfirmed'
+    | 'Tx Confirmed'
+    | 'Unknown';
+  finalVoteStatus?:
+    | 'Closed'
+    | 'Limited'
+    | 'Preparing'
+    | 'Waiting Account Set Up'
+    | 'Not Yet'
+    | 'Now Under Review'
+    | 'Creating'
+    | 'Created'
+    | 'Tx Announced'
+    | 'Tx Unconfirmed'
+    | 'Tx Confirmed'
+    | 'Unknown';
 };
 
 const PrivateUserStatusTableWidgetComponent = (props: {
@@ -101,6 +133,11 @@ const PrivateUserStatusTableWidgetComponent = (props: {
     | undefined;
   configHackathonYearJudge: ConfigHackathonYearJudge | null | undefined;
   configHackathonYearVote: ConfigHackathonYearVote | null | undefined;
+  configHackathonYearFinalJudge:
+    | ConfigHackathonYearFinalJudge
+    | null
+    | undefined;
+  configHackathonYearFinalVote: ConfigHackathonYearFinalVote | null | undefined;
   privateUser: PrivateUser | null | undefined;
   privateUserTxs: PrivateUserTx[] | null | undefined;
   privateUserYearEntry: PrivateUserYearEntry | null | undefined;
@@ -108,6 +145,8 @@ const PrivateUserStatusTableWidgetComponent = (props: {
   privateUserYearSubmission: PrivateUserYearSubmission | null | undefined;
   privateUserYearVote: PrivateUserYearVote | null | undefined;
   privateUserYearJudge: PrivateUserYearJudge | null | undefined;
+  privateUserYearFinalVote: PrivateUserYearFinalVote | null | undefined;
+  privateUserYearFinalJudge: PrivateUserYearFinalJudge | null | undefined;
 }) => {
   const [now, setNow] = useState<Date>(new Date());
 
@@ -661,6 +700,219 @@ const PrivateUserStatusTableWidgetComponent = (props: {
       return 'Unknown';
     })();
 
+  const finalJudgeStatus: PrivateUserStatus['finalJudgeStatus'] =
+    ((): PrivateUserStatus['finalJudgeStatus'] => {
+      const createAndSetUpNewAccountTx = props.privateUserTxs
+        ?.sort((a, b) => {
+          if (!a.createdAt || !b.createdAt) {
+            return 0;
+          }
+          if (a.createdAt > b.createdAt) return -1;
+          if (b.createdAt < a.createdAt) return 1;
+          return 0;
+        })
+        .filter((tx) => tx.description === 'CreateAndSetUpNewAccount')[0];
+      // const createJudgeTx = props.privateUserTxs
+      //   ?.sort((a, b) => {
+      //     if (!a.createdAt || !b.createdAt) {
+      //       return 0;
+      //     }
+      //     if (a.createdAt > b.createdAt) return -1;
+      //     if (b.createdAt < a.createdAt) return 1;
+      //     return 0;
+      //   })
+      //   .filter((tx) => tx.description === `CreateNewJudge${props.yearId}`)[0];
+      const createFinalJudgeTx = props.privateUserTxs
+        ?.sort((a, b) => {
+          if (!a.createdAt || !b.createdAt) {
+            return 0;
+          }
+          if (a.createdAt > b.createdAt) return -1;
+          if (b.createdAt < a.createdAt) return 1;
+          return 0;
+        })
+        .filter(
+          (tx) => tx.description === `CreateNewFinalJudge${props.yearId}`
+        )[0];
+      if (
+        !createAndSetUpNewAccountTx ||
+        !createAndSetUpNewAccountTx.confirmed
+      ) {
+        return 'Waiting Account Set Up';
+      }
+      if (
+        !props.configHackathonYearFinalJudge?.users.some(
+          (userId) => userId === props.authUser?.uid
+        )
+      ) {
+        return 'Limited';
+      }
+      if (
+        props.configHackathonYearFinalJudge &&
+        now < props.configHackathonYearFinalJudge.startAt
+      ) {
+        return 'Preparing';
+      }
+      if (
+        props.configHackathonYearFinalJudge &&
+        props.configHackathonYearFinalJudge.endAt < now
+      ) {
+        if (
+          createAndSetUpNewAccountTx?.confirmed &&
+          props.privateUserYearFinalJudge &&
+          props.privateUserYearFinalJudge.approved === false
+        ) {
+          return 'Now Under Review';
+        }
+        if (createFinalJudgeTx?.confirmed) {
+          return 'Tx Confirmed';
+        }
+        if (createFinalJudgeTx?.unconfirmed) {
+          return 'Tx Unconfirmed';
+        }
+        if (createFinalJudgeTx?.announced) {
+          return 'Tx Announced';
+        }
+        if (createFinalJudgeTx?.createdAt) {
+          return 'Created';
+        }
+        return 'Closed';
+      }
+      if (
+        createAndSetUpNewAccountTx?.confirmed &&
+        props.privateUserYearJudge &&
+        !props.privateUserYearFinalJudge
+      ) {
+        return 'Not Yet';
+      }
+      if (
+        createAndSetUpNewAccountTx?.confirmed &&
+        props.privateUserYearFinalJudge &&
+        props.privateUserYearFinalJudge.approved === false
+      ) {
+        return 'Now Under Review';
+      }
+      if (!createFinalJudgeTx) {
+        return 'Creating';
+      }
+      if (createFinalJudgeTx.confirmed) {
+        return 'Tx Confirmed';
+      }
+      if (createFinalJudgeTx.unconfirmed) {
+        return 'Tx Unconfirmed';
+      }
+      if (createFinalJudgeTx.announced) {
+        return 'Tx Announced';
+      }
+      if (createFinalJudgeTx.createdAt) {
+        return 'Created';
+      }
+      return 'Unknown';
+    })();
+
+  const finalVoteStatus: PrivateUserStatus['finalVoteStatus'] =
+    ((): PrivateUserStatus['finalVoteStatus'] => {
+      const createAndSetUpNewAccountTx = props.privateUserTxs
+        ?.sort((a, b) => {
+          if (!a.createdAt || !b.createdAt) {
+            return 0;
+          }
+          if (a.createdAt > b.createdAt) return -1;
+          if (b.createdAt < a.createdAt) return 1;
+          return 0;
+        })
+        .filter((tx) => tx.description === 'CreateAndSetUpNewAccount')[0];
+      const createFinalVoteTx = props.privateUserTxs
+        ?.sort((a, b) => {
+          if (!a.createdAt || !b.createdAt) {
+            return 0;
+          }
+          if (a.createdAt > b.createdAt) return -1;
+          if (b.createdAt < a.createdAt) return 1;
+          return 0;
+        })
+        .filter(
+          (tx) => tx.description === `CreateNewFinalVote${props.yearId}`
+        )[0];
+      if (
+        !createAndSetUpNewAccountTx ||
+        !createAndSetUpNewAccountTx.confirmed
+      ) {
+        return 'Waiting Account Set Up';
+      }
+      if (
+        props.configHackathonYearFinalJudge?.users.some(
+          (userId) => userId === props.authUser?.uid
+        )
+      ) {
+        return 'Limited';
+      }
+      if (props.privateUserYearSubmission) {
+        return 'Limited';
+      }
+      if (
+        props.configHackathonYearFinalVote &&
+        now < props.configHackathonYearFinalVote.startAt
+      ) {
+        return 'Preparing';
+      }
+      if (
+        props.configHackathonYearFinalVote &&
+        props.configHackathonYearFinalVote.endAt < now
+      ) {
+        if (
+          createAndSetUpNewAccountTx?.confirmed &&
+          props.privateUserYearFinalVote &&
+          props.privateUserYearFinalVote.approved === false
+        ) {
+          return 'Now Under Review';
+        }
+        if (createFinalVoteTx?.confirmed) {
+          return 'Tx Confirmed';
+        }
+        if (createFinalVoteTx?.unconfirmed) {
+          return 'Tx Unconfirmed';
+        }
+        if (createFinalVoteTx?.announced) {
+          return 'Tx Announced';
+        }
+        if (createFinalVoteTx?.createdAt) {
+          return 'Created';
+        }
+        return 'Closed';
+      }
+      if (
+        createAndSetUpNewAccountTx?.confirmed &&
+        props.privateUserYearVote &&
+        !props.privateUserYearFinalVote
+      ) {
+        return 'Not Yet';
+      }
+      if (
+        createAndSetUpNewAccountTx?.confirmed &&
+        props.privateUserYearFinalVote &&
+        props.privateUserYearFinalVote.approved === false
+      ) {
+        return 'Now Under Review';
+      }
+      if (!createFinalVoteTx) {
+        return 'Creating';
+      }
+      if (createFinalVoteTx.confirmed) {
+        return 'Tx Confirmed';
+      }
+      if (createFinalVoteTx.unconfirmed) {
+        return 'Tx Unconfirmed';
+      }
+      if (createFinalVoteTx.announced) {
+        return 'Tx Announced';
+      }
+      if (createFinalVoteTx.createdAt) {
+        return 'Created';
+      }
+      return 'Unknown';
+    })();
+
   const privateUserStatus: PrivateUserStatus = {
     signInStatus,
     accountStatus,
@@ -669,6 +921,8 @@ const PrivateUserStatusTableWidgetComponent = (props: {
     submissionStatus,
     judgeStatus,
     voteStatus,
+    finalJudgeStatus,
+    finalVoteStatus,
   };
 
   return (
@@ -853,6 +1107,70 @@ const PrivateUserStatusTableWidgetComponent = (props: {
             <span>{privateUserStatus.voteStatus}</span>
             <span>
               {privateUserStatus.voteStatus === 'Now Under Review'
+                ? ' : This process is manually executed by NEMTUS internal members and may take up to a day to complete.'
+                : null}
+            </span>
+          </td>
+        </tr>
+        <tr key="finalJudgeStatus">
+          <td>Final Judge</td>
+          <td>
+            {privateUserStatus.finalJudgeStatus === 'Tx Confirmed' ? (
+              <span className="text-success">✔</span>
+            ) : privateUserStatus.finalJudgeStatus === 'Unknown' ? (
+              <span>?</span>
+            ) : privateUserStatus.finalJudgeStatus === 'Not Yet' ? (
+              <FinalJudgeCreateButton
+                userId={props.privateUser?.id ?? ''}
+                yearId={props.yearId}
+                disabled={false}
+              />
+            ) : privateUserStatus.finalJudgeStatus === 'Limited' ? (
+              <span className="text-error">-</span>
+            ) : privateUserStatus.finalJudgeStatus === 'Closed' ? (
+              <span className="text-error">-</span>
+            ) : privateUserStatus.finalJudgeStatus === 'Preparing' ? (
+              <span className="text-success">-</span>
+            ) : (
+              <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+            )}
+          </td>
+          <td>
+            <span>{privateUserStatus.finalJudgeStatus}</span>
+            <span>
+              {privateUserStatus.finalJudgeStatus === 'Now Under Review'
+                ? ' : This process is manually executed by NEMTUS internal members and may take up to a day to complete.'
+                : null}
+            </span>
+          </td>
+        </tr>
+        <tr key="finalVoteStatus">
+          <td>Final Vote</td>
+          <td>
+            {privateUserStatus.finalVoteStatus === 'Tx Confirmed' ? (
+              <span className="text-success">✔</span>
+            ) : privateUserStatus.finalVoteStatus === 'Unknown' ? (
+              <span>?</span>
+            ) : privateUserStatus.finalVoteStatus === 'Not Yet' ? (
+              <FinalVoteCreateButton
+                userId={props.privateUser?.id ?? ''}
+                yearId={props.yearId}
+                disabled={false}
+              />
+            ) : privateUserStatus.finalVoteStatus === 'Limited' ? (
+              <span className="text-error">-</span>
+            ) : privateUserStatus.finalVoteStatus === 'Closed' ? (
+              <span className="text-error">-</span>
+            ) : privateUserStatus.finalVoteStatus === 'Preparing' ? (
+              <span className="text-success">-</span>
+            ) : (
+              <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+            )}
+          </td>
+          <td>
+            <span>{privateUserStatus.finalVoteStatus}</span>
+            <span>
+              {privateUserStatus.finalVoteStatus === 'Now Under Review'
                 ? ' : This process is manually executed by NEMTUS internal members and may take up to a day to complete.'
                 : null}
             </span>
