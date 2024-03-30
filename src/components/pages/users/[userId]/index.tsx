@@ -59,6 +59,16 @@ import {
   getConfigHackathonYearVote,
 } from 'models/configs/hackathon/years/vote';
 import {
+  docRef as configHackathonYearFinalJudgeDocRef,
+  ConfigHackathonYearFinalJudge,
+  getConfigHackathonYearFinalJudge,
+} from 'models/configs/hackathon/years/final-judge';
+import {
+  docRef as configHackathonYearFinalVoteDocRef,
+  ConfigHackathonYearFinalVote,
+  getConfigHackathonYearFinalVote,
+} from 'models/configs/hackathon/years/final-vote';
+import {
   docRef as privateUserYearJudgeDocRef,
   getPrivateUserYearJudge,
   PrivateUserYearJudge,
@@ -68,6 +78,17 @@ import {
   getPrivateUserYearVote,
   PrivateUserYearVote,
 } from 'models/private/users/years/votes';
+import {
+  docRef as privateUserYearFinalJudgeDocRef,
+  getPrivateUserYearFinalJudge,
+  PrivateUserYearFinalJudge,
+} from 'models/private/users/years/final-judges';
+import {
+  docRef as privateUserYearFinalVoteDocRef,
+  getPrivateUserYearFinalVote,
+  PrivateUserYearFinalVote,
+} from 'models/private/users/years/final-votes';
+
 import PrivateUserJudgeCardWidgetComponent from 'components/widgets/card/PrivateUserJudgeCard';
 import PrivateUserVoteCardWidgetComponent from 'components/widgets/card/PrivateUserVoteCard';
 
@@ -93,6 +114,10 @@ const UserPageComponent = () => {
   const [configHackathonYearVote, setConfigHackathonYearVote] = useState<
     ConfigHackathonYearVote | null | undefined
   >(null);
+  const [configHackathonYearFinalJudge, setConfigHackathonYearFinalJudge] =
+    useState<ConfigHackathonYearFinalJudge | null | undefined>(null);
+  const [configHackathonYearFinalVote, setConfigHackathonYearFinalVote] =
+    useState<ConfigHackathonYearFinalVote | null | undefined>(null);
   const [privateUser, setPrivateUser] = useState<
     PrivateUser | null | undefined
   >(null);
@@ -113,6 +138,12 @@ const UserPageComponent = () => {
   >(null);
   const [privateUserYearVote, setPrivateUserYearVote] = useState<
     PrivateUserYearVote | null | undefined
+  >(null);
+  const [privateUserYearFinalJudge, setPrivateUserYearFinalJudge] = useState<
+    PrivateUserYearFinalJudge | null | undefined
+  >(null);
+  const [privateUserYearFinalVote, setPrivateUserYearFinalVote] = useState<
+    PrivateUserYearFinalVote | null | undefined
   >(null);
 
   useEffect(() => {
@@ -153,6 +184,20 @@ const UserPageComponent = () => {
     getConfigHackathonYearVote(CURRENT_YEAR)
       .then((configHackathonYearVote) => {
         setConfigHackathonYearVote(configHackathonYearVote);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    getConfigHackathonYearFinalJudge(CURRENT_YEAR)
+      .then((configHackathonYearFinalJudge) => {
+        setConfigHackathonYearFinalJudge(configHackathonYearFinalJudge);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    getConfigHackathonYearFinalVote(CURRENT_YEAR)
+      .then((configHackathonYearFinalVote) => {
+        setConfigHackathonYearFinalVote(configHackathonYearFinalVote);
       })
       .catch((error) => {
         console.error(error);
@@ -202,6 +247,20 @@ const UserPageComponent = () => {
     getPrivateUserYearVote(userId, CURRENT_YEAR, userId)
       .then((privateUserYearVote) => {
         setPrivateUserYearVote(privateUserYearVote);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    getPrivateUserYearFinalJudge(userId, CURRENT_YEAR, userId)
+      .then((privateUserYearFinalJudge) => {
+        setPrivateUserYearFinalJudge(privateUserYearFinalJudge);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    getPrivateUserYearFinalVote(userId, CURRENT_YEAR, userId)
+      .then((privateUserYearFinalVote) => {
+        setPrivateUserYearFinalVote(privateUserYearFinalVote);
       })
       .catch((error) => {
         console.error(error);
@@ -296,6 +355,46 @@ const UserPageComponent = () => {
           const data = snapshot.data();
           if (data) {
             setConfigHackathonYearVote(data);
+          }
+        },
+        error: (error) => {
+          console.error(error);
+        },
+        complete: () => {
+          console.log('complete');
+        },
+      }
+    );
+    const unsubscribeConfigHackathonYearFinalJudgeDocListener = onSnapshot(
+      configHackathonYearFinalJudgeDocRef(CURRENT_YEAR),
+      {
+        includeMetadataChanges: true,
+      },
+      {
+        next: (snapshot) => {
+          const data = snapshot.data();
+          if (data) {
+            setConfigHackathonYearFinalJudge(data);
+          }
+        },
+        error: (error) => {
+          console.error(error);
+        },
+        complete: () => {
+          console.log('complete');
+        },
+      }
+    );
+    const unsubscribeConfigHackathonYearFinalVoteDocListener = onSnapshot(
+      configHackathonYearFinalVoteDocRef(CURRENT_YEAR),
+      {
+        includeMetadataChanges: true,
+      },
+      {
+        next: (snapshot) => {
+          const data = snapshot.data();
+          if (data) {
+            setConfigHackathonYearFinalVote(data);
           }
         },
         error: (error) => {
@@ -431,6 +530,40 @@ const UserPageComponent = () => {
         },
       }
     );
+    const unsubscribePrivateUserYearFinalJudgeDocListener = onSnapshot(
+      privateUserYearFinalJudgeDocRef(userId, CURRENT_YEAR, userId),
+      {
+        next: (snapshot) => {
+          const data = snapshot.data();
+          if (data) {
+            setPrivateUserYearFinalJudge(data);
+          }
+        },
+        error: (error) => {
+          console.error(error);
+        },
+        complete: () => {
+          console.log('complete');
+        },
+      }
+    );
+    const unsubscribePrivateUserYearFinalVoteDocListener = onSnapshot(
+      privateUserYearFinalVoteDocRef(userId, CURRENT_YEAR, userId),
+      {
+        next: (snapshot) => {
+          const data = snapshot.data();
+          if (data) {
+            setPrivateUserYearFinalVote(data);
+          }
+        },
+        error: (error) => {
+          console.error(error);
+        },
+        complete: () => {
+          console.log('complete');
+        },
+      }
+    );
 
     return () => {
       unsubscribeConfigHackathonYearEntryDocListener();
@@ -438,6 +571,8 @@ const UserPageComponent = () => {
       unsubscribeConfigHackathonYearSubmissionDocListener();
       unsubscribeConfigHackathonYearJudgeDocListener();
       unsubscribeConfigHackathonYearVoteDocListener();
+      unsubscribeConfigHackathonYearFinalJudgeDocListener();
+      unsubscribeConfigHackathonYearFinalVoteDocListener();
       unsubscribePrivateUserDocListener();
       unsubscribePrivateUserTxsCollectionListener();
       unsubscribePrivateUserYearEntryDocListener();
@@ -445,6 +580,8 @@ const UserPageComponent = () => {
       unsubscribePrivateUserYearSubmissionDocListener();
       unsubscribePrivateUserYearJudgeDocListener();
       unsubscribePrivateUserYearVoteDocListener();
+      unsubscribePrivateUserYearFinalJudgeDocListener();
+      unsubscribePrivateUserYearFinalVoteDocListener();
     };
   }, [
     userId,
@@ -454,6 +591,8 @@ const UserPageComponent = () => {
     setConfigHackathonYearSubmission,
     setConfigHackathonYearJudge,
     setConfigHackathonYearVote,
+    setConfigHackathonYearFinalJudge,
+    setConfigHackathonYearFinalVote,
     setPrivateUser,
     setPrivateUserTxs,
     setPrivateUserYearEntry,
@@ -461,6 +600,8 @@ const UserPageComponent = () => {
     setPrivateUserYearSubmission,
     setPrivateUserYearJudge,
     setPrivateUserYearVote,
+    setPrivateUserYearFinalJudge,
+    setPrivateUserYearFinalVote,
   ]);
 
   return (
@@ -473,6 +614,8 @@ const UserPageComponent = () => {
         configHackathonYearSubmission={configHackathonYearSubmission}
         configHackathonYearJudge={configHackathonYearJudge}
         configHackathonYearVote={configHackathonYearVote}
+        configHackathonYearFinalJudge={configHackathonYearFinalJudge}
+        configHackathonYearFinalVote={configHackathonYearFinalVote}
         privateUser={privateUser}
         privateUserTxs={privateUserTxs}
         privateUserYearEntry={privateUserYearEntry}
@@ -480,6 +623,8 @@ const UserPageComponent = () => {
         privateUserYearSubmission={privateUserYearSubmission}
         privateUserYearJudge={privateUserYearJudge}
         privateUserYearVote={privateUserYearVote}
+        privateUserYearFinalJudge={privateUserYearFinalJudge}
+        privateUserYearFinalVote={privateUserYearFinalVote}
       />
       {privateUser ? <PrivateUserCardWidgetComponent {...privateUser} /> : null}
       {privateUserYearTeam ? (

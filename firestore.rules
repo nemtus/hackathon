@@ -157,6 +157,62 @@ service cloud.firestore {
       vote.approved == false;
     }
 
+    function isValidFinalJudge(judge, userId, yearId, judgeId) {
+      return judge.keys().hasAll([
+        'id',
+        'userId',
+        'yearId',
+        'judges',
+        'totalPoints',
+        'approved',
+        'createdAt',
+        'updatedAt',
+      ]) &&
+      judge.id == userId &&
+      judge.id == judgeId &&
+      judge.userId == userId &&
+      judge.yearId == yearId &&
+      // judge.judges is list &&
+      judge.totalPoints is number &&
+      // judge.totalPoints == judge.judges.length * 100 &&
+      judge.approved is bool &&
+      judge.createdAt is timestamp &&
+      judge.updatedAt is timestamp;
+    }
+
+    function isCreateableFinalJudge(judge, userId, yearId, judgeId) {
+      return isValidFinalJudge(judge, userId, yearId, judgeId) &&
+      judge.approved == false;
+    }
+
+    function isValidFinalVote(vote, userId, yearId, voteId) {
+      return vote.keys().hasAll([
+        'id',
+        'userId',
+        'yearId',
+        'votes',
+        'totalPoints',
+        'approved',
+        'createdAt',
+        'updatedAt',
+      ]) &&
+      vote.id == userId &&
+      vote.id == voteId &&
+      vote.userId == userId &&
+      vote.yearId == yearId &&
+      // vote.votes is list &&
+      vote.totalPoints is number &&
+      // vote.totalPoints == vote.votes.length * 5 &&
+      vote.approved is bool &&
+      vote.createdAt is timestamp &&
+      vote.updatedAt is timestamp;
+    }
+
+    function isCreateableFinalVote(vote, userId, yearId, voteId) {
+      return isValidFinalVote(vote, userId, yearId, voteId) &&
+      vote.approved == false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
@@ -267,6 +323,22 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /v/1/scopes/private/users/{userId}/years/{yearId}/finalJudges/{finalJudgeId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isUserOrAdminAuthenticated(userId);
+      allow create: if isUserOrAdminAuthenticated(userId) && isCreateableJudge(request.resource.data, userId, yearId, finalJudgeId);
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/private/users/{userId}/years/{yearId}/finalVotes/{finalVoteId} {
+      allow get: if isUserOrAdminAuthenticated(userId);
+      allow list: if isUserOrAdminAuthenticated(userId);
+      allow create: if isUserOrAdminAuthenticated(userId) && isCreateableVote(request.resource.data, userId, yearId, finalVoteId);
+      allow update: if false;
+      allow delete: if false;
+    }
+
     // for public
     match /v/1/scopes/public/users/{userId} {
       allow get: if true;
@@ -309,6 +381,22 @@ service cloud.firestore {
     }
 
     match /v/1/scopes/public/years/{yearId}/votes/{voteId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/public/years/{yearId}/finalJudges/{finalJudgeId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /v/1/scopes/public/years/{yearId}/finalVotes/{finalVoteId} {
       allow get: if true;
       allow list: if true;
       allow create: if false;

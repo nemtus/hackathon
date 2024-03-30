@@ -5,6 +5,7 @@ import {
 } from 'models/configs/hackathon/years/award';
 import { PublicUser } from 'models/public/users';
 import { getAllPublicJudges, PublicJudge } from '../judges';
+import { getAllPublicFinalJudges, PublicFinalJudge } from '../final-judges';
 import {
   getAllPublicSubmissions,
   getPublicSubmission,
@@ -12,6 +13,7 @@ import {
 } from '../submissions';
 import { getAllPublicTeams, getPublicTeam, PublicTeam } from '../teams';
 import { getAllPublicVotes, PublicVote } from '../votes';
+import { getAllPublicFinalVotes, PublicFinalVote } from '../final-votes';
 
 export type PublicResult = {
   yearId: string;
@@ -21,10 +23,14 @@ export type PublicResult = {
   submission: PublicSubmission;
   judges: PublicJudge[];
   votes: PublicVote[];
+  finalJudges: PublicFinalJudge[];
+  finalVotes: PublicFinalVote[];
   awards: Award[];
   judgeUsers: PublicUser[];
   judgesTotalPoints: number;
   votesTotalPoints: number;
+  finalJudgesTotalPoints: number;
+  finalVotesTotalPoints: number;
   totalPoints: number;
 };
 
@@ -40,14 +46,27 @@ export const getPublicResult = async (
     publicSubmission,
     publicJudges,
     publicVotes,
+    publicFinalJudges,
+    publicFinalVotes,
     configHackathonYearAward,
   ] = await Promise.all([
     getPublicTeam(yearId, teamId),
     getPublicSubmission(yearId, submissionId),
     getAllPublicJudges(yearId),
     getAllPublicVotes(yearId),
+    getAllPublicFinalJudges(yearId),
+    getAllPublicFinalVotes(yearId),
     getConfigHackathonYearAward(yearId),
   ]);
+  console.log({
+    publicTeam,
+    publicSubmission,
+    publicJudges,
+    publicVotes,
+    publicFinalJudges,
+    publicFinalVotes,
+    configHackathonYearAward,
+  });
   if (!publicTeam || !publicSubmission || !configHackathonYearAward) {
     return undefined;
   }
@@ -59,6 +78,8 @@ export const getPublicResult = async (
     publicSubmission,
     publicJudges,
     publicVotes,
+    publicFinalJudges,
+    publicFinalVotes,
     configHackathonYearAward
   );
 };
@@ -71,6 +92,8 @@ const createPublicResultData = (
   publicSubmission: PublicSubmission,
   publicJudges: PublicJudge[],
   publicVotes: PublicVote[],
+  publicFinalJudges: PublicFinalJudge[],
+  publicFinalVotes: PublicFinalVote[],
   configHackathonYearAward: ConfigHackathonYearAward
 ): PublicResult => {
   const judges = publicJudges
@@ -103,7 +126,41 @@ const createPublicResultData = (
     ? votes.reduce((acc, cur) => acc + cur)
     : 0;
 
-  const totalPoints = judgesTotalPoints + votesTotalPoints ?? 0;
+  const finalJudges = publicFinalJudges
+    .map((publicFinalJudge) => {
+      return publicFinalJudge.judges.find(
+        (judge) =>
+          judge.yearId === yearId &&
+          judge.teamId === teamId &&
+          judge.submissionId === submissionId
+      );
+    })
+    .filter((judge) => judge !== undefined)
+    .map((judge) => judge?.point ?? 0);
+  const finalJudgesTotalPoints = finalJudges.length
+    ? finalJudges.reduce((acc, cur) => acc + cur)
+    : 0;
+
+  const finalVotes = publicFinalVotes
+    .map((publicFinalVote) => {
+      return publicFinalVote.votes.find(
+        (vote) =>
+          vote.yearId === yearId &&
+          vote.teamId === teamId &&
+          vote.submissionId === submissionId
+      );
+    })
+    .filter((vote) => vote !== undefined)
+    .map((vote) => vote?.point ?? 0);
+  const finalVotesTotalPoints = finalVotes.length
+    ? finalVotes.reduce((acc, cur) => acc + cur)
+    : 0;
+
+  const totalPoints =
+    judgesTotalPoints +
+      votesTotalPoints +
+      finalJudgesTotalPoints +
+      finalVotesTotalPoints ?? 0;
 
   const awards = configHackathonYearAward.awards.filter((award) => {
     return award.submissionId === publicSubmission.id;
@@ -119,10 +176,14 @@ const createPublicResultData = (
     submission: publicSubmission,
     judges: publicJudges,
     votes: publicVotes,
+    finalJudges: publicFinalJudges,
+    finalVotes: publicFinalVotes,
     awards,
     judgeUsers,
     judgesTotalPoints,
     votesTotalPoints,
+    finalJudgesTotalPoints,
+    finalVotesTotalPoints,
     totalPoints,
   };
 };
@@ -137,12 +198,16 @@ export const getAllPublicResults = async (
     publicSubmissions,
     publicJudges,
     publicVotes,
+    publicFinalJudges,
+    publicFinalVotes,
     configHackathonYearAward,
   ] = await Promise.all([
     getAllPublicTeams(yearId),
     getAllPublicSubmissions(yearId),
     getAllPublicJudges(yearId),
     getAllPublicVotes(yearId),
+    getAllPublicFinalJudges(yearId),
+    getAllPublicFinalVotes(yearId),
     getConfigHackathonYearAward(yearId),
   ]);
 
@@ -162,6 +227,8 @@ export const getAllPublicResults = async (
         publicSubmission,
         publicJudges,
         publicVotes,
+        publicFinalJudges,
+        publicFinalVotes,
         configHackathonYearAward
       );
     })
