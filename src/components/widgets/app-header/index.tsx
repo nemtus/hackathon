@@ -34,6 +34,12 @@ const appMenuList: AppMenu[] = [
     link: '/years/2024/results',
   },
   {
+    key: '2024',
+    icon: FaAward,
+    label: '2024 Award List',
+    link: '/years/2024/awards',
+  },
+  {
     key: '2023',
     icon: FaList,
     label: '2023 Entry List',
