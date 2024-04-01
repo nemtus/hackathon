@@ -67,7 +67,9 @@ const PublicAwardsPageComponent = () => {
                   <div className="card-title justify-end">
                     Total Points:{publicResult.totalPoints} = Judge Points:
                     {publicResult.judgesTotalPoints} + Vote Points:
-                    {publicResult.votesTotalPoints}
+                    {publicResult.votesTotalPoints} + Final Judge Points:{' '}
+                    {publicResult.finalJudgesTotalPoints} + Final Vote Points:{' '}
+                    {publicResult.finalVotesTotalPoints}
                   </div>
                 </div>
                 <PublicSubmissionCardWidgetComponent
