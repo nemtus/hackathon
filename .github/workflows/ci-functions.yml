@@ -23,10 +23,10 @@ jobs:
             package-lock.json
             functions/package-lock.json
 
-      - run: npm ci
-        working-directory: ./functions
-      - name: Audit dependencies (high+)
+      - name: Audit dependencies (high+) before install
         run: npm audit --audit-level=high
+        working-directory: ./functions
+      - run: npm ci
         working-directory: ./functions
       - run: npm run build
         working-directory: ./functions
