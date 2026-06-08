@@ -18,7 +18,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "@nemtus/symbol-sdk-openapi-generator-typescript-axios": "^0.1.0",
+    "@nemtus/symbol-sdk-openapi-generator-typescript-axios": "^0.2.0",
     "@slack/web-api": "^7.16.0",
     "axios": "^1.17.0",
     "firebase-admin": "^13.10.0",
