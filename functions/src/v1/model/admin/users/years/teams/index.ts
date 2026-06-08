@@ -27,18 +27,18 @@ const docRef = (userId: string, yearId: string, id: string) =>
 export const getAdminUserYearTeam = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<AdminUserYearTeam | undefined> => {
   return (await docRef(userId, yearId, id).get()).data();
 };
 
 export const setAdminUserYearTeam = async (
   userId: string,
-  adminUserYearTeam: AdminUserYearTeam
+  adminUserYearTeam: AdminUserYearTeam,
 ): Promise<AdminUserYearTeam | undefined> => {
   if (!adminUserYearTeam.id) {
     const docRef = await collectionRef(userId, adminUserYearTeam.yearId).add(
-      adminUserYearTeam
+      adminUserYearTeam,
     );
     return (await docRef.get()).data();
   }
@@ -46,7 +46,7 @@ export const setAdminUserYearTeam = async (
     adminUserYearTeam,
     {
       merge: true,
-    }
+    },
   );
   return (
     await docRef(userId, adminUserYearTeam.yearId, adminUserYearTeam.id).get()
@@ -54,7 +54,7 @@ export const setAdminUserYearTeam = async (
 };
 
 export const convertPrivateUserYearTeamToAdminUserYearTeam = (
-  privateUserYearTeam: PrivateUserYearTeam
+  privateUserYearTeam: PrivateUserYearTeam,
 ): AdminUserYearTeam => {
   const adminUserYearTeam: AdminUserYearTeam = privateUserYearTeam;
   return adminUserYearTeam;

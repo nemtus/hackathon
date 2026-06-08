@@ -29,7 +29,7 @@ export type PublicResults = PublicResult[];
 export const getPublicResult = async (
   yearId: string,
   teamId: string,
-  submissionId: string
+  submissionId: string,
 ): Promise<PublicResult | undefined> => {
   const publicTeam = await getPublicTeam(yearId, teamId);
   if (!publicTeam) {
@@ -52,7 +52,7 @@ export const getPublicResult = async (
         (judge) =>
           judge.yearId === yearId &&
           judge.teamId === teamId &&
-          judge.submissionId === submissionId
+          judge.submissionId === submissionId,
       );
       if (judge) {
         return judge;
@@ -73,7 +73,7 @@ export const getPublicResult = async (
         (vote) =>
           vote.yearId === yearId &&
           vote.teamId === teamId &&
-          vote.submissionId === submissionId
+          vote.submissionId === submissionId,
       );
       if (vote) {
         return vote;
@@ -105,14 +105,14 @@ export const getPublicResult = async (
 // Note: Submission createdAt asc order
 export const getAllPublicResults = async (
   yearId: string,
-  order: 'createdTimeAsc' | 'totalPointsDesc'
+  order: 'createdTimeAsc' | 'totalPointsDesc',
 ): Promise<PublicResults> => {
   const publicTeams = await getAllPublicTeams(yearId);
   const publicSubmissions = await getAllPublicSubmissions(yearId);
   const publicResultsWithoutJudgesAndVotes = publicSubmissions
     .map((publicSubmission) => {
       const publicTeam = publicTeams.find(
-        (publicTeam) => publicTeam.id === publicSubmission.teamId
+        (publicTeam) => publicTeam.id === publicSubmission.teamId,
       );
       if (!publicTeam) {
         return undefined;
@@ -127,7 +127,7 @@ export const getAllPublicResults = async (
     })
     .filter(
       (publicResultWithoutJudgesAndVotes) =>
-        publicResultWithoutJudgesAndVotes !== undefined
+        publicResultWithoutJudgesAndVotes !== undefined,
     );
   const publicResults: PublicResults = [];
   for (const publicResultWithoutJudgesAndVotes of publicResultsWithoutJudgesAndVotes) {
@@ -137,7 +137,7 @@ export const getAllPublicResults = async (
     const publicResult = await getPublicResult(
       publicResultWithoutJudgesAndVotes.yearId,
       publicResultWithoutJudgesAndVotes.teamId,
-      publicResultWithoutJudgesAndVotes.submissionId
+      publicResultWithoutJudgesAndVotes.submissionId,
     );
     if (!publicResult) {
       continue;
@@ -155,7 +155,7 @@ export const getAllPublicResults = async (
 
 const sortPublicResultsWithCreatedTime = (
   publicResults: PublicResults,
-  ascOrDesc: 'asc' | 'desc' = 'asc'
+  ascOrDesc: 'asc' | 'desc' = 'asc',
 ) => {
   return publicResults.sort((a, b) => {
     if (!a || !b) {
@@ -188,7 +188,7 @@ const sortPublicResultsWithCreatedTime = (
 
 const sortPublicResultsWithTotalPoints = (
   publicResults: PublicResults,
-  ascOrDesc: 'asc' | 'desc' = 'desc'
+  ascOrDesc: 'asc' | 'desc' = 'desc',
 ) => {
   return publicResults.sort((a, b) => {
     if (!a || !b) {

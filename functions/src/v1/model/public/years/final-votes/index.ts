@@ -21,27 +21,27 @@ const docRef = (yearId: string, id: string) =>
 
 export const getPublicFinalVote = async (
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PublicFinalVote | undefined> => {
   return (await docRef(yearId, id).get()).data();
 };
 
 export const setPublicFinalVote = async (
-  publicFinalVote: PublicFinalVote
+  publicFinalVote: PublicFinalVote,
 ): Promise<void> => {
   await docRef(publicFinalVote.yearId, publicFinalVote.id).set(
     publicFinalVote,
     {
       merge: true,
-    }
+    },
   );
 };
 
 export const getAllPublicFinalVotes = async (
-  yearId: string
+  yearId: string,
 ): Promise<PublicFinalVotes> => {
   return (await collectionRef(yearId).get()).docs.map((snapshot) =>
-    snapshot.data()
+    snapshot.data(),
   );
 };
 
@@ -69,7 +69,7 @@ export const getAllPublicFinalVotes = async (
 // };
 
 export const convertPublicUserYearFinalVoteToPublicFinalVote = (
-  publicUserYearFinalVote: PublicUserYearFinalVote
+  publicUserYearFinalVote: PublicUserYearFinalVote,
 ): PublicFinalVote => {
   const publicFinalVote: PublicFinalVote = publicUserYearFinalVote;
   return publicFinalVote;

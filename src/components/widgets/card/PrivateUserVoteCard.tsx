@@ -1,7 +1,7 @@
 import { PrivateUserYearVote } from 'models/private/users/years/votes';
 
 const PrivateUserVoteCardWidgetComponent = (
-  privateUserVote: PrivateUserYearVote
+  privateUserVote: PrivateUserYearVote,
 ) => {
   const {
     // id,

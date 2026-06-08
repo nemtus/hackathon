@@ -22,28 +22,28 @@ const docRef = (userId: string, id: string) =>
 
 export const getPrivateUserTx = async (
   userId: string,
-  id: string
+  id: string,
 ): Promise<PrivateUserTx | undefined> => {
   return (await docRef(userId, id).get()).data();
 };
 
 export const setPrivateUserTx = async (
   userId: string,
-  privateUserTx: PrivateUserTx
+  privateUserTx: PrivateUserTx,
 ): Promise<void> => {
   await docRef(userId, privateUserTx.id).set(privateUserTx, { merge: true });
 };
 
 export const getAllPrivateUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<PrivateUserTxs> => {
   return (await collectionRef(userId).get()).docs.map((snapshot) =>
-    snapshot.data()
+    snapshot.data(),
   );
 };
 
 export const convertAdminUserTxToPrivateUserTx = (
-  adminUserTx: AdminUserTx
+  adminUserTx: AdminUserTx,
 ): PrivateUserTx => {
   const privateUserTx: PrivateUserTx = adminUserTx;
   return privateUserTx;

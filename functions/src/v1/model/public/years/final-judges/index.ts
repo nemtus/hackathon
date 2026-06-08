@@ -21,13 +21,13 @@ const docRef = (yearId: string, id: string) =>
 
 export const getPublicFinalJudge = async (
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PublicFinalJudge | undefined> => {
   return (await docRef(yearId, id).get()).data();
 };
 
 export const setPublicFinalJudge = async (
-  publicJudge: PublicFinalJudge
+  publicJudge: PublicFinalJudge,
 ): Promise<void> => {
   await docRef(publicJudge.yearId, publicJudge.id).set(publicJudge, {
     merge: true,
@@ -35,10 +35,10 @@ export const setPublicFinalJudge = async (
 };
 
 export const getAllPublicFinalJudges = async (
-  yearId: string
+  yearId: string,
 ): Promise<PublicFinalJudges> => {
   return (await collectionRef(yearId).get()).docs.map((snapshot) =>
-    snapshot.data()
+    snapshot.data(),
   );
 };
 
@@ -66,7 +66,7 @@ export const getAllPublicFinalJudges = async (
 // };
 
 export const convertPublicUserYearFinalJudgeToPublicFinalJudge = (
-  publicUserYearFinalJudge: PublicUserYearFinalJudge
+  publicUserYearFinalJudge: PublicUserYearFinalJudge,
 ): PublicFinalJudge => {
   const publicFinalJudge: PublicFinalJudge = publicUserYearFinalJudge;
   return publicFinalJudge;

@@ -22,14 +22,14 @@ export const docRef = (yearId: string) =>
   doc(db, docPath(yearId)).withConverter(converter<ConfigHackathonYearVote>());
 
 export const getConfigHackathonYearVote = async (
-  yearId: string
+  yearId: string,
 ): Promise<ConfigHackathonYearVote | undefined> => {
   return (await getDoc(docRef(yearId))).data();
 };
 
 export const setConfigHackathonYearVote = async (
   yearId: string,
-  configHackathonYearVote: Partial<ConfigHackathonYearVote>
+  configHackathonYearVote: Partial<ConfigHackathonYearVote>,
 ): Promise<void> => {
   await setDoc(docRef(yearId), configHackathonYearVote, { merge: true });
 };

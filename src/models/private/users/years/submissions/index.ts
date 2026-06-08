@@ -22,31 +22,31 @@ const collectionPath = (userId: string, yearId: string) =>
   `/v/1/scopes/private/users/${userId}/years/${yearId}/submissions`;
 export const collectionRef = (userId: string, yearId: string) =>
   collection(db, collectionPath(userId, yearId)).withConverter(
-    converter<PrivateUserYearSubmission>()
+    converter<PrivateUserYearSubmission>(),
   );
 const docPath = (userId: string, yearId: string, id: string) =>
   `${collectionPath(userId, yearId)}/${id}`;
 export const docRef = (userId: string, yearId: string, id: string) =>
   doc(db, docPath(userId, yearId, id)).withConverter(
-    converter<PrivateUserYearSubmission>()
+    converter<PrivateUserYearSubmission>(),
   );
 
 export const getPrivateUserYearSubmission = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PrivateUserYearSubmission | undefined> => {
   return (await getDoc(docRef(userId, yearId, id))).data();
 };
 
 export const setPrivateUserYearSubmission = async (
   userId: string,
-  privateUserYearSubmission: PrivateUserYearSubmission
+  privateUserYearSubmission: PrivateUserYearSubmission,
 ): Promise<PrivateUserYearSubmission | undefined> => {
   if (!privateUserYearSubmission.id) {
     const docRef = await addDoc(
       collectionRef(userId, privateUserYearSubmission.yearId),
-      privateUserYearSubmission
+      privateUserYearSubmission,
     );
     return (await getDoc(docRef)).data();
   }
@@ -56,37 +56,37 @@ export const setPrivateUserYearSubmission = async (
       const privateUserYearSubmissionDocRef = docRef(
         userId,
         privateUserYearSubmission.yearId,
-        privateUserYearSubmission.id
+        privateUserYearSubmission.id,
       );
       const privateUserYearSubmissionDoc = await transaction.get(
-        privateUserYearSubmissionDocRef
+        privateUserYearSubmissionDocRef,
       );
       if (!privateUserYearSubmissionDoc.exists()) {
         transaction.set(
           privateUserYearSubmissionDocRef,
-          privateUserYearSubmission
+          privateUserYearSubmission,
         );
         return (
           await getDoc(
             docRef(
               userId,
               privateUserYearSubmission.yearId,
-              privateUserYearSubmission.id
-            )
+              privateUserYearSubmission.id,
+            ),
           )
         ).data();
       }
       transaction.update(
         privateUserYearSubmissionDocRef,
-        privateUserYearSubmission
+        privateUserYearSubmission,
       );
       return (
         await getDoc(
           docRef(
             userId,
             privateUserYearSubmission.yearId,
-            privateUserYearSubmission.id
-          )
+            privateUserYearSubmission.id,
+          ),
         )
       ).data();
     });
@@ -97,17 +97,17 @@ export const setPrivateUserYearSubmission = async (
 
 export const getAllPrivateUserYearSubmissions = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<PrivateUserYearSubmissions> => {
   return (
     await getDocs(
-      query(collectionRef(userId, yearId), orderBy('createdAt', 'asc'))
+      query(collectionRef(userId, yearId), orderBy('createdAt', 'asc')),
     )
   ).docs.map((doc) => doc.data());
 };
 
 export const convertPrivateUserYearSubmissionToPublicUserYearSubmission = (
-  privateUserYearSubmission: PrivateUserYearSubmission
+  privateUserYearSubmission: PrivateUserYearSubmission,
 ): PublicUserYearSubmission => {
   const publicUserYearSubmission: PublicUserYearSubmission =
     privateUserYearSubmission;
@@ -115,7 +115,7 @@ export const convertPrivateUserYearSubmissionToPublicUserYearSubmission = (
 };
 
 export const convertPrivateUserYearSubmissionToAdminUserYearSubmission = (
-  privateUserYearSubmission: PrivateUserYearSubmission
+  privateUserYearSubmission: PrivateUserYearSubmission,
 ): AdminUserYearSubmission => {
   const adminUserYearSubmission: AdminUserYearSubmission =
     privateUserYearSubmission;

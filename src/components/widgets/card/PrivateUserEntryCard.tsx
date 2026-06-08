@@ -1,7 +1,7 @@
 import { PrivateUserYearEntry } from 'models/private/users/years/entries';
 
 const PrivateUserYearEntryCardWidgetComponent = (
-  privateUserYearEntry: PrivateUserYearEntry
+  privateUserYearEntry: PrivateUserYearEntry,
 ) => {
   const {
     // id,

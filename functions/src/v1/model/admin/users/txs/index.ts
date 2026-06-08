@@ -19,28 +19,28 @@ const docRef = (userId: string, id: string) =>
 
 export const getAdminUserTx = async (
   userId: string,
-  id: string
+  id: string,
 ): Promise<AdminUserTx | undefined> => {
   return (await docRef(userId, id).get()).data();
 };
 
 export const setAdminUserTx = async (
   userId: string,
-  adminUserTx: AdminUserTx
+  adminUserTx: AdminUserTx,
 ): Promise<void> => {
   await docRef(userId, adminUserTx.id).set(adminUserTx, { merge: true });
 };
 
 export const getAllAdminUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<AdminUserTxs> => {
   return (await collectionRef(userId).get()).docs.map((snapshot) =>
-    snapshot.data()
+    snapshot.data(),
   );
 };
 
 export const queryAnnouncedAdminUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<AdminUserTxs> => {
   return (
     await collectionRef(userId)
@@ -51,7 +51,7 @@ export const queryAnnouncedAdminUserTxs = async (
 };
 
 export const queryUnconfirmedAdminUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<AdminUserTxs> => {
   return (
     await collectionRef(userId)
@@ -63,7 +63,7 @@ export const queryUnconfirmedAdminUserTxs = async (
 };
 
 export const queryConfirmedAdminUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<AdminUserTxs> => {
   return (
     await collectionRef(userId)
@@ -76,7 +76,7 @@ export const queryConfirmedAdminUserTxs = async (
 };
 
 export const queryFinalizedAdminUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<AdminUserTxs> => {
   return (
     await collectionRef(userId)

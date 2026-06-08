@@ -26,13 +26,13 @@ const docRef = (id: string) =>
   db.doc(docPath(id)).withConverter(converter<PrivateUser>());
 
 export const getPrivateUser = async (
-  id: string
+  id: string,
 ): Promise<PrivateUser | undefined> => {
   return (await docRef(id).get()).data();
 };
 
 export const setPrivateUser = async (
-  privateUser: PrivateUser
+  privateUser: PrivateUser,
 ): Promise<void> => {
   await docRef(privateUser.id).set(privateUser, { merge: true });
 };
@@ -70,7 +70,7 @@ export const queryVotePrivateUsers = async (): Promise<PrivateUsers> => {
 };
 
 export const convertAdminUserToPrivateUser = (
-  adminUser: AdminUser
+  adminUser: AdminUser,
 ): PrivateUser => {
   const privateUser: PrivateUser = {
     id: adminUser.id,

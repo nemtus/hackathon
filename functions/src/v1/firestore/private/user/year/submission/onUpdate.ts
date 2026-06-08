@@ -30,7 +30,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-private-user-year-submission-onUpdate'
+          'v1-firestore-private-user-year-submission-onUpdate',
         )
       ) {
         return;
@@ -57,7 +57,7 @@ export const onUpdate = () =>
 
       const beforePrivateUserYearSubmission =
         converter<PrivateUserYearSubmission>().fromFirestore(
-          changeSnapshot.before
+          changeSnapshot.before,
         );
       logger.debug({ beforePrivateUserYearSubmission });
       if (!beforePrivateUserYearSubmission) {
@@ -66,7 +66,7 @@ export const onUpdate = () =>
 
       const afterPrivateUserYearSubmission =
         converter<PrivateUserYearSubmission>().fromFirestore(
-          changeSnapshot.after
+          changeSnapshot.after,
         );
       logger.debug({ afterPrivateUserYearSubmission });
       if (!afterPrivateUserYearSubmission) {
@@ -104,7 +104,7 @@ export const onUpdate = () =>
         const postMessageResponse = await postMessage(
           slackBotUserOAuthToken,
           JSON.stringify(publicUserYearSubmission, null, 2),
-          `#${slackNotifyChannel}`
+          `#${slackNotifyChannel}`,
         );
         logger.debug({ postMessageResponse });
       }

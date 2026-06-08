@@ -15,7 +15,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-config-symbol-node-check-onUpdate'
+          'v1-firestore-config-symbol-node-check-onUpdate',
         )
       ) {
         return;

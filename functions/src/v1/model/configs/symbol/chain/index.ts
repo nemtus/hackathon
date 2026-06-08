@@ -27,7 +27,7 @@ export const getChainInfo = async (): Promise<Chain | undefined> => {
 };
 
 export const setChainInfo = async (
-  chainInfo: Partial<Chain>
+  chainInfo: Partial<Chain>,
 ): Promise<void> => {
   await docRef.set(chainInfo, { merge: true });
 };

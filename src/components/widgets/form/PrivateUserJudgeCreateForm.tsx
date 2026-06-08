@@ -43,7 +43,7 @@ const schema = yup.object().shape({
       submissionId: yup.string(),
       point: yup.number().required().integer().min(0).max(200),
       message: yup.string().required().max(140),
-    })
+    }),
   ),
 });
 
@@ -83,7 +83,7 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
       propsConfigHackathonYearJudgeUsers: props.configHackathonYearJudge.users,
       userIsJudge: props.configHackathonYearJudge.users.some(
         (userId) =>
-          userId === props.authUser.uid && userId === props.privateUser.id
+          userId === props.authUser.uid && userId === props.privateUser.id,
       ),
     });
     console.log({
@@ -98,7 +98,7 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
       now: now <= props.configHackathonYearJudge.endAt,
       userIsJudge: props.configHackathonYearJudge.users.some(
         (userId) =>
-          userId === props.authUser.uid && userId === props.privateUser.id
+          userId === props.authUser.uid && userId === props.privateUser.id,
       ),
     });
     return (
@@ -111,16 +111,16 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
       now <= props.configHackathonYearJudge.endAt &&
       props.configHackathonYearJudge.users.some(
         (userId) =>
-          userId === props.authUser.uid && userId === props.privateUser.id
+          userId === props.authUser.uid && userId === props.privateUser.id,
       )
     );
   };
 
   const isCreateablePrivateUserYearJudge = (
-    privateUserYearJudge: PrivateUserYearJudge
+    privateUserYearJudge: PrivateUserYearJudge,
   ) => {
     const isPositive = !privateUserYearJudge.judges.some(
-      (judge) => judge.point < 0 || !Number.isInteger(judge.point)
+      (judge) => judge.point < 0 || !Number.isInteger(judge.point),
     );
     console.log({ isPositive });
     const isValidMessage = privateUserYearJudge.judges.some((judge) => {
@@ -133,7 +133,7 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
     });
     console.log({ isValidMessage });
     const judges = privateUserYearJudge.judges.map((judge) =>
-      parseInt(judge.point.toString())
+      parseInt(judge.point.toString()),
     );
     const totalPoints = judges.length
       ? judges.reduce((acc, cur) => acc + cur)
@@ -146,7 +146,7 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
   };
 
   const convertPublicResultsToInitialJudges = (
-    publicResults: PublicResults
+    publicResults: PublicResults,
   ) => {
     const judges: Judge[] = publicResults.map((publicResult) => {
       return {
@@ -224,17 +224,17 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
   };
 
   const onSubmit: SubmitHandler<PrivateUserYearJudge> = async (
-    privateUserYearJudge
+    privateUserYearJudge,
   ): Promise<void> => {
     if (!isCreateableUser()) {
       alert(
-        "You can't create a judge. Because you are not a judge or the deadline has passed or you have already created a judge."
+        "You can't create a judge. Because you are not a judge or the deadline has passed or you have already created a judge.",
       );
       return;
     }
     if (!isCreateablePrivateUserYearJudge(privateUserYearJudge)) {
       alert(
-        "You can't create a judge. Because the judge is invalid. Please make sure that the number of points you have and the total number of points scored match. Please use up all the points you have."
+        "You can't create a judge. Because the judge is invalid. Please make sure that the number of points you have and the total number of points scored match. Please use up all the points you have.",
       );
       return;
     }
@@ -243,7 +243,7 @@ const PrivateUserYearJudgeCreateFormWidgetComponent = (props: {
     privateUserYearJudge.updatedAt = now;
     privateUserYearJudge.approvedAt = undefined;
     const judges = getValues('judges').map((judge) =>
-      parseInt(judge.point.toString())
+      parseInt(judge.point.toString()),
     );
     privateUserYearJudge.totalPoints = judges.length
       ? judges.reduce((acc, cur) => acc + cur)

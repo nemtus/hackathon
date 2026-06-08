@@ -18,7 +18,7 @@ const docRef = (yearId: string) =>
     .withConverter(converter<ConfigHackathonYearFinalVote>());
 
 export const getConfigHackathonYearFinalVote = async (
-  yearId: string
+  yearId: string,
 ): Promise<ConfigHackathonYearFinalVote | undefined> => {
   return (await docRef(yearId).get()).data();
 };

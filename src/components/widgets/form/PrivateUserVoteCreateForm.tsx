@@ -41,7 +41,7 @@ const schema = yup.object().shape({
       submissionId: yup.string(),
       point: yup.number().required().integer().min(0),
       message: yup.string().max(140),
-    })
+    }),
   ),
 });
 
@@ -81,7 +81,7 @@ const PrivateUserYearVoteCreateFormWidgetComponent = (props: {
       propsConfigHackathonYearJudgeUsers: props.configHackathonYearJudge.users,
       userIsNotJudge: !props.configHackathonYearJudge.users.some(
         (userId) =>
-          userId === props.authUser.uid && userId === props.privateUser.id
+          userId === props.authUser.uid && userId === props.privateUser.id,
       ),
     });
     console.log({
@@ -96,7 +96,7 @@ const PrivateUserYearVoteCreateFormWidgetComponent = (props: {
       now: now <= props.configHackathonYearVote.endAt,
       userIsNotJudge: !props.configHackathonYearJudge.users.some(
         (userId) =>
-          userId === props.authUser.uid && userId === props.privateUser.id
+          userId === props.authUser.uid && userId === props.privateUser.id,
       ),
     });
     return (
@@ -109,16 +109,16 @@ const PrivateUserYearVoteCreateFormWidgetComponent = (props: {
       now <= props.configHackathonYearVote.endAt &&
       !props.configHackathonYearJudge.users.some(
         (userId) =>
-          userId === props.authUser.uid && userId === props.privateUser.id
+          userId === props.authUser.uid && userId === props.privateUser.id,
       )
     );
   };
 
   const isCreateablePrivateUserYearVote = (
-    privateUserYearVote: PrivateUserYearVote
+    privateUserYearVote: PrivateUserYearVote,
   ) => {
     const isPositive = !privateUserYearVote.votes.some(
-      (vote) => vote.point < 0 || !Number.isInteger(vote.point)
+      (vote) => vote.point < 0 || !Number.isInteger(vote.point),
     );
     console.log({ isPositive });
     const isValidMessage = !privateUserYearVote.votes.some((vote) => {
@@ -127,7 +127,7 @@ const PrivateUserYearVoteCreateFormWidgetComponent = (props: {
     });
     console.log({ isValidMessage });
     const votes = privateUserYearVote.votes.map((vote) =>
-      parseInt(vote.point.toString())
+      parseInt(vote.point.toString()),
     );
     const totalPoints = votes.length
       ? votes.reduce((acc, cur) => acc + cur)
@@ -216,17 +216,17 @@ const PrivateUserYearVoteCreateFormWidgetComponent = (props: {
   };
 
   const onSubmit: SubmitHandler<PrivateUserYearVote> = async (
-    privateUserYearVote
+    privateUserYearVote,
   ): Promise<void> => {
     if (!isCreateableUser()) {
       alert(
-        "You can't create a vote. Because you are not a submitter or the deadline has passed or you have already created a vote."
+        "You can't create a vote. Because you are not a submitter or the deadline has passed or you have already created a vote.",
       );
       return;
     }
     if (!isCreateablePrivateUserYearVote(privateUserYearVote)) {
       alert(
-        "You can't create a vote. Because the vote is invalid. Please make sure that the number of points you have and the total number of points scored match. Please use up all the points you have."
+        "You can't create a vote. Because the vote is invalid. Please make sure that the number of points you have and the total number of points scored match. Please use up all the points you have.",
       );
       return;
     }
@@ -235,7 +235,7 @@ const PrivateUserYearVoteCreateFormWidgetComponent = (props: {
     privateUserYearVote.updatedAt = now;
     privateUserYearVote.approvedAt = undefined;
     const votes = getValues('votes').map((vote) =>
-      parseInt(vote.point.toString())
+      parseInt(vote.point.toString()),
     );
     privateUserYearVote.totalPoints = votes.length
       ? votes.reduce((acc, cur) => acc + cur)

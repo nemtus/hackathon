@@ -23,7 +23,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-public-user-year-finalJudge-onCreate'
+          'v1-firestore-public-user-year-finalJudge-onCreate',
         )
       ) {
         return;
@@ -57,7 +57,7 @@ export const onCreate = () =>
 
       const publicFinalJudge =
         convertPublicUserYearFinalJudgeToPublicFinalJudge(
-          publicUserYearFinalJudge
+          publicUserYearFinalJudge,
         );
       await setPublicFinalJudge(publicFinalJudge);
     });

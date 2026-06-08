@@ -47,7 +47,7 @@ const schema = yup.object().shape({
       submissionId: yup.string(),
       point: yup.number().required().integer().min(0).max(200),
       message: yup.string().required().max(140),
-    })
+    }),
   ),
 });
 
@@ -95,7 +95,7 @@ const PrivateUserYearFinalJudgeCreateFormWidgetComponent = (props: {
         props.configHackathonYearFinalJudge.users,
       userIsJudge: props.configHackathonYearFinalJudge.users.some(
         (userId) =>
-          userId === props.authUser.uid && userId === props.privateUser.id
+          userId === props.authUser.uid && userId === props.privateUser.id,
       ),
     });
     console.log({
@@ -114,7 +114,7 @@ const PrivateUserYearFinalJudgeCreateFormWidgetComponent = (props: {
       now: now <= props.configHackathonYearFinalJudge.endAt,
       userIsJudge: props.configHackathonYearFinalJudge.users.some(
         (userId) =>
-          userId === props.authUser.uid && userId === props.privateUser.id
+          userId === props.authUser.uid && userId === props.privateUser.id,
       ),
     });
     return (
@@ -129,16 +129,16 @@ const PrivateUserYearFinalJudgeCreateFormWidgetComponent = (props: {
       now <= props.configHackathonYearFinalJudge.endAt &&
       props.configHackathonYearFinalJudge.users.some(
         (userId) =>
-          userId === props.authUser.uid && userId === props.privateUser.id
+          userId === props.authUser.uid && userId === props.privateUser.id,
       )
     );
   };
 
   const isCreatablePrivateUserYearFinalJudge = (
-    privateUserYearFinalJudge: PrivateUserYearFinalJudge
+    privateUserYearFinalJudge: PrivateUserYearFinalJudge,
   ) => {
     const isPositive = !privateUserYearFinalJudge.judges.some(
-      (judge) => judge.point < 0 || !Number.isInteger(judge.point)
+      (judge) => judge.point < 0 || !Number.isInteger(judge.point),
     );
     console.log({ isPositive });
     const isValidMessage = privateUserYearFinalJudge.judges.some((judge) => {
@@ -151,7 +151,7 @@ const PrivateUserYearFinalJudgeCreateFormWidgetComponent = (props: {
     });
     console.log({ isValidMessage });
     const judges = privateUserYearFinalJudge.judges.map((judge) =>
-      parseInt(judge.point.toString())
+      parseInt(judge.point.toString()),
     );
     const totalPoints = judges.length
       ? judges.reduce((acc, cur) => acc + cur)
@@ -164,7 +164,7 @@ const PrivateUserYearFinalJudgeCreateFormWidgetComponent = (props: {
   };
 
   const convertPublicResultsToInitialFinalJudges = (
-    publicResults: PublicResults
+    publicResults: PublicResults,
   ) => {
     const finalJudges: FinalJudge[] = publicResults.map((publicResult) => {
       return {
@@ -200,7 +200,9 @@ const PrivateUserYearFinalJudgeCreateFormWidgetComponent = (props: {
       updatedAt: undefined,
       approvedAt: undefined,
     },
-    resolver: yupResolver(schema) as unknown as Resolver<PrivateUserYearFinalJudge>,
+    resolver: yupResolver(
+      schema,
+    ) as unknown as Resolver<PrivateUserYearFinalJudge>,
   });
 
   const { fields } = useFieldArray({
@@ -242,17 +244,17 @@ const PrivateUserYearFinalJudgeCreateFormWidgetComponent = (props: {
   };
 
   const onSubmit: SubmitHandler<PrivateUserYearFinalJudge> = async (
-    privateUserYearFinalJudge
+    privateUserYearFinalJudge,
   ): Promise<void> => {
     if (!isCreatableUser()) {
       alert(
-        "You can't create a finalJudge. Because you are not a judge or the deadline has passed or you have already created a finalJudge."
+        "You can't create a finalJudge. Because you are not a judge or the deadline has passed or you have already created a finalJudge.",
       );
       return;
     }
     if (!isCreatablePrivateUserYearFinalJudge(privateUserYearFinalJudge)) {
       alert(
-        "You can't create a finalJudge. Because the finalJudge is invalid. Please make sure that the number of points you have and the total number of points scored match. Please use up all the points you have."
+        "You can't create a finalJudge. Because the finalJudge is invalid. Please make sure that the number of points you have and the total number of points scored match. Please use up all the points you have.",
       );
       return;
     }
@@ -261,7 +263,7 @@ const PrivateUserYearFinalJudgeCreateFormWidgetComponent = (props: {
     privateUserYearFinalJudge.updatedAt = now;
     privateUserYearFinalJudge.approvedAt = undefined;
     const judges = getValues('judges').map((judge) =>
-      parseInt(judge.point.toString())
+      parseInt(judge.point.toString()),
     );
     privateUserYearFinalJudge.totalPoints = judges.length
       ? judges.reduce((acc, cur) => acc + cur)

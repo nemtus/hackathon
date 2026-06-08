@@ -36,31 +36,31 @@ const collectionPath = (userId: string, yearId: string) =>
   `/v/1/scopes/public/users/${userId}/years/${yearId}/judges`;
 const collectionRef = (userId: string, yearId: string) =>
   collection(db, collectionPath(userId, yearId)).withConverter(
-    converter<PublicUserYearJudge>()
+    converter<PublicUserYearJudge>(),
   );
 const docPath = (userId: string, yearId: string, id: string) =>
   `${collectionPath(userId, yearId)}/${id}`;
 const docRef = (userId: string, yearId: string, id: string) =>
   doc(db, docPath(userId, yearId, id)).withConverter(
-    converter<PublicUserYearJudge>()
+    converter<PublicUserYearJudge>(),
   );
 
 export const getPublicUserYearJudge = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PublicUserYearJudge | undefined> => {
   return (await getDoc(docRef(userId, yearId, id))).data();
 };
 
 export const setPublicUserYearJudge = async (
   userId: string,
-  publicUserYearJudge: PublicUserYearJudge
+  publicUserYearJudge: PublicUserYearJudge,
 ): Promise<PublicUserYearJudge | undefined> => {
   if (!publicUserYearJudge.id) {
     const docRef = await addDoc(
       collectionRef(userId, publicUserYearJudge.yearId),
-      publicUserYearJudge
+      publicUserYearJudge,
     );
     return (await getDoc(docRef)).data();
   }
@@ -69,17 +69,17 @@ export const setPublicUserYearJudge = async (
     publicUserYearJudge,
     {
       merge: true,
-    }
+    },
   );
   return (
     await getDoc(
-      docRef(userId, publicUserYearJudge.yearId, publicUserYearJudge.id)
+      docRef(userId, publicUserYearJudge.yearId, publicUserYearJudge.id),
     )
   ).data();
 };
 
 export const convertPrivateUserYearJudgeToPublicUserYearJudge = (
-  privateUserYearVote: PrivateUserYearJudge
+  privateUserYearVote: PrivateUserYearJudge,
 ): PublicUserYearJudge => {
   const publicUserYearVote: PublicUserYearJudge = privateUserYearVote;
   return publicUserYearVote;

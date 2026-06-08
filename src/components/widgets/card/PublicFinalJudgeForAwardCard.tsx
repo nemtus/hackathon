@@ -11,7 +11,7 @@ const PublicFinalJudgeForAwardCardWidgetComponent = (props: {
   } = props.publicFinalJudge;
 
   const judge = judges.find(
-    (judge) => judge.submissionId === props.submissionId
+    (judge) => judge.submissionId === props.submissionId,
   );
 
   const user = props.judgeUsers.find((user) => user.id === judge?.userId);

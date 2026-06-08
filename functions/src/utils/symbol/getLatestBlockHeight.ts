@@ -23,7 +23,7 @@ export const getLatestBlockHeight = async (): Promise<number> => {
     const basePath = `https://${node.id}:3001`;
     logger.debug({ basePath });
     const networkRoutesApi = new NetworkRoutesApi(
-      new Configuration({ basePath })
+      new Configuration({ basePath }),
     );
     const chainRoutesApi = new ChainRoutesApi(new Configuration({ basePath }));
     try {

@@ -39,7 +39,7 @@ export type PublicResults = PublicResult[];
 export const getPublicResult = async (
   yearId: string,
   teamId: string,
-  submissionId: string
+  submissionId: string,
 ): Promise<PublicResult | undefined> => {
   const [
     publicTeam,
@@ -80,7 +80,7 @@ export const getPublicResult = async (
     publicVotes,
     publicFinalJudges,
     publicFinalVotes,
-    configHackathonYearAward
+    configHackathonYearAward,
   );
 };
 
@@ -94,7 +94,7 @@ const createPublicResultData = (
   publicVotes: PublicVote[],
   publicFinalJudges: PublicFinalJudge[],
   publicFinalVotes: PublicFinalVote[],
-  configHackathonYearAward: ConfigHackathonYearAward
+  configHackathonYearAward: ConfigHackathonYearAward,
 ): PublicResult => {
   const judges = publicJudges
     .map((publicJudge) => {
@@ -102,7 +102,7 @@ const createPublicResultData = (
         (judge) =>
           judge.yearId === yearId &&
           judge.teamId === teamId &&
-          judge.submissionId === submissionId
+          judge.submissionId === submissionId,
       );
     })
     .filter((judge) => judge !== undefined)
@@ -117,7 +117,7 @@ const createPublicResultData = (
         (vote) =>
           vote.yearId === yearId &&
           vote.teamId === teamId &&
-          vote.submissionId === submissionId
+          vote.submissionId === submissionId,
       );
     })
     .filter((vote) => vote !== undefined)
@@ -132,7 +132,7 @@ const createPublicResultData = (
         (judge) =>
           judge.yearId === yearId &&
           judge.teamId === teamId &&
-          judge.submissionId === submissionId
+          judge.submissionId === submissionId,
       );
     })
     .filter((judge) => judge !== undefined)
@@ -147,7 +147,7 @@ const createPublicResultData = (
         (vote) =>
           vote.yearId === yearId &&
           vote.teamId === teamId &&
-          vote.submissionId === submissionId
+          vote.submissionId === submissionId,
       );
     })
     .filter((vote) => vote !== undefined)
@@ -191,7 +191,7 @@ const createPublicResultData = (
 // Note: Submission createdAt asc order
 export const getAllPublicResults = async (
   yearId: string,
-  order: 'createdTimeAsc' | 'totalPointsDesc'
+  order: 'createdTimeAsc' | 'totalPointsDesc',
 ): Promise<PublicResults> => {
   const [
     publicTeams,
@@ -214,7 +214,7 @@ export const getAllPublicResults = async (
   const publicResults = publicSubmissions
     .map((publicSubmission) => {
       const publicTeam = publicTeams.find(
-        (publicTeam) => publicTeam.id === publicSubmission.teamId
+        (publicTeam) => publicTeam.id === publicSubmission.teamId,
       );
       if (!publicTeam || !configHackathonYearAward) {
         return undefined;
@@ -229,7 +229,7 @@ export const getAllPublicResults = async (
         publicVotes,
         publicFinalJudges,
         publicFinalVotes,
-        configHackathonYearAward
+        configHackathonYearAward,
       );
     })
     .filter((publicResult) => publicResult) as PublicResults;
@@ -244,7 +244,7 @@ export const getAllPublicResults = async (
 
 const sortPublicResultsWithCreatedTime = (
   publicResults: PublicResults,
-  ascOrDesc: 'asc' | 'desc' = 'asc'
+  ascOrDesc: 'asc' | 'desc' = 'asc',
 ) => {
   return publicResults.sort((a, b) => {
     if (!a || !b) {
@@ -277,7 +277,7 @@ const sortPublicResultsWithCreatedTime = (
 
 const sortPublicResultsWithTotalPoints = (
   publicResults: PublicResults,
-  ascOrDesc: 'asc' | 'desc' = 'desc'
+  ascOrDesc: 'asc' | 'desc' = 'desc',
 ) => {
   return publicResults.sort((a, b) => {
     if (!a || !b) {

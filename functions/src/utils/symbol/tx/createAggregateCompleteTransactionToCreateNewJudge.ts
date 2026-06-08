@@ -38,7 +38,7 @@ export const createAggregateCompleteTransactionToCreateNewJudge = async (
   dataEncryptionKey: string,
   userId: string,
   adminUserYearJudge: AdminUserYearJudge,
-  mosaicIdHex: string
+  mosaicIdHex: string,
 ): Promise<AdminUserTx> => {
   if (!userId) {
     throw Error('userId is undefined');
@@ -53,14 +53,14 @@ export const createAggregateCompleteTransactionToCreateNewJudge = async (
   logger.debug({ adminUser });
 
   const feeBillingAccount = await restoreAccountFromPrivateKey(
-    feeBillingAccountPrivateKey
+    feeBillingAccountPrivateKey,
   );
   const messageReceivingAccount = await restoreAccountFromPrivateKey(
-    messageReceivingAccountPrivateKey
+    messageReceivingAccountPrivateKey,
   );
   const multisigAccounts: MultisigAccounts = await restoreAccountsFromAdminUser(
     adminUser,
-    dataEncryptionKey
+    dataEncryptionKey,
   );
 
   const multisigAccount = multisigAccounts.multisigAccount;
@@ -96,7 +96,7 @@ export const createAggregateCompleteTransactionToCreateNewJudge = async (
     multisigAccount.address,
     [],
     PlainMessage.create(messageString),
-    networkType
+    networkType,
   ).toAggregate(feeBillingAccount.publicAccount);
 
   logger.debug('embeddedTransferTransaction2');
@@ -117,7 +117,7 @@ export const createAggregateCompleteTransactionToCreateNewJudge = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message2String),
-    networkType
+    networkType,
   ).toAggregate(multisigAccount.publicAccount);
 
   const embeddedJudgeTransactions: InnerTransaction[] = [];
@@ -151,7 +151,7 @@ export const createAggregateCompleteTransactionToCreateNewJudge = async (
     const adminUserYearTeam = await getAdminUserYearTeam(
       judge.teamId,
       judge.yearId,
-      judge.teamId
+      judge.teamId,
     );
     logger.debug({ adminUserYearTeam });
     if (!adminUserYearTeam) {
@@ -182,11 +182,11 @@ export const createAggregateCompleteTransactionToCreateNewJudge = async (
     };
     const teamAccount = await restoreAccountFromEncryptedAccount(
       teamEncryptedAccount,
-      dataEncryptionKey
+      dataEncryptionKey,
     );
 
     logger.debug(
-      `embeddedMosaicSupplyRevocationTransactionForEachJudge userId: ${judge.userId}, teamId: ${judge.teamId}, point: ${judge.point}`
+      `embeddedMosaicSupplyRevocationTransactionForEachJudge userId: ${judge.userId}, teamId: ${judge.teamId}, point: ${judge.point}`,
     );
     const mosaic = new Mosaic(mosaicId, UInt64.fromUint(judge.point));
     const embeddedMosaicSupplyRevocationTransaction =
@@ -194,12 +194,12 @@ export const createAggregateCompleteTransactionToCreateNewJudge = async (
         deadline,
         multisigAccount.address,
         mosaic,
-        networkType
+        networkType,
       ).toAggregate(feeBillingAccount.publicAccount);
     embeddedJudgeTransactions.push(embeddedMosaicSupplyRevocationTransaction);
 
     logger.debug(
-      `embeddedTransferTransactionForEachJudge userId: ${judge.userId}, teamId: ${judge.teamId}, point: ${judge.point}, message: ${judge.message}`
+      `embeddedTransferTransactionForEachJudge userId: ${judge.userId}, teamId: ${judge.teamId}, point: ${judge.point}, message: ${judge.message}`,
     );
     const messageForEachJudgeJson = judge;
     logger.debug('messageForEachJudgeJson', { messageForEachJudgeJson });
@@ -210,7 +210,7 @@ export const createAggregateCompleteTransactionToCreateNewJudge = async (
       teamAccount.address,
       [mosaic],
       PlainMessage.create(messageForEachJudgeString),
-      networkType
+      networkType,
     ).toAggregate(feeBillingAccount.publicAccount);
     embeddedJudgeTransactions.push(embeddedTransferTransactionForEachJudge);
 
@@ -222,7 +222,7 @@ export const createAggregateCompleteTransactionToCreateNewJudge = async (
   }
   if (totalPoints !== adminUserYearJudge.totalPoints) {
     throw Error(
-      'totalPoints should be equal to adminUserYearJudge.totalPoints'
+      'totalPoints should be equal to adminUserYearJudge.totalPoints',
     );
   }
 
@@ -239,7 +239,7 @@ export const createAggregateCompleteTransactionToCreateNewJudge = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message3String),
-    networkType
+    networkType,
   ).toAggregate(multisigAccount.publicAccount);
 
   logger.debug('embeddedTransferTransaction4');
@@ -248,7 +248,7 @@ export const createAggregateCompleteTransactionToCreateNewJudge = async (
     multisigAccount.address,
     [new Mosaic(mosaicId, UInt64.fromUint(adminUserYearJudge.totalPoints))],
     EmptyMessage,
-    networkType
+    networkType,
   ).toAggregate(feeBillingAccount.publicAccount);
 
   logger.debug('aggregateTransaction');
@@ -266,7 +266,7 @@ export const createAggregateCompleteTransactionToCreateNewJudge = async (
     deadline,
     embeddedTransactions,
     networkType,
-    initialEmptyCosignatures
+    initialEmptyCosignatures,
   ).setMaxFeeForAggregate(feeMultiplier, requiredCosignatories);
 
   const generationHashSeed = await getGenerationHashSeed();
@@ -278,7 +278,7 @@ export const createAggregateCompleteTransactionToCreateNewJudge = async (
     feeBillingAccount.signTransactionWithCosignatories(
       aggregateCompleteTransaction,
       [multisigCosignatory1Account, multisigCosignatory2Account],
-      generationHashSeed
+      generationHashSeed,
     );
 
   const hash = signedAggregateCompleteTransactionWithCosignatures.hash;

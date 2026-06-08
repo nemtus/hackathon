@@ -9,7 +9,7 @@ const PublicJudgeCardWidgetComponent = (props: {
   } = props.publicJudge;
 
   const judge = judges.find(
-    (judge) => judge.submissionId === props.submissionId
+    (judge) => judge.submissionId === props.submissionId,
   );
 
   return judge ? (

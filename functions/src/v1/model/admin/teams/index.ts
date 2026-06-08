@@ -21,7 +21,7 @@ const docRef = (id: string) =>
   db.doc(docPath(id)).withConverter(converter<AdminTeam>());
 
 export const getAdminTeam = async (
-  id: string
+  id: string,
 ): Promise<AdminTeam | undefined> => {
   return (await docRef(id).get()).data();
 };

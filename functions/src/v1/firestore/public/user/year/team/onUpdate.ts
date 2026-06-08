@@ -17,7 +17,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-public-user-year-team-onUpdate'
+          'v1-firestore-public-user-year-team-onUpdate',
         )
       ) {
         return;
@@ -58,7 +58,7 @@ export const onUpdate = () =>
 
       const publicTeam = convertPublicUserYearTeamToPublicTeam(
         userId,
-        afterPublicUserYearTeam
+        afterPublicUserYearTeam,
       );
       await setPublicTeam(publicTeam);
     });

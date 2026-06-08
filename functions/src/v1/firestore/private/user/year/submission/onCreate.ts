@@ -29,7 +29,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-private-user-year-submission-onCreate'
+          'v1-firestore-private-user-year-submission-onCreate',
         )
       ) {
         return;
@@ -76,7 +76,7 @@ export const onCreate = () =>
       const postMessageResponse = await postMessage(
         slackBotUserOAuthToken,
         JSON.stringify(publicUserYearSubmission, null, 2),
-        `#${slackNotifyChannel}`
+        `#${slackNotifyChannel}`,
       );
       logger.debug({ postMessageResponse });
     });

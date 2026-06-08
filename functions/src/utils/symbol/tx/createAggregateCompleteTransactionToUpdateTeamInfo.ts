@@ -29,7 +29,7 @@ export const createAggregateCompleteTransactionToUpdateTeamInfo = async (
   messageReceivingAccountPrivateKey: string,
   dataEncryptionKey: string,
   userId: string,
-  adminUserYearTeam: AdminUserYearTeam
+  adminUserYearTeam: AdminUserYearTeam,
 ): Promise<AdminUserTx> => {
   if (!userId) {
     throw Error('userId is undefined');
@@ -41,14 +41,14 @@ export const createAggregateCompleteTransactionToUpdateTeamInfo = async (
   logger.debug({ adminUser });
 
   const feeBillingAccount = await restoreAccountFromPrivateKey(
-    feeBillingAccountPrivateKey
+    feeBillingAccountPrivateKey,
   );
   const messageReceivingAccount = await restoreAccountFromPrivateKey(
-    messageReceivingAccountPrivateKey
+    messageReceivingAccountPrivateKey,
   );
   const multisigAccounts: MultisigAccounts = await restoreAccountsFromAdminUser(
     adminUser,
-    dataEncryptionKey
+    dataEncryptionKey,
   );
 
   if (!adminUserYearTeam.teamSaltHexString) {
@@ -75,7 +75,7 @@ export const createAggregateCompleteTransactionToUpdateTeamInfo = async (
   };
   const teamAccount = await restoreAccountFromEncryptedAccount(
     teamEncryptedAccount,
-    dataEncryptionKey
+    dataEncryptionKey,
   );
 
   const multisigAccount = multisigAccounts.multisigAccount;
@@ -111,7 +111,7 @@ export const createAggregateCompleteTransactionToUpdateTeamInfo = async (
     teamAccount.address,
     [],
     PlainMessage.create(messageString),
-    networkType
+    networkType,
   ).toAggregate(feeBillingAccount.publicAccount);
 
   logger.debug('embeddedTransferTransaction2');
@@ -133,14 +133,14 @@ export const createAggregateCompleteTransactionToUpdateTeamInfo = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message2String),
-    networkType
+    networkType,
   ).toAggregate(teamAccount.publicAccount);
 
   logger.debug('embeddedTransferTransaction3');
   const publicUserYearTeam = await getPublicUserYearTeam(
     userId,
     adminUserYearTeam.yearId,
-    adminUserYearTeam.id
+    adminUserYearTeam.id,
   );
   if (!publicUserYearTeam) {
     throw Error('publicUserYearTeam is undefined');
@@ -154,7 +154,7 @@ export const createAggregateCompleteTransactionToUpdateTeamInfo = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message3String),
-    networkType
+    networkType,
   ).toAggregate(teamAccount.publicAccount);
 
   // eslint-disable-next-line
@@ -170,7 +170,7 @@ export const createAggregateCompleteTransactionToUpdateTeamInfo = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message4String),
-    networkType
+    networkType,
   ).toAggregate(teamAccount.publicAccount);
 
   logger.debug('aggregateTransaction');
@@ -187,7 +187,7 @@ export const createAggregateCompleteTransactionToUpdateTeamInfo = async (
     deadline,
     embeddedTransactions,
     networkType,
-    initialEmptyCosignatures
+    initialEmptyCosignatures,
   ).setMaxFeeForAggregate(feeMultiplier, requiredCosignatories);
 
   const generationHashSeed = await getGenerationHashSeed();
@@ -199,7 +199,7 @@ export const createAggregateCompleteTransactionToUpdateTeamInfo = async (
     feeBillingAccount.signTransactionWithCosignatories(
       aggregateCompleteTransaction,
       [multisigCosignatory1Account, multisigCosignatory2Account],
-      generationHashSeed
+      generationHashSeed,
     );
 
   const hash = signedAggregateCompleteTransactionWithCosignatures.hash;

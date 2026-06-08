@@ -4,5 +4,5 @@ import { exportFunctionsModule } from '../../../utils/firebase/deploy';
 const domains: string[] = ['symbol'];
 
 domains.forEach((domain) =>
-  exportFunctionsModule(['v1', 'firestore', 'config', domain], exports)
+  exportFunctionsModule(['v1', 'firestore', 'config', domain], exports),
 );

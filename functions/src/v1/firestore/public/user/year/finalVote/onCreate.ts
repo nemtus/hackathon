@@ -23,7 +23,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-public-user-year-finalVote-onCreate'
+          'v1-firestore-public-user-year-finalVote-onCreate',
         )
       ) {
         return;
@@ -56,7 +56,7 @@ export const onCreate = () =>
       logger.debug({ publicUserYearFinalVote });
 
       const publicFinalVote = convertPublicUserYearFinalVoteToPublicFinalVote(
-        publicUserYearFinalVote
+        publicUserYearFinalVote,
       );
       await setPublicFinalVote(publicFinalVote);
     });

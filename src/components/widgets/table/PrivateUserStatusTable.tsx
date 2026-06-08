@@ -284,7 +284,7 @@ const PrivateUserStatusTableWidgetComponent = (props: {
           return 0;
         })
         .filter(
-          (tx) => tx.description === `CreateAndSetUpNewTeam${props.yearId}`
+          (tx) => tx.description === `CreateAndSetUpNewTeam${props.yearId}`,
         )[0];
       const updateTeamTx = props.privateUserTxs
         ?.sort((a, b) => {
@@ -394,7 +394,7 @@ const PrivateUserStatusTableWidgetComponent = (props: {
           return 0;
         })
         .filter(
-          (tx) => tx.description === `CreateAndSetUpNewTeam${props.yearId}`
+          (tx) => tx.description === `CreateAndSetUpNewTeam${props.yearId}`,
         )[0];
       const createSubmissionTx = props.privateUserTxs
         ?.sort((a, b) => {
@@ -406,7 +406,7 @@ const PrivateUserStatusTableWidgetComponent = (props: {
           return 0;
         })
         .filter(
-          (tx) => tx.description === `CreateNewSubmission${props.yearId}`
+          (tx) => tx.description === `CreateNewSubmission${props.yearId}`,
         )[0];
       const updateSubmissionTx = props.privateUserTxs
         ?.sort((a, b) => {
@@ -418,7 +418,7 @@ const PrivateUserStatusTableWidgetComponent = (props: {
           return 0;
         })
         .filter(
-          (tx) => tx.description === `UpdateSubmission${props.yearId}`
+          (tx) => tx.description === `UpdateSubmission${props.yearId}`,
         )[0];
       if (
         props.configHackathonYearSubmission &&
@@ -536,7 +536,7 @@ const PrivateUserStatusTableWidgetComponent = (props: {
       }
       if (
         !props.configHackathonYearJudge?.users.some(
-          (userId) => userId === props.authUser?.uid
+          (userId) => userId === props.authUser?.uid,
         )
       ) {
         return 'Limited';
@@ -633,7 +633,7 @@ const PrivateUserStatusTableWidgetComponent = (props: {
       }
       if (
         props.configHackathonYearJudge?.users.some(
-          (userId) => userId === props.authUser?.uid
+          (userId) => userId === props.authUser?.uid,
         )
       ) {
         return 'Limited';
@@ -732,7 +732,7 @@ const PrivateUserStatusTableWidgetComponent = (props: {
           return 0;
         })
         .filter(
-          (tx) => tx.description === `CreateNewFinalJudge${props.yearId}`
+          (tx) => tx.description === `CreateNewFinalJudge${props.yearId}`,
         )[0];
       if (
         !createAndSetUpNewAccountTx ||
@@ -742,7 +742,7 @@ const PrivateUserStatusTableWidgetComponent = (props: {
       }
       if (
         !props.configHackathonYearFinalJudge?.users.some(
-          (userId) => userId === props.authUser?.uid
+          (userId) => userId === props.authUser?.uid,
         )
       ) {
         return 'Limited';
@@ -832,7 +832,7 @@ const PrivateUserStatusTableWidgetComponent = (props: {
           return 0;
         })
         .filter(
-          (tx) => tx.description === `CreateNewFinalVote${props.yearId}`
+          (tx) => tx.description === `CreateNewFinalVote${props.yearId}`,
         )[0];
       if (
         !createAndSetUpNewAccountTx ||
@@ -842,7 +842,7 @@ const PrivateUserStatusTableWidgetComponent = (props: {
       }
       if (
         props.configHackathonYearFinalJudge?.users.some(
-          (userId) => userId === props.authUser?.uid
+          (userId) => userId === props.authUser?.uid,
         )
       ) {
         return 'Limited';

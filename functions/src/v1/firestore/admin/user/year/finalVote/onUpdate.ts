@@ -14,10 +14,10 @@ const CURRENT_YEAR = process.env.CURRENT_YEAR;
 const CURRENT_YEAR_MOSAIC_ID = process.env[`MOSAIC_ID_${CURRENT_YEAR}`];
 
 const FEE_BILLING_ACCOUNT_PRIVATE_KEY = defineSecret(
-  'FEE_BILLING_ACCOUNT_PRIVATE_KEY'
+  'FEE_BILLING_ACCOUNT_PRIVATE_KEY',
 );
 const MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY = defineSecret(
-  'MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY'
+  'MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY',
 );
 const DATA_ENCRYPTION_KEY = defineSecret('DATA_ENCRYPTION_KEY');
 
@@ -39,7 +39,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-admin-user-year-vote-onUpdate'
+          'v1-firestore-admin-user-year-vote-onUpdate',
         )
       ) {
         return;
@@ -89,7 +89,7 @@ export const onUpdate = () =>
 
       const beforeAdminUserYearFinalVote =
         converter<AdminUserYearFinalVote>().fromFirestore(
-          changeSnapshot.before
+          changeSnapshot.before,
         );
       logger.debug({ beforeAdminUserYearFinalVote });
       if (!beforeAdminUserYearFinalVote) {
@@ -126,11 +126,11 @@ export const onUpdate = () =>
             dataEncryptionKey,
             userId,
             afterAdminUserYearFinalVote,
-            currentYearMosaicId
+            currentYearMosaicId,
           );
         await setAdminUserTx(
           userId,
-          aggregateCompleteTransactionToCreateNewFinalVote
+          aggregateCompleteTransactionToCreateNewFinalVote,
         );
       }
 
@@ -143,7 +143,7 @@ export const onUpdate = () =>
             dataEncryptionKey,
             userId,
             afterAdminUserYearFinalVote,
-            currentYearMosaicId
+            currentYearMosaicId,
           );
         await setAdminUserTx(userId, aggregateCompleteTransactionToUpdateVote);
       }

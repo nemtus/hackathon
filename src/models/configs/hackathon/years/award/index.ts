@@ -35,14 +35,14 @@ export const docRef = (yearId: string) =>
   doc(db, docPath(yearId)).withConverter(converter<ConfigHackathonYearAward>());
 
 export const getConfigHackathonYearAward = async (
-  yearId: string
+  yearId: string,
 ): Promise<ConfigHackathonYearAward | undefined> => {
   return (await getDoc(docRef(yearId))).data();
 };
 
 export const setConfigHackathonYearAward = async (
   yearId: string,
-  configHackathonYearAward: Partial<ConfigHackathonYearAward>
+  configHackathonYearAward: Partial<ConfigHackathonYearAward>,
 ): Promise<void> => {
   await setDoc(docRef(yearId), configHackathonYearAward, { merge: true });
 };

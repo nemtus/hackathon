@@ -23,26 +23,26 @@ const docRef = (userId: string, yearId: string, id: string) =>
 export const getAdminUserYearSubmission = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<AdminUserYearSubmission | undefined> => {
   return (await docRef(userId, yearId, id).get()).data();
 };
 
 export const setAdminUserYearSubmission = async (
   userId: string,
-  adminUserYearSubmission: AdminUserYearSubmission
+  adminUserYearSubmission: AdminUserYearSubmission,
 ): Promise<AdminUserYearSubmission | undefined> => {
   if (!adminUserYearSubmission.id) {
     const docRef = await collectionRef(
       userId,
-      adminUserYearSubmission.yearId
+      adminUserYearSubmission.yearId,
     ).add(adminUserYearSubmission);
     return (await docRef.get()).data();
   }
   await docRef(
     userId,
     adminUserYearSubmission.yearId,
-    adminUserYearSubmission.id
+    adminUserYearSubmission.id,
   ).set(adminUserYearSubmission, {
     merge: true,
   });
@@ -50,13 +50,13 @@ export const setAdminUserYearSubmission = async (
     await docRef(
       userId,
       adminUserYearSubmission.yearId,
-      adminUserYearSubmission.id
+      adminUserYearSubmission.id,
     ).get()
   ).data();
 };
 
 export const convertPrivateUserYearSubmissionToAdminUserYearSubmission = (
-  privateUserYearSubmission: PrivateUserYearSubmission
+  privateUserYearSubmission: PrivateUserYearSubmission,
 ): AdminUserYearSubmission => {
   const adminUserYearSubmission: AdminUserYearSubmission =
     privateUserYearSubmission;

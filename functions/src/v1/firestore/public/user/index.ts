@@ -24,5 +24,5 @@ import {
 const domains: string[] = ['year'];
 
 domains.forEach((domain) =>
-  exportFunctionsModule(['v1', 'firestore', 'public', 'user', domain], exports)
+  exportFunctionsModule(['v1', 'firestore', 'public', 'user', domain], exports),
 );

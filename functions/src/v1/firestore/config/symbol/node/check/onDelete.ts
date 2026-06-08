@@ -11,7 +11,7 @@ export const onDelete = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-config-symbol-node-check-onDelete'
+          'v1-firestore-config-symbol-node-check-onDelete',
         )
       ) {
         return;

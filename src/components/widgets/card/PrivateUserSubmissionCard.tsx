@@ -2,7 +2,7 @@ import CopyButtonComponent from 'components/widgets/button/CopyButton';
 import { PrivateUserYearSubmission } from 'models/private/users/years/submissions';
 
 const PrivateUserSubmissionCardWidgetComponent = (
-  privateUserSubmission: PrivateUserYearSubmission
+  privateUserSubmission: PrivateUserYearSubmission,
 ) => {
   const {
     id,

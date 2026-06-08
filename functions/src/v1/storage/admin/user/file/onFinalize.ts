@@ -9,7 +9,7 @@ export const onFinalize = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-storage-admin-user-file-onFinalize'
+          'v1-storage-admin-user-file-onFinalize',
         )
       ) {
         return;

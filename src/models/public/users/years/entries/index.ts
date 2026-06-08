@@ -27,38 +27,38 @@ const collectionPath = (userId: string, yearId: string) =>
   `/v/1/scopes/public/users/${userId}/years/${yearId}/entries`;
 const collectionRef = (userId: string, yearId: string) =>
   collection(db, collectionPath(userId, yearId)).withConverter(
-    converter<PublicUserYearEntry>()
+    converter<PublicUserYearEntry>(),
   );
 const docPath = (id: string) => `${collectionPath}/${id}`;
 const docRef = (id: string) =>
   doc(db, docPath(id)).withConverter(converter<PublicUserYearEntry>());
 
 export const getPublicUserEntry = async (
-  id: string
+  id: string,
 ): Promise<PublicUserYearEntry | undefined> => {
   return (await getDoc(docRef(id))).data();
 };
 
 export const setPublicUserEntry = async (
-  publicUser: PublicUserYearEntry
+  publicUser: PublicUserYearEntry,
 ): Promise<void> => {
   await setDoc(docRef(publicUser.id), publicUser, { merge: true });
 };
 
 export const getAllPublicUserEntries = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<PublicUserYearEntries> => {
   return (
     await getDocs(
-      query(collectionRef(userId, yearId), orderBy('createdAt', 'asc'))
+      query(collectionRef(userId, yearId), orderBy('createdAt', 'asc')),
     )
   ).docs.map((doc) => doc.data());
 };
 
 export const getCountAllPublicUserEntries = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<number> => {
   return (await getCountFromServer(query(collectionRef(userId, yearId)))).data()
     .count;
@@ -66,7 +66,7 @@ export const getCountAllPublicUserEntries = async (
 
 export const queryEntryPublicUserEntries = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<PublicUserYearEntries> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
@@ -74,15 +74,15 @@ export const queryEntryPublicUserEntries = async (
       query(
         collectionRef(userId, yearId),
         orderBy('entryAt', 'asc'),
-        startAt(startDate)
-      )
+        startAt(startDate),
+      ),
     )
   ).docs.map((doc) => doc.data());
 };
 
 export const getCountEntryPublicUserEntries = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<number> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
@@ -90,15 +90,15 @@ export const getCountEntryPublicUserEntries = async (
       query(
         collectionRef(userId, yearId),
         orderBy('entryAt', 'asc'),
-        startAt(startDate)
-      )
+        startAt(startDate),
+      ),
     )
   ).data().count;
 };
 
 export const querySubmitPublicUserEntries = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<PublicUserYearEntries> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
@@ -106,15 +106,15 @@ export const querySubmitPublicUserEntries = async (
       query(
         collectionRef(userId, yearId),
         orderBy('submitAt', 'asc'),
-        startAt(startDate)
-      )
+        startAt(startDate),
+      ),
     )
   ).docs.map((doc) => doc.data());
 };
 
 export const getCountSubmitPublicUserEntries = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<number> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
@@ -122,15 +122,15 @@ export const getCountSubmitPublicUserEntries = async (
       query(
         collectionRef(userId, yearId),
         orderBy('submitAt', 'asc'),
-        startAt(startDate)
-      )
+        startAt(startDate),
+      ),
     )
   ).data().count;
 };
 
 export const queryVotePublicUserEntries = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<PublicUserYearEntries> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
@@ -138,14 +138,14 @@ export const queryVotePublicUserEntries = async (
       query(
         collectionRef(userId, yearId),
         orderBy('voteAt', 'asc'),
-        startAt(startDate)
-      )
+        startAt(startDate),
+      ),
     )
   ).docs.map((doc) => doc.data());
 };
 
 export const convertAdminUserToPublicUser = (
-  adminUserYearEntry: AdminUserYearEntry
+  adminUserYearEntry: AdminUserYearEntry,
 ): PublicUserYearEntry => {
   const publicUser: PublicUserYearEntry = {
     id: adminUserYearEntry.id,
@@ -158,7 +158,7 @@ export const convertAdminUserToPublicUser = (
 };
 
 export const convertPrivateUserToPublicUser = (
-  privateUserYearEntry: PrivateUserYearEntry
+  privateUserYearEntry: PrivateUserYearEntry,
 ): PublicUserYearEntry => {
   const publicUser: PublicUserYearEntry = {
     id: privateUserYearEntry.id,

@@ -26,26 +26,26 @@ const docRef = (userId: string, yearId: string, id: string) =>
 export const getPrivateUserYearFinalJudge = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PrivateUserYearFinalJudge | undefined> => {
   return (await docRef(userId, yearId, id).get()).data();
 };
 
 export const setPrivateUserYearFinalJudge = async (
   userId: string,
-  privateUserYearFinalJudge: PrivateUserYearFinalJudge
+  privateUserYearFinalJudge: PrivateUserYearFinalJudge,
 ): Promise<PrivateUserYearFinalJudge | undefined> => {
   if (!privateUserYearFinalJudge.id) {
     const docRef = await collectionRef(
       userId,
-      privateUserYearFinalJudge.yearId
+      privateUserYearFinalJudge.yearId,
     ).add(privateUserYearFinalJudge);
     return (await docRef.get()).data();
   }
   await docRef(
     userId,
     privateUserYearFinalJudge.yearId,
-    privateUserYearFinalJudge.id
+    privateUserYearFinalJudge.id,
   ).set(privateUserYearFinalJudge, {
     merge: true,
   });
@@ -53,7 +53,7 @@ export const setPrivateUserYearFinalJudge = async (
     await docRef(
       userId,
       privateUserYearFinalJudge.yearId,
-      privateUserYearFinalJudge.id
+      privateUserYearFinalJudge.id,
     ).get()
   ).data();
 };

@@ -20,7 +20,7 @@ const collectionPath = (userId: string) =>
 
 const collectionRef = (userId: string) =>
   collection(db, collectionPath(userId)).withConverter(
-    converter<AdminUserTx>()
+    converter<AdminUserTx>(),
   );
 
 const docPath = (userId: string, id: string) =>
@@ -31,20 +31,20 @@ const docRef = (userId: string, id: string) =>
 
 export const getAdminUserTx = async (
   userId: string,
-  id: string
+  id: string,
 ): Promise<AdminUserTx | undefined> => {
   return (await getDoc(docRef(userId, id))).data();
 };
 
 export const setAdminUserTx = async (
   userId: string,
-  adminUserTx: AdminUserTx
+  adminUserTx: AdminUserTx,
 ): Promise<void> => {
   await setDoc(docRef(userId, adminUserTx.id), adminUserTx, { merge: true });
 };
 
 export const getAllAdminUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<AdminUserTxs> => {
   return (
     await getDocs(query(collectionRef(userId), orderBy('createdAt', 'desc')))
@@ -52,57 +52,57 @@ export const getAllAdminUserTxs = async (
 };
 
 export const queryNotAnnouncedAdminUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<AdminUserTxs> => {
   return (
     await getDocs(
       query(
         collectionRef(userId),
         where('announced', '==', false),
-        orderBy('createdAt', 'asc')
-      )
+        orderBy('createdAt', 'asc'),
+      ),
     )
   ).docs.map((doc) => doc.data());
 };
 
 export const queryNotUnconfirmedAdminUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<AdminUserTxs> => {
   return (
     await getDocs(
       query(
         collectionRef(userId),
         where('unconfirmed', '==', false),
-        orderBy('createdAt', 'asc')
-      )
+        orderBy('createdAt', 'asc'),
+      ),
     )
   ).docs.map((doc) => doc.data());
 };
 
 export const queryNotConfirmedAdminUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<AdminUserTxs> => {
   return (
     await getDocs(
       query(
         collectionRef(userId),
         where('confirmed', '==', false),
-        orderBy('createdAt', 'asc')
-      )
+        orderBy('createdAt', 'asc'),
+      ),
     )
   ).docs.map((doc) => doc.data());
 };
 
 export const queryNotFinalizedAdminUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<AdminUserTxs> => {
   return (
     await getDocs(
       query(
         collectionRef(userId),
         where('finalized', '==', false),
-        orderBy('createdAt', 'asc')
-      )
+        orderBy('createdAt', 'asc'),
+      ),
     )
   ).docs.map((doc) => doc.data());
 };

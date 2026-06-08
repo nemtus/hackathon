@@ -72,7 +72,7 @@ const SubmissionCreatePageComponent = () => {
     getPrivateUserYearTeam(
       userId,
       yearId,
-      userId /* Note: teamId should be userId */
+      userId /* Note: teamId should be userId */,
     )
       .then((privateUserYearTeam) => {
         setPrivateUserYearTeam(privateUserYearTeam);
@@ -84,7 +84,7 @@ const SubmissionCreatePageComponent = () => {
     getPrivateUserYearSubmission(
       userId,
       yearId,
-      userId /* Note: submissionId should be userId */
+      userId /* Note: submissionId should be userId */,
     )
       .then((privateUserYearSubmission) => {
         setPrivateUserYearSubmission(privateUserYearSubmission);
@@ -111,7 +111,7 @@ const SubmissionCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearEntryDocListener = onSnapshot(
       privateUserYearEntryDocRef(userId, CURRENT_YEAR, userId),
@@ -128,7 +128,7 @@ const SubmissionCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearTeamDocListener = onSnapshot(
       privateUserYearTeamDocRef(userId, CURRENT_YEAR, userId),
@@ -146,7 +146,7 @@ const SubmissionCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearSubmissionDocListener = onSnapshot(
       privateUserYearSubmissionDocRef(userId, CURRENT_YEAR, userId),
@@ -164,7 +164,7 @@ const SubmissionCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
 
     return () => {

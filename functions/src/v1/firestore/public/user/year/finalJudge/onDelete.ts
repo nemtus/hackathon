@@ -12,7 +12,7 @@ export const onDelete = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-public-user-year-finalJudge-onDelete'
+          'v1-firestore-public-user-year-finalJudge-onDelete',
         )
       ) {
         return;

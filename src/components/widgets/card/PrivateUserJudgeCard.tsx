@@ -1,7 +1,7 @@
 import { PrivateUserYearJudge } from 'models/private/users/years/judges';
 
 const PrivateUserJudgeCardWidgetComponent = (
-  privateUserJudge: PrivateUserYearJudge
+  privateUserJudge: PrivateUserYearJudge,
 ) => {
   const {
     // id,

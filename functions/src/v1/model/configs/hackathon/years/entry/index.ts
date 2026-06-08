@@ -16,7 +16,7 @@ const docRef = (yearId: string) =>
   db.doc(docPath(yearId)).withConverter(converter<ConfigHackathonYearEntry>());
 
 export const getConfigHackathonYearEntry = async (
-  yearId: string
+  yearId: string,
 ): Promise<ConfigHackathonYearEntry | undefined> => {
   return (await docRef(yearId).get()).data();
 };

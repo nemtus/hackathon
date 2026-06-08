@@ -13,7 +13,7 @@ const _exportFunction = (
   name: string,
   f: () =>
     | CloudFunction<QueryDocumentSnapshot>
-    | CloudFunction<Change<QueryDocumentSnapshot>>
+    | CloudFunction<Change<QueryDocumentSnapshot>>,
 ) => exportFunction(['v1', 'firestore', 'private', 'user', name], exports, f);
 
 _exportFunction('onCreate', onCreate);
@@ -24,5 +24,8 @@ _exportFunction('onUpdate', onUpdate);
 const domains: string[] = ['tx', 'year'];
 
 domains.forEach((domain) =>
-  exportFunctionsModule(['v1', 'firestore', 'private', 'user', domain], exports)
+  exportFunctionsModule(
+    ['v1', 'firestore', 'private', 'user', domain],
+    exports,
+  ),
 );

@@ -38,7 +38,7 @@ export const createAggregateCompleteTransactionToCreateNewVote = async (
   dataEncryptionKey: string,
   userId: string,
   adminUserYearVote: AdminUserYearVote,
-  mosaicIdHex: string
+  mosaicIdHex: string,
 ): Promise<AdminUserTx> => {
   if (!userId) {
     throw Error('userId is undefined');
@@ -53,14 +53,14 @@ export const createAggregateCompleteTransactionToCreateNewVote = async (
   logger.debug({ adminUser });
 
   const feeBillingAccount = await restoreAccountFromPrivateKey(
-    feeBillingAccountPrivateKey
+    feeBillingAccountPrivateKey,
   );
   const messageReceivingAccount = await restoreAccountFromPrivateKey(
-    messageReceivingAccountPrivateKey
+    messageReceivingAccountPrivateKey,
   );
   const multisigAccounts: MultisigAccounts = await restoreAccountsFromAdminUser(
     adminUser,
-    dataEncryptionKey
+    dataEncryptionKey,
   );
 
   const multisigAccount = multisigAccounts.multisigAccount;
@@ -96,7 +96,7 @@ export const createAggregateCompleteTransactionToCreateNewVote = async (
     multisigAccount.address,
     [],
     PlainMessage.create(messageString),
-    networkType
+    networkType,
   ).toAggregate(feeBillingAccount.publicAccount);
 
   logger.debug('embeddedTransferTransaction2');
@@ -117,7 +117,7 @@ export const createAggregateCompleteTransactionToCreateNewVote = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message2String),
-    networkType
+    networkType,
   ).toAggregate(multisigAccount.publicAccount);
 
   const embeddedVoteTransactions: InnerTransaction[] = [];
@@ -151,7 +151,7 @@ export const createAggregateCompleteTransactionToCreateNewVote = async (
     const adminUserYearTeam = await getAdminUserYearTeam(
       vote.teamId,
       vote.yearId,
-      vote.teamId
+      vote.teamId,
     );
     logger.debug({ adminUserYearTeam });
     if (!adminUserYearTeam) {
@@ -182,11 +182,11 @@ export const createAggregateCompleteTransactionToCreateNewVote = async (
     };
     const teamAccount = await restoreAccountFromEncryptedAccount(
       teamEncryptedAccount,
-      dataEncryptionKey
+      dataEncryptionKey,
     );
 
     logger.debug(
-      `embeddedMosaicSupplyRevocationTransactionForEachVote userId: ${vote.userId}, teamId: ${vote.teamId}, point: ${vote.point}`
+      `embeddedMosaicSupplyRevocationTransactionForEachVote userId: ${vote.userId}, teamId: ${vote.teamId}, point: ${vote.point}`,
     );
     const mosaic = new Mosaic(mosaicId, UInt64.fromUint(vote.point));
     const embeddedMosaicSupplyRevocationTransaction =
@@ -194,12 +194,12 @@ export const createAggregateCompleteTransactionToCreateNewVote = async (
         deadline,
         multisigAccount.address,
         mosaic,
-        networkType
+        networkType,
       ).toAggregate(feeBillingAccount.publicAccount);
     embeddedVoteTransactions.push(embeddedMosaicSupplyRevocationTransaction);
 
     logger.debug(
-      `embeddedTransferTransactionForEachVote userId: ${vote.userId}, teamId: ${vote.teamId}, point: ${vote.point}, message: ${vote.message}`
+      `embeddedTransferTransactionForEachVote userId: ${vote.userId}, teamId: ${vote.teamId}, point: ${vote.point}, message: ${vote.message}`,
     );
     const messageForEachVoteJson = vote;
     logger.debug('messageForEachVoteJson', { messageForEachVoteJson });
@@ -210,7 +210,7 @@ export const createAggregateCompleteTransactionToCreateNewVote = async (
       teamAccount.address,
       [mosaic],
       PlainMessage.create(messageForEachVoteString),
-      networkType
+      networkType,
     ).toAggregate(feeBillingAccount.publicAccount);
     embeddedVoteTransactions.push(embeddedTransferTransactionForEachVote);
 
@@ -236,7 +236,7 @@ export const createAggregateCompleteTransactionToCreateNewVote = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message3String),
-    networkType
+    networkType,
   ).toAggregate(multisigAccount.publicAccount);
 
   logger.debug('embeddedTransferTransaction4');
@@ -245,7 +245,7 @@ export const createAggregateCompleteTransactionToCreateNewVote = async (
     multisigAccount.address,
     [new Mosaic(mosaicId, UInt64.fromUint(adminUserYearVote.totalPoints))],
     EmptyMessage,
-    networkType
+    networkType,
   ).toAggregate(feeBillingAccount.publicAccount);
 
   logger.debug('aggregateTransaction');
@@ -263,7 +263,7 @@ export const createAggregateCompleteTransactionToCreateNewVote = async (
     deadline,
     embeddedTransactions,
     networkType,
-    initialEmptyCosignatures
+    initialEmptyCosignatures,
   ).setMaxFeeForAggregate(feeMultiplier, requiredCosignatories);
 
   const generationHashSeed = await getGenerationHashSeed();
@@ -275,7 +275,7 @@ export const createAggregateCompleteTransactionToCreateNewVote = async (
     feeBillingAccount.signTransactionWithCosignatories(
       aggregateCompleteTransaction,
       [multisigCosignatory1Account, multisigCosignatory2Account],
-      generationHashSeed
+      generationHashSeed,
     );
 
   const hash = signedAggregateCompleteTransactionWithCosignatures.hash;

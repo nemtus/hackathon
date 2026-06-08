@@ -35,7 +35,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-private-user-year-judge-onUpdate'
+          'v1-firestore-private-user-year-judge-onUpdate',
         )
       ) {
         return;
@@ -60,9 +60,8 @@ export const onUpdate = () =>
         throw Error('judgeId is undefined');
       }
 
-      const configHackathonYearJudge = await getConfigHackathonYearJudge(
-        yearId
-      );
+      const configHackathonYearJudge =
+        await getConfigHackathonYearJudge(yearId);
       if (!configHackathonYearJudge) {
         throw Error('configHackathonYearJudge is undefined');
       }
@@ -87,7 +86,7 @@ export const onUpdate = () =>
       }
       if (afterPrivateUserYearJudge.userId !== userId) {
         throw Error(
-          'userId is not matched to afterPrivateUserYearJudge.userId'
+          'userId is not matched to afterPrivateUserYearJudge.userId',
         );
       }
       const adminUser = await getAdminUser(userId);
@@ -112,7 +111,7 @@ export const onUpdate = () =>
             afterPrivateUserYearJudge.createdAt <=
               configHackathonYearJudge.endAt &&
             configHackathonYearJudge.users.some(
-              (userId) => userId === afterPrivateUserYearJudge.userId
+              (userId) => userId === afterPrivateUserYearJudge.userId,
             ) &&
             judge.userId && // Note: voting user
             judge.yearId === CURRENT_YEAR &&
@@ -130,7 +129,7 @@ export const onUpdate = () =>
         const adminUserYearTeam = await getAdminUserYearTeam(
           judge.teamId,
           judge.yearId,
-          judge.teamId
+          judge.teamId,
         );
         logger.debug({ adminUserYearTeam });
         if (!adminUserYearTeam) {
@@ -159,7 +158,7 @@ export const onUpdate = () =>
       }
       if (totalPoints !== afterPrivateUserYearJudge.totalPoints) {
         throw Error(
-          'totalPoints should be equal to afterPrivateUserYearJudge.totalPoints'
+          'totalPoints should be equal to afterPrivateUserYearJudge.totalPoints',
         );
       }
 
@@ -193,7 +192,7 @@ export const onUpdate = () =>
         const postMessageResponse = await postMessage(
           slackBotUserOAuthToken,
           JSON.stringify(publicUserYearJudge, null, 2),
-          `#${slackNotifyChannel}`
+          `#${slackNotifyChannel}`,
         );
         logger.debug({ postMessageResponse });
       }

@@ -9,7 +9,7 @@ export const onArchive = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-storage-admin-user-file-onArchive'
+          'v1-storage-admin-user-file-onArchive',
         )
       ) {
         return;

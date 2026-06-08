@@ -90,7 +90,7 @@ const JudgeCreatePageComponent = () => {
     PrivateUserYearVote | null | undefined
   >(null);
   const [publicResults, setPublicResults] = useState<PublicResults | null | []>(
-    null
+    null,
   );
   const [configHackathonYearEntry, setConfigHackathonYearEntry] = useState<
     ConfigHackathonYearEntry | null | undefined
@@ -136,7 +136,7 @@ const JudgeCreatePageComponent = () => {
     getPrivateUserYearTeam(
       userId,
       yearId,
-      userId /* Note: teamId should be userId */
+      userId /* Note: teamId should be userId */,
     )
       .then((privateUserYearTeam) => {
         setPrivateUserYearTeam(privateUserYearTeam);
@@ -148,7 +148,7 @@ const JudgeCreatePageComponent = () => {
     getPrivateUserYearSubmission(
       userId,
       yearId,
-      userId /* Note: submissionId should be userId */
+      userId /* Note: submissionId should be userId */,
     )
       .then((privateUserYearSubmission) => {
         setPrivateUserYearSubmission(privateUserYearSubmission);
@@ -238,7 +238,7 @@ const JudgeCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearEntryDocListener = onSnapshot(
       privateUserYearEntryDocRef(userId, CURRENT_YEAR, userId),
@@ -255,7 +255,7 @@ const JudgeCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearTeamDocListener = onSnapshot(
       privateUserYearTeamDocRef(userId, CURRENT_YEAR, userId),
@@ -273,7 +273,7 @@ const JudgeCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearSubmissionDocListener = onSnapshot(
       privateUserYearSubmissionDocRef(userId, CURRENT_YEAR, userId),
@@ -291,7 +291,7 @@ const JudgeCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearJudgeDocListener = onSnapshot(
       privateUserYearJudgeDocRef(userId, CURRENT_YEAR, userId),
@@ -309,7 +309,7 @@ const JudgeCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearVoteDocListener = onSnapshot(
       privateUserYearVoteDocRef(userId, CURRENT_YEAR, userId),
@@ -327,7 +327,7 @@ const JudgeCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribeConfigHackathonYearEntryDocListener = onSnapshot(
       configHackathonYearEntryDocRef(CURRENT_YEAR),
@@ -345,7 +345,7 @@ const JudgeCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribeConfigHackathonYearTeamDocListener = onSnapshot(
       configHackathonYearTeamDocRef(CURRENT_YEAR),
@@ -363,7 +363,7 @@ const JudgeCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribeConfigHackathonYearSubmissionDocListener = onSnapshot(
       configHackathonYearSubmissionDocRef(CURRENT_YEAR),
@@ -381,7 +381,7 @@ const JudgeCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribeConfigHackathonYearJudgeDocListener = onSnapshot(
       configHackathonYearJudgeDocRef(CURRENT_YEAR),
@@ -399,7 +399,7 @@ const JudgeCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribeConfigHackathonYearVoteDocListener = onSnapshot(
       configHackathonYearVoteDocRef(CURRENT_YEAR),
@@ -417,7 +417,7 @@ const JudgeCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
 
     return () => {

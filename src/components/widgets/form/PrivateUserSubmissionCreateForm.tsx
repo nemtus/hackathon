@@ -78,7 +78,9 @@ const PrivateUserYearSubmissionCreateFormWidgetComponent = (props: {
       updatedAt: undefined,
       approvedAt: undefined,
     },
-    resolver: yupResolver(schema) as unknown as Resolver<PrivateUserYearSubmission>,
+    resolver: yupResolver(
+      schema,
+    ) as unknown as Resolver<PrivateUserYearSubmission>,
   });
 
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,7 +96,7 @@ const PrivateUserYearSubmissionCreateFormWidgetComponent = (props: {
     }
     const storageRef = ref(
       storage,
-      `users/${userId}/years/${yearId}/submissions/${userId}/images/image.${fileExtension}`
+      `users/${userId}/years/${yearId}/submissions/${userId}/images/image.${fileExtension}`,
     );
     const snapshot = await uploadBytes(storageRef, files[0]);
     const downloadUrl = await getDownloadURL(snapshot.ref);
@@ -102,7 +104,7 @@ const PrivateUserYearSubmissionCreateFormWidgetComponent = (props: {
   };
 
   const onSubmit: SubmitHandler<PrivateUserYearSubmission> = async (
-    privateUserYearSubmission
+    privateUserYearSubmission,
   ): Promise<void> => {
     if (!imageDownloadUrl) {
       alert('Please upload image!');

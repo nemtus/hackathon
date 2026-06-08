@@ -18,7 +18,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-public-user-year-judge-onUpdate'
+          'v1-firestore-public-user-year-judge-onUpdate',
         )
       ) {
         return;
@@ -58,7 +58,7 @@ export const onUpdate = () =>
       }
 
       const publicTeam = convertPublicUserYearJudgeToPublicJudge(
-        afterPublicUserYearJudge
+        afterPublicUserYearJudge,
       );
       await setPublicJudge(publicTeam);
     });

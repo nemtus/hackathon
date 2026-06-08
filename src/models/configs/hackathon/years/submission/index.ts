@@ -20,18 +20,18 @@ const collectionPath = (yearId: string) => `/v/1/configs/hackathon/${yearId}`;
 const docPath = (yearId: string) => `${collectionPath(yearId)}/submission`;
 export const docRef = (yearId: string) =>
   doc(db, docPath(yearId)).withConverter(
-    converter<ConfigHackathonYearSubmission>()
+    converter<ConfigHackathonYearSubmission>(),
   );
 
 export const getConfigHackathonYearSubmission = async (
-  yearId: string
+  yearId: string,
 ): Promise<ConfigHackathonYearSubmission | undefined> => {
   return (await getDoc(docRef(yearId))).data();
 };
 
 export const setConfigHackathonYearSubmission = async (
   yearId: string,
-  configHackathonYearSubmission: Partial<ConfigHackathonYearSubmission>
+  configHackathonYearSubmission: Partial<ConfigHackathonYearSubmission>,
 ): Promise<void> => {
   await setDoc(docRef(yearId), configHackathonYearSubmission, { merge: true });
 };

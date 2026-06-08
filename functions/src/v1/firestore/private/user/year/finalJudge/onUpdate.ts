@@ -45,7 +45,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-private-user-year-finalJudge-onUpdate'
+          'v1-firestore-private-user-year-finalJudge-onUpdate',
         )
       ) {
         return;
@@ -70,9 +70,8 @@ export const onUpdate = () =>
         throw Error('finalJudgeId is undefined');
       }
 
-      const configHackathonYearJudge = await getConfigHackathonYearJudge(
-        yearId
-      );
+      const configHackathonYearJudge =
+        await getConfigHackathonYearJudge(yearId);
       if (!configHackathonYearJudge) {
         throw Error('configHackathonYearJudge is undefined');
       }
@@ -84,7 +83,7 @@ export const onUpdate = () =>
 
       const beforePrivateUserYearFinalJudge =
         converter<PrivateUserYearFinalJudge>().fromFirestore(
-          changeSnapshot.before
+          changeSnapshot.before,
         );
       logger.debug({ beforePrivateUserYearFinalJudge });
       if (!beforePrivateUserYearFinalJudge) {
@@ -93,7 +92,7 @@ export const onUpdate = () =>
 
       const afterPrivateUserYearFinalJudge =
         converter<PrivateUserYearFinalJudge>().fromFirestore(
-          changeSnapshot.after
+          changeSnapshot.after,
         );
       logger.debug({ afterPrivateUserYearFinalJudge });
       if (!afterPrivateUserYearFinalJudge) {
@@ -106,7 +105,7 @@ export const onUpdate = () =>
       }
       if (afterPrivateUserYearFinalJudge.userId !== userId) {
         throw Error(
-          'userId is not matched to afterPrivateUserYearFinalJudge.userId'
+          'userId is not matched to afterPrivateUserYearFinalJudge.userId',
         );
       }
       const adminUser = await getAdminUser(userId);
@@ -131,7 +130,7 @@ export const onUpdate = () =>
             afterPrivateUserYearFinalJudge.createdAt <=
               configHackathonYearFinalJudge.endAt &&
             configHackathonYearFinalJudge.users.some(
-              (userId) => userId === afterPrivateUserYearFinalJudge.userId
+              (userId) => userId === afterPrivateUserYearFinalJudge.userId,
             ) &&
             finalJudge.userId && // Note: voting user
             finalJudge.yearId === CURRENT_YEAR &&
@@ -150,7 +149,7 @@ export const onUpdate = () =>
         const adminUserYearTeam = await getAdminUserYearTeam(
           finalJudge.teamId,
           finalJudge.yearId,
-          finalJudge.teamId
+          finalJudge.teamId,
         );
         logger.debug({ adminUserYearTeam });
         if (!adminUserYearTeam) {
@@ -179,7 +178,7 @@ export const onUpdate = () =>
       }
       if (totalPoints !== afterPrivateUserYearFinalJudge.totalPoints) {
         throw Error(
-          'totalPoints should be equal to afterPrivateUserYearFinalJudge.totalPoints'
+          'totalPoints should be equal to afterPrivateUserYearFinalJudge.totalPoints',
         );
       }
 
@@ -214,7 +213,7 @@ export const onUpdate = () =>
         const postMessageResponse = await postMessage(
           slackBotUserOAuthToken,
           JSON.stringify(publicUserYearFinalJudge, null, 2),
-          `#${slackNotifyChannel}`
+          `#${slackNotifyChannel}`,
         );
         logger.debug({ postMessageResponse });
       }

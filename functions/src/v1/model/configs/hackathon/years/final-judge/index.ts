@@ -19,7 +19,7 @@ const docRef = (yearId: string) =>
     .withConverter(converter<ConfigHackathonYearFinalJudge>());
 
 export const getConfigHackathonYearFinalJudge = async (
-  yearId: string
+  yearId: string,
 ): Promise<ConfigHackathonYearFinalJudge | undefined> => {
   return (await docRef(yearId).get()).data();
 };

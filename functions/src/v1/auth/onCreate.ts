@@ -8,10 +8,10 @@ import { AdminUser, setAdminUser } from '../model/admin/users';
 import { setAdminUserTx } from '../model/admin/users/txs';
 
 const FEE_BILLING_ACCOUNT_PRIVATE_KEY = defineSecret(
-  'FEE_BILLING_ACCOUNT_PRIVATE_KEY'
+  'FEE_BILLING_ACCOUNT_PRIVATE_KEY',
 );
 const MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY = defineSecret(
-  'MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY'
+  'MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY',
 );
 const DATA_ENCRYPTION_KEY = defineSecret('DATA_ENCRYPTION_KEY');
 
@@ -38,9 +38,8 @@ export const onCreate = () =>
       const messageReceivingAccountPrivateKey =
         MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY.value();
       const dataEncryptionKey = DATA_ENCRYPTION_KEY.value();
-      const multisigEncryptedAccount = await createNewEncryptedAccount(
-        dataEncryptionKey
-      );
+      const multisigEncryptedAccount =
+        await createNewEncryptedAccount(dataEncryptionKey);
       const multisigCosignatory1EncryptedAccount =
         await createNewEncryptedAccount(dataEncryptionKey);
       const multisigCosignatory2EncryptedAccount =
@@ -102,10 +101,10 @@ export const onCreate = () =>
           feeBillingAccountPrivateKey,
           messageReceivingAccountPrivateKey,
           dataEncryptionKey,
-          adminUser
+          adminUser,
         );
       await setAdminUserTx(
         adminUser.id,
-        aggregateCompleteTransactionToCreateAndSetUpNewAccount
+        aggregateCompleteTransactionToCreateAndSetUpNewAccount,
       );
     });

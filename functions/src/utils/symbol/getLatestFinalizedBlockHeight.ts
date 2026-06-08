@@ -23,7 +23,7 @@ export const getLatestFinalizedBlockHeight = async (): Promise<number> => {
     const basePath = `https://${node.id}:3001`;
     logger.debug({ basePath });
     const networkRoutesApi = new NetworkRoutesApi(
-      new Configuration({ basePath })
+      new Configuration({ basePath }),
     );
     const chainRoutesApi = new ChainRoutesApi(new Configuration({ basePath }));
     try {
@@ -46,7 +46,7 @@ export const getLatestFinalizedBlockHeight = async (): Promise<number> => {
       }
       const chainInfo = (await chainRoutesApi.getChainInfo()).data;
       latestFinalizedBlockHeights.push(
-        parseInt(chainInfo.latestFinalizedBlock.height)
+        parseInt(chainInfo.latestFinalizedBlock.height),
       );
     } catch (error) {
       logger.debug({ error });

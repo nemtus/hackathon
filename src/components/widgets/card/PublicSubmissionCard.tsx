@@ -2,7 +2,7 @@ import CopyButtonComponent from 'components/widgets/button/CopyButton';
 import { PublicSubmission } from 'models/public/years/submissions';
 
 const PublicSubmissionCardWidgetComponent = (
-  publicSubmission: PublicSubmission
+  publicSubmission: PublicSubmission,
 ) => {
   const {
     // id,

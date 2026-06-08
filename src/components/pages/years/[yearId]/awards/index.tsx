@@ -16,10 +16,10 @@ import PublicFinalVotesForAwardCardWidgetComponent from 'components/widgets/card
 const PublicAwardsPageComponent = () => {
   const { yearId } = useParams();
   const [order] = useState<'createdTimeAsc' | 'totalPointsDesc'>(
-    'totalPointsDesc'
+    'totalPointsDesc',
   );
   const [publicResults, setPublicResults] = useState<PublicResults | null>(
-    null
+    null,
   );
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -58,7 +58,7 @@ const PublicAwardsPageComponent = () => {
                     {publicResult.awards
                       .filter(
                         (award) =>
-                          award.submissionId === publicResult.submissionId
+                          award.submissionId === publicResult.submissionId,
                       )
                       .map((award) => (
                         <AwardImageComponent award={award} key={award.index} />
@@ -99,7 +99,7 @@ const PublicAwardsPageComponent = () => {
                 />
               </div>
             </div>
-          ) : null
+          ) : null,
         )}
     </>
   ) : (

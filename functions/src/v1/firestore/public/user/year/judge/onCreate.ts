@@ -18,7 +18,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-public-user-year-judge-onCreate'
+          'v1-firestore-public-user-year-judge-onCreate',
         )
       ) {
         return;

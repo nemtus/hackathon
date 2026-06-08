@@ -17,7 +17,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-public-user-year-vote-onUpdate'
+          'v1-firestore-public-user-year-vote-onUpdate',
         )
       ) {
         return;
@@ -57,7 +57,7 @@ export const onUpdate = () =>
       }
 
       const publicTeam = convertPublicUserYearVoteToPublicVote(
-        afterPublicUserYearVote
+        afterPublicUserYearVote,
       );
       await setPublicVote(publicTeam);
     });

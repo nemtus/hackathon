@@ -122,7 +122,7 @@ const convertProviderNameToAuthProvider = (providerName: string) => {
 const authErrorHandler = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any,
-  signInProviderName: string
+  signInProviderName: string,
 ): Promise<void> => {
   if (error.code === 'auth/account-exists-with-different-credential') {
     console.log('another auth process handling...');
@@ -148,7 +148,7 @@ const authErrorHandler = async (
         }
         const linkResult = await linkWithPopup(
           signInResult.user,
-          signInProvider
+          signInProvider,
         );
         if (!linkResult.user) {
           throw Error('Account link failed');
@@ -276,7 +276,7 @@ if (import.meta.env.DEV) {
 }
 
 const converter = <
-  T extends Record<string, unknown>
+  T extends Record<string, unknown>,
 >(): FirestoreDataConverter<T> => ({
   toFirestore: (data: T) => {
     // Note: プロパティの最上位階層のみに対して変換を行う実装としている

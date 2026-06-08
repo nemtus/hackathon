@@ -24,13 +24,13 @@ const docRef = (yearId: string, id: string) =>
 
 export const getPublicTeam = async (
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PublicTeam | undefined> => {
   return (await getDoc(docRef(yearId, id))).data();
 };
 
 export const getAllPublicTeams = async (
-  yearId: string
+  yearId: string,
 ): Promise<PublicTeam[]> => {
   return (
     await getDocs(query(collectionRef(yearId), orderBy('createdAt', 'asc')))

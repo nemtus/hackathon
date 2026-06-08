@@ -26,20 +26,20 @@ export type PrivateUsers = PrivateUser[];
 
 const collectionPath = '/v/1/scopes/private/users';
 export const collectionRef = collection(db, collectionPath).withConverter(
-  converter<PrivateUser>()
+  converter<PrivateUser>(),
 );
 const docPath = (id: string) => `${collectionPath}/${id}`;
 export const docRef = (id: string) =>
   doc(db, docPath(id)).withConverter(converter<PrivateUser>());
 
 export const getPrivateUser = async (
-  id: string
+  id: string,
 ): Promise<PrivateUser | undefined> => {
   return (await getDoc(docRef(id))).data();
 };
 
 export const setPrivateUser = async (
-  privateUser: PrivateUser
+  privateUser: PrivateUser,
 ): Promise<void> => {
   await setDoc(docRef(privateUser.id), privateUser, { merge: true });
 };
@@ -54,7 +54,7 @@ export const queryEntryPrivateUsers = async (): Promise<PrivateUsers> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
     await getDocs(
-      query(collectionRef, orderBy('entryAt', 'asc'), startAt(startDate))
+      query(collectionRef, orderBy('entryAt', 'asc'), startAt(startDate)),
     )
   ).docs.map((doc) => doc.data());
 };
@@ -63,7 +63,7 @@ export const querySubmitPrivateUsers = async (): Promise<PrivateUsers> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
     await getDocs(
-      query(collectionRef, orderBy('submitAt', 'asc'), startAt(startDate))
+      query(collectionRef, orderBy('submitAt', 'asc'), startAt(startDate)),
     )
   ).docs.map((doc) => doc.data());
 };
@@ -72,13 +72,13 @@ export const queryVotePrivateUsers = async (): Promise<PrivateUsers> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
     await getDocs(
-      query(collectionRef, orderBy('voteAt', 'asc'), startAt(startDate))
+      query(collectionRef, orderBy('voteAt', 'asc'), startAt(startDate)),
     )
   ).docs.map((doc) => doc.data());
 };
 
 export const convertAdminUserToPrivateUser = (
-  adminUser: AdminUser
+  adminUser: AdminUser,
 ): PrivateUser => {
   const privateUser: PrivateUser = {
     id: adminUser.id,

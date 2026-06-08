@@ -9,7 +9,7 @@ export const onMetadataUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-storage-admin-user-file-onMetadataUpdate'
+          'v1-storage-admin-user-file-onMetadataUpdate',
         )
       ) {
         return;

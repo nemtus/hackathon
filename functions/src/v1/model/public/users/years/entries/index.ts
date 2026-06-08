@@ -31,7 +31,7 @@ const docRef = (userId: string, yearId: string, id: string) =>
 export const getPublicUserYearEntry = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PublicUserYearEntry | undefined> => {
   return (await docRef(userId, yearId, id).get()).data();
 };
@@ -39,28 +39,28 @@ export const getPublicUserYearEntry = async (
 export const setPublicUserYearEntry = async (
   userId: string,
   yearId: string,
-  publicUserYearEntry: PublicUserYearEntry
+  publicUserYearEntry: PublicUserYearEntry,
 ): Promise<void> => {
   await docRef(userId, yearId, publicUserYearEntry.id).set(
     publicUserYearEntry,
     {
       merge: true,
-    }
+    },
   );
 };
 
 export const getAllPublicUserYearEntries = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<PublicUserEntries> => {
   return (await collectionRef(userId, yearId).get()).docs.map((snapshot) =>
-    snapshot.data()
+    snapshot.data(),
   );
 };
 
 export const queryEntryPublicUserYearEntries = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<PublicUserEntries> => {
   return (
     await collectionRef(userId, yearId)
@@ -72,7 +72,7 @@ export const queryEntryPublicUserYearEntries = async (
 
 export const querySubmitPublicUserYearEntries = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<PublicUserEntries> => {
   return (
     await collectionRef(userId, yearId)
@@ -85,7 +85,7 @@ export const querySubmitPublicUserYearEntries = async (
 
 export const queryVotePublicUserYearEntries = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<PublicUserEntries> => {
   return (
     await collectionRef(userId, yearId)
@@ -96,7 +96,7 @@ export const queryVotePublicUserYearEntries = async (
 };
 
 export const convertAdminUserYearEntryToPrivateUserYearEntry = (
-  adminUserYearEntry: AdminUserYearEntry
+  adminUserYearEntry: AdminUserYearEntry,
 ): PrivateUserYearEntry => {
   const privateUserYearEntry: PrivateUserYearEntry = {
     id: adminUserYearEntry.id,
@@ -109,7 +109,7 @@ export const convertAdminUserYearEntryToPrivateUserYearEntry = (
 };
 
 export const convertAdminUserYearEntryToPublicUserYearEntry = (
-  adminUserYearEntry: AdminUserYearEntry
+  adminUserYearEntry: AdminUserYearEntry,
 ): PublicUserYearEntry => {
   const publicUserYearEntry: PublicUserYearEntry = {
     id: adminUserYearEntry.id,
@@ -122,7 +122,7 @@ export const convertAdminUserYearEntryToPublicUserYearEntry = (
 };
 
 export const convertPrivateUserYearEntryToPublicUserYearEntry = (
-  privateUserYearEntry: PrivateUserYearEntry
+  privateUserYearEntry: PrivateUserYearEntry,
 ): PublicUserYearEntry => {
   const publicUserYearEntry: PublicUserYearEntry = {
     id: privateUserYearEntry.id,

@@ -21,33 +21,33 @@ const docRef = (yearId: string, id: string) =>
 
 export const getPublicSubmission = async (
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PublicSubmission | undefined> => {
   return (await docRef(yearId, id).get()).data();
 };
 
 export const setPublicSubmission = async (
-  publicSubmission: PublicSubmission
+  publicSubmission: PublicSubmission,
 ): Promise<void> => {
   await docRef(publicSubmission.yearId, publicSubmission.id).set(
     publicSubmission,
     {
       merge: true,
-    }
+    },
   );
 };
 
 export const getAllPublicSubmissions = async (
-  yearId: string
+  yearId: string,
 ): Promise<PublicSubmissions> => {
   return (await collectionRef(yearId).get()).docs.map((snapshot) =>
-    snapshot.data()
+    snapshot.data(),
   );
 };
 
 export const convertPublicUserYearSubmissionToPublicSubmission = (
   userId: string,
-  publicUserYearSubmission: PublicUserYearSubmission
+  publicUserYearSubmission: PublicUserYearSubmission,
 ): PublicSubmission => {
   const publicSubmission: PublicSubmission = {
     userId,

@@ -16,31 +16,31 @@ const collectionPath = (userId: string, yearId: string) =>
   `/v/1/scopes/admin/users/${userId}/years/${yearId}/finalVotes`;
 const collectionRef = (userId: string, yearId: string) =>
   collection(db, collectionPath(userId, yearId)).withConverter(
-    converter<AdminUserYearFinalVote>()
+    converter<AdminUserYearFinalVote>(),
   );
 const docPath = (userId: string, yearId: string, id: string) =>
   `${collectionPath(userId, yearId)}/${id}`;
 const docRef = (userId: string, yearId: string, id: string) =>
   doc(db, docPath(userId, yearId, id)).withConverter(
-    converter<AdminUserYearFinalVote>()
+    converter<AdminUserYearFinalVote>(),
   );
 
 export const getAdminUserYearFinalVote = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<AdminUserYearFinalVote | undefined> => {
   return (await getDoc(docRef(userId, yearId, id))).data();
 };
 
 export const setAdminUserYearFinalVote = async (
   userId: string,
-  adminUserYearFinalVote: AdminUserYearFinalVote
+  adminUserYearFinalVote: AdminUserYearFinalVote,
 ): Promise<AdminUserYearFinalVote | undefined> => {
   if (!adminUserYearFinalVote.id) {
     const docRef = await addDoc(
       collectionRef(userId, adminUserYearFinalVote.yearId),
-      adminUserYearFinalVote
+      adminUserYearFinalVote,
     );
     return (await getDoc(docRef)).data();
   }
@@ -49,17 +49,17 @@ export const setAdminUserYearFinalVote = async (
     adminUserYearFinalVote,
     {
       merge: true,
-    }
+    },
   );
   return (
     await getDoc(
-      docRef(userId, adminUserYearFinalVote.yearId, adminUserYearFinalVote.id)
+      docRef(userId, adminUserYearFinalVote.yearId, adminUserYearFinalVote.id),
     )
   ).data();
 };
 
 export const convertPrivateUserYearFinalVoteToAdminUserYearFinalVote = (
-  privateUserYearFinalVote: PrivateUserYearFinalVote
+  privateUserYearFinalVote: PrivateUserYearFinalVote,
 ): AdminUserYearFinalVote => {
   const adminUserYearFinalVote: AdminUserYearFinalVote =
     privateUserYearFinalVote;

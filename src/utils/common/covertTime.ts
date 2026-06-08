@@ -1,5 +1,5 @@
 export const convertFromFirestore = <T extends Record<string, unknown>>(
-  obj: T
+  obj: T,
 ): Partial<T> => {
   const cloneObj = Object.assign(obj);
   const keys = Object.keys(cloneObj);

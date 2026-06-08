@@ -27,18 +27,18 @@ const docRef = (userId: string, yearId: string, id: string) =>
 export const getPrivateUserYearTeam = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PrivateUserYearTeam | undefined> => {
   return (await docRef(userId, yearId, id).get()).data();
 };
 
 export const setPrivateUserYearTeam = async (
   userId: string,
-  privateUserYearTeam: PrivateUserYearTeam
+  privateUserYearTeam: PrivateUserYearTeam,
 ): Promise<PrivateUserYearTeam | undefined> => {
   if (!privateUserYearTeam.id) {
     const docRef = await collectionRef(userId, privateUserYearTeam.yearId).add(
-      privateUserYearTeam
+      privateUserYearTeam,
     );
     return (await docRef.get()).data();
   }
@@ -46,13 +46,13 @@ export const setPrivateUserYearTeam = async (
     privateUserYearTeam,
     {
       merge: true,
-    }
+    },
   );
   return (
     await docRef(
       userId,
       privateUserYearTeam.yearId,
-      privateUserYearTeam.id
+      privateUserYearTeam.id,
     ).get()
   ).data();
 };

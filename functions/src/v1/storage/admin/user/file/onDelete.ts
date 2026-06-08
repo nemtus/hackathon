@@ -9,7 +9,7 @@ export const onDelete = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-storage-admin-user-file-onDelete'
+          'v1-storage-admin-user-file-onDelete',
         )
       ) {
         return;

@@ -30,7 +30,7 @@ const docRef = (id: string) =>
   db.doc(docPath(id)).withConverter(converter<AdminUser>());
 
 export const getAdminUser = async (
-  id: string
+  id: string,
 ): Promise<AdminUser | undefined> => {
   return (await docRef(id).get()).data();
 };

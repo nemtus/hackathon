@@ -38,7 +38,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalVote = async (
   dataEncryptionKey: string,
   userId: string,
   adminUserYearFinalVote: AdminUserYearFinalVote,
-  mosaicIdHex: string
+  mosaicIdHex: string,
 ): Promise<AdminUserTx> => {
   if (!userId) {
     throw Error('userId is undefined');
@@ -53,14 +53,14 @@ export const createAggregateCompleteTransactionToCreateNewFinalVote = async (
   logger.debug({ adminUser });
 
   const feeBillingAccount = await restoreAccountFromPrivateKey(
-    feeBillingAccountPrivateKey
+    feeBillingAccountPrivateKey,
   );
   const messageReceivingAccount = await restoreAccountFromPrivateKey(
-    messageReceivingAccountPrivateKey
+    messageReceivingAccountPrivateKey,
   );
   const multisigAccounts: MultisigAccounts = await restoreAccountsFromAdminUser(
     adminUser,
-    dataEncryptionKey
+    dataEncryptionKey,
   );
 
   const multisigAccount = multisigAccounts.multisigAccount;
@@ -96,7 +96,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalVote = async (
     multisigAccount.address,
     [],
     PlainMessage.create(messageString),
-    networkType
+    networkType,
   ).toAggregate(feeBillingAccount.publicAccount);
 
   logger.debug('embeddedTransferTransaction2');
@@ -117,7 +117,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalVote = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message2String),
-    networkType
+    networkType,
   ).toAggregate(multisigAccount.publicAccount);
 
   const embeddedVoteTransactions: InnerTransaction[] = [];
@@ -151,7 +151,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalVote = async (
     const adminUserYearTeam = await getAdminUserYearTeam(
       finalVote.teamId,
       finalVote.yearId,
-      finalVote.teamId
+      finalVote.teamId,
     );
     logger.debug({ adminUserYearTeam });
     if (!adminUserYearTeam) {
@@ -182,11 +182,11 @@ export const createAggregateCompleteTransactionToCreateNewFinalVote = async (
     };
     const teamAccount = await restoreAccountFromEncryptedAccount(
       teamEncryptedAccount,
-      dataEncryptionKey
+      dataEncryptionKey,
     );
 
     logger.debug(
-      `embeddedMosaicSupplyRevocationTransactionForEachFinalVote userId: ${finalVote.userId}, teamId: ${finalVote.teamId}, point: ${finalVote.point}`
+      `embeddedMosaicSupplyRevocationTransactionForEachFinalVote userId: ${finalVote.userId}, teamId: ${finalVote.teamId}, point: ${finalVote.point}`,
     );
     const mosaic = new Mosaic(mosaicId, UInt64.fromUint(finalVote.point));
     const embeddedMosaicSupplyRevocationTransaction =
@@ -194,17 +194,17 @@ export const createAggregateCompleteTransactionToCreateNewFinalVote = async (
         deadline,
         multisigAccount.address,
         mosaic,
-        networkType
+        networkType,
       ).toAggregate(feeBillingAccount.publicAccount);
     embeddedVoteTransactions.push(embeddedMosaicSupplyRevocationTransaction);
 
     logger.debug(
-      `embeddedTransferTransactionForEachFinalVote userId: ${finalVote.userId}, teamId: ${finalVote.teamId}, point: ${finalVote.point}, message: ${finalVote.message}`
+      `embeddedTransferTransactionForEachFinalVote userId: ${finalVote.userId}, teamId: ${finalVote.teamId}, point: ${finalVote.point}, message: ${finalVote.message}`,
     );
     const messageForEachFinalVoteJson = finalVote;
     logger.debug('messageForEachVoteJson', { messageForEachFinalVoteJson });
     const messageForEachFinalVoteString = JSON.stringify(
-      messageForEachFinalVoteJson
+      messageForEachFinalVoteJson,
     );
     logger.debug('messageForEachVoteString', { messageForEachFinalVoteString });
     const embeddedTransferTransactionForEachFinalVote =
@@ -213,7 +213,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalVote = async (
         teamAccount.address,
         [mosaic],
         PlainMessage.create(messageForEachFinalVoteString),
-        networkType
+        networkType,
       ).toAggregate(feeBillingAccount.publicAccount);
     embeddedVoteTransactions.push(embeddedTransferTransactionForEachFinalVote);
 
@@ -225,14 +225,14 @@ export const createAggregateCompleteTransactionToCreateNewFinalVote = async (
   }
   if (totalPoints !== adminUserYearFinalVote.totalPoints) {
     throw Error(
-      'totalPoints should be equal to adminUserYearFinalVote.totalPoints'
+      'totalPoints should be equal to adminUserYearFinalVote.totalPoints',
     );
   }
 
   logger.debug('embeddedTransferTransaction3');
   const copiedAdminUserYearFinalVote = Object.assign(
     {},
-    adminUserYearFinalVote
+    adminUserYearFinalVote,
   ) as any;
   delete copiedAdminUserYearFinalVote.votes;
   const message3Json = copiedAdminUserYearFinalVote;
@@ -244,7 +244,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalVote = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message3String),
-    networkType
+    networkType,
   ).toAggregate(multisigAccount.publicAccount);
 
   logger.debug('embeddedTransferTransaction4');
@@ -253,7 +253,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalVote = async (
     multisigAccount.address,
     [new Mosaic(mosaicId, UInt64.fromUint(adminUserYearFinalVote.totalPoints))],
     EmptyMessage,
-    networkType
+    networkType,
   ).toAggregate(feeBillingAccount.publicAccount);
 
   logger.debug('aggregateTransaction');
@@ -271,7 +271,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalVote = async (
     deadline,
     embeddedTransactions,
     networkType,
-    initialEmptyCosignatures
+    initialEmptyCosignatures,
   ).setMaxFeeForAggregate(feeMultiplier, requiredCosignatories);
 
   const generationHashSeed = await getGenerationHashSeed();
@@ -283,7 +283,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalVote = async (
     feeBillingAccount.signTransactionWithCosignatories(
       aggregateCompleteTransaction,
       [multisigCosignatory1Account, multisigCosignatory2Account],
-      generationHashSeed
+      generationHashSeed,
     );
 
   const hash = signedAggregateCompleteTransactionWithCosignatures.hash;
