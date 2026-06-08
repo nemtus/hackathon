@@ -12,13 +12,14 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 input="$(cat)"
 file="$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty' 2>/dev/null)"
 [ -z "$file" ] && exit 0
-[ -f "$file" ] || exit 0
 
-# 絶対パスへ正規化
+# 絶対パスへ正規化（存在チェックより先に行う。相対パスは REPO_ROOT 基準で解決する）
 case "$file" in
   /*) abs="$file" ;;
   *)  abs="$REPO_ROOT/$file" ;;
 esac
+
+[ -f "$abs" ] || exit 0
 
 # 拡張子で処理を振り分け
 run_eslint=0
