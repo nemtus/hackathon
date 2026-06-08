@@ -1,5 +1,5 @@
-import * as f from 'firebase-functions';
-import { SUPPORTED_REGIONS } from 'firebase-functions';
+import * as f from 'firebase-functions/v1';
+import { SUPPORTED_REGIONS } from 'firebase-functions/v1';
 
 const functions = (
   runtimeOptions: f.RuntimeOptions = { memory: '128MB' },

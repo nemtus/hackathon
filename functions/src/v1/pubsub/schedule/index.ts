@@ -1,4 +1,4 @@
-import { CloudFunction } from 'firebase-functions';
+import { CloudFunction } from 'firebase-functions/v1';
 import { exportFunction } from '../../../utils/firebase/deploy';
 import { checkNodes } from './checkNodes';
 

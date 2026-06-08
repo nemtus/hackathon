@@ -1,4 +1,4 @@
-import { HttpsFunction, Runnable } from 'firebase-functions';
+import { HttpsFunction, Runnable } from 'firebase-functions/v1';
 import { exportFunction } from '../../../utils/firebase/deploy';
 import { hello } from './hello';
 

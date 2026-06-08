@@ -1,6 +1,6 @@
 import { exportFunction } from '../../../../../utils/firebase/deploy';
-import { CloudFunction } from 'firebase-functions';
-import { ObjectMetadata } from 'firebase-functions/lib/v1/providers/storage';
+import { CloudFunction } from 'firebase-functions/v1';
+import { ObjectMetadata } from 'firebase-functions/v1/storage';
 import { onFinalize } from './onFinalize';
 import { onDelete } from './onDelete';
 import { onArchive } from './onArchive';
