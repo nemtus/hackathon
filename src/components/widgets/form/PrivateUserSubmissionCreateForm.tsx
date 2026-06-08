@@ -1,4 +1,4 @@
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { PrivateUser } from 'models/private/users';
@@ -78,7 +78,7 @@ const PrivateUserYearSubmissionCreateFormWidgetComponent = (props: {
       updatedAt: undefined,
       approvedAt: undefined,
     },
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema) as unknown as Resolver<PrivateUserYearSubmission>,
   });
 
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

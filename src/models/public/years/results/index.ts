@@ -158,9 +158,9 @@ const createPublicResultData = (
 
   const totalPoints =
     judgesTotalPoints +
-      votesTotalPoints +
-      finalJudgesTotalPoints +
-      finalVotesTotalPoints ?? 0;
+    votesTotalPoints +
+    finalJudgesTotalPoints +
+    finalVotesTotalPoints;
 
   const awards = configHackathonYearAward.awards.filter((award) => {
     return award.submissionId === publicSubmission.id;

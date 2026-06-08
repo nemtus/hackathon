@@ -2,7 +2,7 @@ import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import XymCityCityscapeImage from '../../../images/xym-city-cityscape-light.png';
 
-const CURRENT_YEAR = process.env.REACT_APP_CURRENT_YEAR;
+const CURRENT_YEAR = import.meta.env.REACT_APP_CURRENT_YEAR;
 if (!CURRENT_YEAR) {
   throw Error('REACT_APP_CURRENT_YEAR is not defined');
 }

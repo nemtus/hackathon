@@ -58,7 +58,7 @@ const PrivateUserTeamCardWidgetComponent = (
               <div className="stat-value">
                 <a
                   className="link link-primary"
-                  href={`${process.env.REACT_APP_SYMBOL_BLOCK_EXPLORER_URL}/accounts/${teamAddress}`}
+                  href={`${import.meta.env.REACT_APP_SYMBOL_BLOCK_EXPLORER_URL}/accounts/${teamAddress}`}
                 >
                   {teamAddress}
                 </a>
@@ -77,7 +77,7 @@ const PrivateUserTeamCardWidgetComponent = (
               <div className="stat-value">
                 <a
                   className="link link-primary"
-                  href={`${process.env.REACT_APP_SYMBOL_BLOCK_EXPLORER_URL}/accounts/${addressForPrizeReceipt}`}
+                  href={`${import.meta.env.REACT_APP_SYMBOL_BLOCK_EXPLORER_URL}/accounts/${addressForPrizeReceipt}`}
                 >
                   {addressForPrizeReceipt}
                 </a>
