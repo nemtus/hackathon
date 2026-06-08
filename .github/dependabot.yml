@@ -11,6 +11,28 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    # Defer these major upgrades until their migrations are scoped (see
+    # plan); remove an entry when ready to adopt that major.
+    ignore:
+      # React 19 migration not yet scoped.
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react-dom"
+        update-types: ["version-update:semver-major"]
+      # TS 6 / ESLint 10 (flat config) not yet supported by the toolchain.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      # daisyUI 5 requires Tailwind 4; couple with a Tailwind 4 migration.
+      - dependency-name: "daisyui"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "tailwindcss"
+        update-types: ["version-update:semver-major"]
 
   # Cloud Functions npm dependencies
   - package-ecosystem: "npm"
@@ -23,6 +45,20 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    # Defer these major upgrades until their migrations are scoped (see
+    # plan); remove an entry when ready to adopt that major.
+    ignore:
+      # TS 6 / ESLint 10 (flat config) not yet supported by the toolchain.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      # symbol-sdk 3 is a large crypto-breaking rewrite; handle separately.
+      - dependency-name: "symbol-sdk"
+        update-types: ["version-update:semver-major"]
+      # Keep @types/node aligned with the Node 22 deploy runtime.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
 
   # GitHub Actions (keeps SHA-pinned actions up to date)
   - package-ecosystem: "github-actions"
