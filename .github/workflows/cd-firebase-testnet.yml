@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        node: ['18.x']
+        node: ['24.x']
 
     name: Node ${{ matrix.node }} CD Firebase testnet
     steps:
@@ -28,6 +28,11 @@ jobs:
             package-lock.json
             functions/package-lock.json
 
+      - name: Audit dependencies (high+) before install
+        run: npm audit --audit-level=high
+      - name: Audit functions dependencies (high+) before install
+        run: npm audit --audit-level=high
+        working-directory: ./functions
       - name: Create empty env file for testnet build
         run: touch .env.testnet
       - name: Restore testnet env file content from secret

@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node: ['18.x']
+        node: ['24.x']
 
     name: Node ${{ matrix.node }} CD Firebase mainnet
     steps:
@@ -25,6 +25,11 @@ jobs:
             package-lock.json
             functions/package-lock.json
 
+      - name: Audit dependencies (high+) before install
+        run: npm audit --audit-level=high
+      - name: Audit functions dependencies (high+) before install
+        run: npm audit --audit-level=high
+        working-directory: ./functions
       - name: Create empty env file for mainnet build
         run: touch .env.mainnet
       - name: Restore mainnet env file content from secret

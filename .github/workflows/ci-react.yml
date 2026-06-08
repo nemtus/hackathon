@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node: ['18.x']
+        node: ['24.x']
 
     name: Node ${{ matrix.node }} CI React
     steps:
@@ -22,6 +22,8 @@ jobs:
           cache-dependency-path: |
             package-lock.json
 
+      - name: Audit dependencies (high+) before install
+        run: npm audit --audit-level=high
       - name: Create empty env file for development build
         run: touch .env
       - name: Restore development environment file content from secret
@@ -30,8 +32,6 @@ jobs:
         run: echo $REACT_ENV | base64 --decode --ignore-garbage > .env
 
       - run: npm ci
-      - name: Audit dependencies (high+)
-        run: npm audit --audit-level=high || true
       - run: npm run build
 
       - name: Clear env file
