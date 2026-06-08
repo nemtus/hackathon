@@ -35,3 +35,9 @@ yarn-error.log*
 *.log
 
 .firebase/*
+
+# Claude Code（settings.json / .mcp.json / hooks / CLAUDE.md はコミット対象）
+.claude/settings.local.json
+
+# Serena（MCP）ローカルキャッシュ
+.serena/cache/
