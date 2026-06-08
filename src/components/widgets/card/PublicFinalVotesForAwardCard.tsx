@@ -34,7 +34,7 @@ const PublicFinalVotesForAwardCardWidgetComponent = (props: {
                         publicFinalVote={publicUserYearFinalVote}
                         key={publicUserYearFinalVote.userId}
                       />
-                    )
+                    ),
                   )}
                 </div>
               </div>

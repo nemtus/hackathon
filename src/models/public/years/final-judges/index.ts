@@ -17,7 +17,7 @@ const collectionPath = (yearId: string) =>
   `/v/1/scopes/public/years/${yearId}/finalJudges`;
 const collectionRef = (yearId: string) =>
   collection(db, collectionPath(yearId)).withConverter(
-    converter<PublicFinalJudge>()
+    converter<PublicFinalJudge>(),
   );
 const docPath = (yearId: string, id: string) =>
   `${collectionPath(yearId)}/${id}`;
@@ -26,13 +26,13 @@ const docRef = (yearId: string, id: string) =>
 
 export const getPublicFinalJudge = async (
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PublicFinalJudge | undefined> => {
   return (await getDoc(docRef(yearId, id))).data();
 };
 
 export const getAllPublicFinalJudges = async (
-  yearId: string
+  yearId: string,
 ): Promise<PublicFinalJudge[]> => {
   return (
     await getDocs(query(collectionRef(yearId), orderBy('createdAt', 'asc')))

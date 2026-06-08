@@ -13,6 +13,6 @@ const domains: string[] = [
 domains.forEach((domain) =>
   exportFunctionsModule(
     ['v1', 'firestore', 'public', 'user', 'year', domain],
-    exports
-  )
+    exports,
+  ),
 );

@@ -68,7 +68,7 @@ const PublicAwardPageComponent = () => {
                   {publicResult.awards
                     .filter(
                       (award) =>
-                        award.submissionId === publicResult.submissionId
+                        award.submissionId === publicResult.submissionId,
                     )
                     .map((award) => (
                       <AwardImageComponent award={award} key={award.index} />

@@ -17,7 +17,7 @@ const collectionPath = (yearId: string) =>
   `/v/1/scopes/public/years/${yearId}/submissions`;
 const collectionRef = (yearId: string) =>
   collection(db, collectionPath(yearId)).withConverter(
-    converter<PublicSubmission>()
+    converter<PublicSubmission>(),
   );
 const docPath = (yearId: string, id: string) =>
   `${collectionPath(yearId)}/${id}`;
@@ -26,13 +26,13 @@ const docRef = (yearId: string, id: string) =>
 
 export const getPublicSubmission = async (
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PublicSubmission | undefined> => {
   return (await getDoc(docRef(yearId, id))).data();
 };
 
 export const getAllPublicSubmissions = async (
-  yearId: string
+  yearId: string,
 ): Promise<PublicSubmission[]> => {
   return (
     await getDocs(query(collectionRef(yearId), orderBy('createdAt', 'asc')))

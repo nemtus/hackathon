@@ -40,7 +40,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-private-user-year-vote-onCreate'
+          'v1-firestore-private-user-year-vote-onCreate',
         )
       ) {
         return;
@@ -94,11 +94,11 @@ export const onCreate = () =>
       const privateUserYearJudge = await getPrivateUserYearJudge(
         userId,
         yearId,
-        userId
+        userId,
       );
       if (privateUserYearJudge) {
         throw Error(
-          'privateUserYearJudge should be undefined. Judge cannot vote'
+          'privateUserYearJudge should be undefined. Judge cannot vote',
         );
       }
 
@@ -182,7 +182,7 @@ export const onCreate = () =>
         const adminUserYearTeam = await getAdminUserYearTeam(
           vote.teamId,
           vote.yearId,
-          vote.teamId
+          vote.teamId,
         );
         logger.debug({ adminUserYearTeam });
         if (!adminUserYearTeam) {
@@ -211,7 +211,7 @@ export const onCreate = () =>
       }
       if (totalPoints !== privateUserYearVote.totalPoints) {
         throw Error(
-          'totalPoints should be equal to privateUserYearVote.totalPoints'
+          'totalPoints should be equal to privateUserYearVote.totalPoints',
         );
       }
 
@@ -228,7 +228,7 @@ export const onCreate = () =>
       const postMessageResponse = await postMessage(
         slackBotUserOAuthToken,
         JSON.stringify(publicUserYearVote, null, 2),
-        `#${slackNotifyChannel}`
+        `#${slackNotifyChannel}`,
       );
       logger.debug({ postMessageResponse });
     });

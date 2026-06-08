@@ -19,13 +19,13 @@ const docRef = (id: string) =>
   db.doc(docPath(id)).withConverter(converter<PrivateTeam>());
 
 export const getPrivateUser = async (
-  id: string
+  id: string,
 ): Promise<PrivateTeam | undefined> => {
   return (await docRef(id).get()).data();
 };
 
 export const setPrivateUser = async (
-  privateTeam: PrivateTeam
+  privateTeam: PrivateTeam,
 ): Promise<void> => {
   await docRef(privateTeam.id).set(privateTeam, { merge: true });
 };

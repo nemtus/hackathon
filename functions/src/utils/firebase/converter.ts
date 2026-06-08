@@ -5,7 +5,7 @@ import {
 } from 'firebase-admin/firestore';
 
 export const converter = <
-  T extends Record<string, unknown>
+  T extends Record<string, unknown>,
 >(): FirestoreDataConverter<T> => {
   return {
     toFirestore: (data: T) => {

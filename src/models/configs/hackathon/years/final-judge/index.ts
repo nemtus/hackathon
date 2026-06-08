@@ -21,18 +21,18 @@ const collectionPath = (yearId: string) => `/v/1/configs/hackathon/${yearId}`;
 const docPath = (yearId: string) => `${collectionPath(yearId)}/finalJudge`;
 export const docRef = (yearId: string) =>
   doc(db, docPath(yearId)).withConverter(
-    converter<ConfigHackathonYearFinalJudge>()
+    converter<ConfigHackathonYearFinalJudge>(),
   );
 
 export const getConfigHackathonYearFinalJudge = async (
-  yearId: string
+  yearId: string,
 ): Promise<ConfigHackathonYearFinalJudge | undefined> => {
   return (await getDoc(docRef(yearId))).data();
 };
 
 export const setConfigHackathonYearFinalJudge = async (
   yearId: string,
-  configHackathonYearJudge: Partial<ConfigHackathonYearFinalJudge>
+  configHackathonYearJudge: Partial<ConfigHackathonYearFinalJudge>,
 ): Promise<void> => {
   await setDoc(docRef(yearId), configHackathonYearJudge, { merge: true });
 };

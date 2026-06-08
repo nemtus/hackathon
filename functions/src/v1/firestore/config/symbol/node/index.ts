@@ -6,6 +6,6 @@ const domains: string[] = ['check'];
 domains.forEach((domain) =>
   exportFunctionsModule(
     ['v1', 'firestore', 'config', 'symbol', 'node', domain],
-    exports
-  )
+    exports,
+  ),
 );

@@ -5,40 +5,40 @@ import AppHeader from 'components/widgets/app-header';
 
 const HomePageComponent = loadable(() => import('components/pages/home'));
 const UserPageComponent = loadable(
-  () => import('components/pages/users/[userId]')
+  () => import('components/pages/users/[userId]'),
 );
 const TeamCreatePageComponent = loadable(
-  () => import('components/pages/users/[userId]/years/[yearId]/teams/create')
+  () => import('components/pages/users/[userId]/years/[yearId]/teams/create'),
 );
 const SubmissionCreatePageComponent = loadable(
   () =>
-    import('components/pages/users/[userId]/years/[yearId]/submissions/create')
+    import('components/pages/users/[userId]/years/[yearId]/submissions/create'),
 );
 const JudgeCreatePageComponent = loadable(
-  () => import('components/pages/users/[userId]/years/[yearId]/judges/create')
+  () => import('components/pages/users/[userId]/years/[yearId]/judges/create'),
 );
 const VoteCreatePageComponent = loadable(
-  () => import('components/pages/users/[userId]/years/[yearId]/votes/create')
+  () => import('components/pages/users/[userId]/years/[yearId]/votes/create'),
 );
 const FinalJudgeCreatePageComponent = loadable(
   () =>
-    import('components/pages/users/[userId]/years/[yearId]/final-judges/create')
+    import('components/pages/users/[userId]/years/[yearId]/final-judges/create'),
 );
 const FinalVoteCreatePageComponent = loadable(
   () =>
-    import('components/pages/users/[userId]/years/[yearId]/final-votes/create')
+    import('components/pages/users/[userId]/years/[yearId]/final-votes/create'),
 );
 const PublicResultPageComponent = loadable(
-  () => import('components/pages/years/[yearId]/results/[resultId]')
+  () => import('components/pages/years/[yearId]/results/[resultId]'),
 );
 const PublicResultsPageComponent = loadable(
-  () => import('components/pages/years/[yearId]/results')
+  () => import('components/pages/years/[yearId]/results'),
 );
 const PublicAwardPageComponent = loadable(
-  () => import('components/pages/years/[yearId]/awards/[awardId]')
+  () => import('components/pages/years/[yearId]/awards/[awardId]'),
 );
 const PublicAwardsPageComponent = loadable(
-  () => import('components/pages/years/[yearId]/awards')
+  () => import('components/pages/years/[yearId]/awards'),
 );
 
 function App() {

@@ -52,7 +52,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-private-user-year-finalVote-onCreate'
+          'v1-firestore-private-user-year-finalVote-onCreate',
         )
       ) {
         return;
@@ -112,21 +112,21 @@ export const onCreate = () =>
       const privateUserYearJudge = await getPrivateUserYearJudge(
         userId,
         yearId,
-        userId
+        userId,
       );
       if (privateUserYearJudge) {
         throw Error(
-          'privateUserYearJudge should be undefined. Judge cannot vote'
+          'privateUserYearJudge should be undefined. Judge cannot vote',
         );
       }
       const privateUserYearFinalJudge = await getPrivateUserYearFinalJudge(
         userId,
         yearId,
-        userId
+        userId,
       );
       if (privateUserYearFinalJudge) {
         throw Error(
-          'privateUserYearFinalJudge should be undefined. Judge cannot vote'
+          'privateUserYearFinalJudge should be undefined. Judge cannot vote',
         );
       }
 
@@ -215,7 +215,7 @@ export const onCreate = () =>
         const adminUserYearTeam = await getAdminUserYearTeam(
           finalVote.teamId,
           finalVote.yearId,
-          finalVote.teamId
+          finalVote.teamId,
         );
         logger.debug({ adminUserYearTeam });
         if (!adminUserYearTeam) {
@@ -244,7 +244,7 @@ export const onCreate = () =>
       }
       if (totalPoints !== privateUserYearFinalVote.totalPoints) {
         throw Error(
-          'totalPoints should be equal to privateUserYearVote.totalPoints'
+          'totalPoints should be equal to privateUserYearVote.totalPoints',
         );
       }
 
@@ -263,7 +263,7 @@ export const onCreate = () =>
       const postMessageResponse = await postMessage(
         slackBotUserOAuthToken,
         JSON.stringify(publicUserYearFinalVote, null, 2),
-        `#${slackNotifyChannel}`
+        `#${slackNotifyChannel}`,
       );
       logger.debug({ postMessageResponse });
     });

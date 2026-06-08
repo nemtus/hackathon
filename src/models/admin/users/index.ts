@@ -30,14 +30,14 @@ export type AdminUsers = AdminUser[];
 
 const collectionPath = '/v/1/scopes/admin/users';
 const collectionRef = collection(db, collectionPath).withConverter(
-  converter<AdminUser>()
+  converter<AdminUser>(),
 );
 const docPath = (id: string) => `${collectionPath}/${id}`;
 const docRef = (id: string) =>
   doc(db, docPath(id)).withConverter(converter<AdminUser>());
 
 export const getAdminUser = async (
-  id: string
+  id: string,
 ): Promise<AdminUser | undefined> => {
   return (await getDoc(docRef(id))).data();
 };
@@ -56,7 +56,7 @@ export const queryEntryAdminUsers = async (): Promise<AdminUsers> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
     await getDocs(
-      query(collectionRef, orderBy('entryAt', 'asc'), startAt(startDate))
+      query(collectionRef, orderBy('entryAt', 'asc'), startAt(startDate)),
     )
   ).docs.map((doc) => doc.data());
 };
@@ -65,7 +65,7 @@ export const querySubmitAdminUsers = async (): Promise<AdminUsers> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
     await getDocs(
-      query(collectionRef, orderBy('submitAt', 'asc'), startAt(startDate))
+      query(collectionRef, orderBy('submitAt', 'asc'), startAt(startDate)),
     )
   ).docs.map((doc) => doc.data());
 };
@@ -74,7 +74,7 @@ export const queryVoteAdminUsers = async (): Promise<AdminUsers> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
     await getDocs(
-      query(collectionRef, orderBy('voteAt', 'asc'), startAt(startDate))
+      query(collectionRef, orderBy('voteAt', 'asc'), startAt(startDate)),
     )
   ).docs.map((doc) => doc.data());
 };

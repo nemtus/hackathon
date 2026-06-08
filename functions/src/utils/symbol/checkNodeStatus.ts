@@ -51,13 +51,13 @@ export const checkNodeStatus = async (nodeCheck: NodeCheck): Promise<void> => {
     const basePathSSL = `https://${nodeCheck.nodeId}:3001`;
     logger.debug({ basePathSSL });
     const nodeRoutesApiSSL = new NodeRoutesApi(
-      new Configuration({ basePath: basePathSSL })
+      new Configuration({ basePath: basePathSSL }),
     );
     const networkRoutesApiSSL = new NetworkRoutesApi(
-      new Configuration({ basePath: basePathSSL })
+      new Configuration({ basePath: basePathSSL }),
     );
     const chainRoutesApiSSL = new ChainRoutesApi(
-      new Configuration({ basePath: basePathSSL })
+      new Configuration({ basePath: basePathSSL }),
     );
 
     const nodeInfoSSL = (await nodeRoutesApiSSL.getNodeInfo()).data;
@@ -87,13 +87,13 @@ export const checkNodeStatus = async (nodeCheck: NodeCheck): Promise<void> => {
     const basePath = `http://${nodeCheck.nodeId}:3000`;
     logger.debug({ basePath });
     const nodeRoutesApi = new NodeRoutesApi(
-      new Configuration({ basePath: basePath })
+      new Configuration({ basePath: basePath }),
     );
     const networkRoutesApi = new NetworkRoutesApi(
-      new Configuration({ basePath: basePath })
+      new Configuration({ basePath: basePath }),
     );
     const chainRoutesApi = new ChainRoutesApi(
-      new Configuration({ basePath: basePath })
+      new Configuration({ basePath: basePath }),
     );
 
     const nodeInfo = (await nodeRoutesApi.getNodeInfo()).data;

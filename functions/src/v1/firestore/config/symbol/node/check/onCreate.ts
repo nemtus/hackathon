@@ -11,7 +11,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-config-symbol-node-check-onCreate'
+          'v1-firestore-config-symbol-node-check-onCreate',
         )
       ) {
         return;

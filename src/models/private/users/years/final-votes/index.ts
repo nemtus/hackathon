@@ -17,31 +17,31 @@ const collectionPath = (userId: string, yearId: string) =>
   `/v/1/scopes/private/users/${userId}/years/${yearId}/finalVotes`;
 const collectionRef = (userId: string, yearId: string) =>
   collection(db, collectionPath(userId, yearId)).withConverter(
-    converter<PrivateUserYearFinalVote>()
+    converter<PrivateUserYearFinalVote>(),
   );
 const docPath = (userId: string, yearId: string, id: string) =>
   `${collectionPath(userId, yearId)}/${id}`;
 export const docRef = (userId: string, yearId: string, id: string) =>
   doc(db, docPath(userId, yearId, id)).withConverter(
-    converter<PrivateUserYearFinalVote>()
+    converter<PrivateUserYearFinalVote>(),
   );
 
 export const getPrivateUserYearFinalVote = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PrivateUserYearFinalVote | undefined> => {
   return (await getDoc(docRef(userId, yearId, id))).data();
 };
 
 export const setPrivateUserYearFinalVote = async (
   userId: string,
-  privateUserYearFinalVote: PrivateUserYearFinalVote
+  privateUserYearFinalVote: PrivateUserYearFinalVote,
 ): Promise<PrivateUserYearFinalVote | undefined> => {
   if (!privateUserYearFinalVote.id) {
     const docRef = await addDoc(
       collectionRef(userId, privateUserYearFinalVote.yearId),
-      privateUserYearFinalVote
+      privateUserYearFinalVote,
     );
     return (await getDoc(docRef)).data();
   }
@@ -49,26 +49,26 @@ export const setPrivateUserYearFinalVote = async (
     docRef(
       userId,
       privateUserYearFinalVote.yearId,
-      privateUserYearFinalVote.id
+      privateUserYearFinalVote.id,
     ),
     privateUserYearFinalVote,
     {
       merge: true,
-    }
+    },
   );
   return (
     await getDoc(
       docRef(
         userId,
         privateUserYearFinalVote.yearId,
-        privateUserYearFinalVote.id
-      )
+        privateUserYearFinalVote.id,
+      ),
     )
   ).data();
 };
 
 export const convertPrivateYearFinalVoteToAdminUserYearFinalVote = (
-  privateUserYearFinalVote: PrivateUserYearFinalVote
+  privateUserYearFinalVote: PrivateUserYearFinalVote,
 ): AdminUserYearFinalVote => {
   const adminUserYearFinalVote: AdminUserYearFinalVote =
     privateUserYearFinalVote;
@@ -76,7 +76,7 @@ export const convertPrivateYearFinalVoteToAdminUserYearFinalVote = (
 };
 
 export const convertPrivateUserYearFinalVoteToPublicUserYearFinalVote = (
-  privateUserYearFinalVote: PrivateUserYearFinalVote
+  privateUserYearFinalVote: PrivateUserYearFinalVote,
 ): PrivateUserYearFinalVote => {
   const publicUserYearFinalVote: PrivateUserYearFinalVote =
     privateUserYearFinalVote;

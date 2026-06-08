@@ -16,10 +16,10 @@ import PublicFinalVotesForAwardCardWidgetComponent from 'components/widgets/card
 const PublicResultsPageComponent = () => {
   const { yearId } = useParams();
   const [order] = useState<'createdTimeAsc' | 'totalPointsDesc'>(
-    'createdTimeAsc'
+    'createdTimeAsc',
   );
   const [publicResults, setPublicResults] = useState<PublicResults | null>(
-    null
+    null,
   );
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -109,7 +109,7 @@ const PublicResultsPageComponent = () => {
               />
             </div>
           </div>
-        ) : null
+        ) : null,
       )}
     </>
   ) : (

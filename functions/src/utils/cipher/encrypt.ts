@@ -4,7 +4,7 @@ export const encrypt = (
   plainMessage: string,
   password: string,
   saltHexString: string,
-  ivHexString: string
+  ivHexString: string,
 ): string => {
   const algorithm = 'aes-256-cbc';
   const key = crypto.scryptSync(password, saltHexString, 32);
@@ -19,7 +19,7 @@ export const decrypt = (
   encryptedMessage: string,
   password: string,
   saltHexString: string,
-  ivHexString: string
+  ivHexString: string,
 ): string => {
   const algorithm = 'aes-256-cbc';
   const key = crypto.scryptSync(password, saltHexString, 32);

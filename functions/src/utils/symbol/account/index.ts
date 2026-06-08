@@ -35,7 +35,7 @@ export type PublicAccount = {
 };
 
 export const createNewEncryptedAccount = async (
-  dataEncryptionKey: string
+  dataEncryptionKey: string,
 ): Promise<EncryptedAccount> => {
   const networkType = await getNetworkType();
   const account = Account.generateNewAccount(networkType);
@@ -46,7 +46,7 @@ export const createNewEncryptedAccount = async (
     privateKey,
     dataEncryptionKey,
     saltHexString,
-    ivHexString
+    ivHexString,
   );
   const publicKey = account.publicKey;
   const address = account.address.plain();
@@ -62,13 +62,13 @@ export const createNewEncryptedAccount = async (
 
 export const restorePrivateAccountFromEncryptedAccount = (
   encryptedAccount: EncryptedAccount,
-  dataEncryptionKey: string
+  dataEncryptionKey: string,
 ): PrivateAccount => {
   const privateKey = decrypt(
     encryptedAccount.encryptedPrivateKey,
     dataEncryptionKey,
     encryptedAccount.saltHexString,
-    encryptedAccount.ivHexString
+    encryptedAccount.ivHexString,
   );
   const publicKey = encryptedAccount.publicKey;
   const address = encryptedAccount.address;
@@ -82,13 +82,13 @@ export const restorePrivateAccountFromEncryptedAccount = (
 
 export const restoreAccountFromEncryptedAccount = async (
   encryptedAccount: EncryptedAccount,
-  dataEncryptionKey: string
+  dataEncryptionKey: string,
 ): Promise<Account> => {
   const privateKey = decrypt(
     encryptedAccount.encryptedPrivateKey,
     dataEncryptionKey,
     encryptedAccount.saltHexString,
-    encryptedAccount.ivHexString
+    encryptedAccount.ivHexString,
   );
   const networkType = await getNetworkType();
   const account = Account.createFromPrivateKey(privateKey, networkType);
@@ -96,7 +96,7 @@ export const restoreAccountFromEncryptedAccount = async (
 };
 
 export const restorePrivateAccountFromPrivateKey = async (
-  privateKey: string
+  privateKey: string,
 ) => {
   const networkType = await getNetworkType();
   const account = Account.createFromPrivateKey(privateKey, networkType);
@@ -111,7 +111,7 @@ export const restorePrivateAccountFromPrivateKey = async (
 };
 
 export const restoreAccountFromPrivateKey = async (
-  privateKey: string
+  privateKey: string,
 ): Promise<Account> => {
   const networkType = await getNetworkType();
   const account = Account.createFromPrivateKey(privateKey, networkType);
@@ -120,7 +120,7 @@ export const restoreAccountFromPrivateKey = async (
 
 export const restoreAccountsFromAdminUser = async (
   adminUser: AdminUser,
-  dataEncryptionKey: string
+  dataEncryptionKey: string,
 ): Promise<MultisigAccounts> => {
   const networkType = await getNetworkType();
 
@@ -137,11 +137,11 @@ export const restoreAccountsFromAdminUser = async (
     adminUser.multisigEncryptedPrivateKey,
     dataEncryptionKey,
     adminUser.multisigSaltHexString,
-    adminUser.multisigIvHexString
+    adminUser.multisigIvHexString,
   );
   const multisigAccount = Account.createFromPrivateKey(
     multisitPrivateKey,
-    networkType
+    networkType,
   );
 
   if (!adminUser.multisigCosignatory1EncryptedPrivateKey) {
@@ -157,11 +157,11 @@ export const restoreAccountsFromAdminUser = async (
     adminUser.multisigCosignatory1EncryptedPrivateKey,
     dataEncryptionKey,
     adminUser.multisigCosignatory1SaltHexString,
-    adminUser.multisigCosignatory1IvHexString
+    adminUser.multisigCosignatory1IvHexString,
   );
   const multisigCosignatory1Account = Account.createFromPrivateKey(
     multisitCosignatory1PrivateKey,
-    networkType
+    networkType,
   );
 
   if (!adminUser.multisigCosignatory2EncryptedPrivateKey) {
@@ -177,11 +177,11 @@ export const restoreAccountsFromAdminUser = async (
     adminUser.multisigCosignatory2EncryptedPrivateKey,
     dataEncryptionKey,
     adminUser.multisigCosignatory2SaltHexString,
-    adminUser.multisigCosignatory2IvHexString
+    adminUser.multisigCosignatory2IvHexString,
   );
   const multisigCosignatory2Account = Account.createFromPrivateKey(
     multisitCosignatory2PrivateKey,
-    networkType
+    networkType,
   );
 
   if (!adminUser.multisigCosignatory3EncryptedPrivateKey) {
@@ -197,11 +197,11 @@ export const restoreAccountsFromAdminUser = async (
     adminUser.multisigCosignatory3EncryptedPrivateKey,
     dataEncryptionKey,
     adminUser.multisigCosignatory3SaltHexString,
-    adminUser.multisigCosignatory3IvHexString
+    adminUser.multisigCosignatory3IvHexString,
   );
   const multisigCosignatory3Account = Account.createFromPrivateKey(
     multisitCosignatory3PrivateKey,
-    networkType
+    networkType,
   );
 
   return {
@@ -213,7 +213,7 @@ export const restoreAccountsFromAdminUser = async (
 };
 
 export const convertEncryptedAccountToPublicAccount = (
-  encryptedAccount: EncryptedAccount
+  encryptedAccount: EncryptedAccount,
 ): PublicAccount => {
   const publicKey = encryptedAccount.publicKey;
   const address = encryptedAccount.address;

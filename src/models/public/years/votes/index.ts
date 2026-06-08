@@ -24,13 +24,13 @@ const docRef = (yearId: string, id: string) =>
 
 export const getPublicVote = async (
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PublicVote | undefined> => {
   return (await getDoc(docRef(yearId, id))).data();
 };
 
 export const getAllPublicVotes = async (
-  yearId: string
+  yearId: string,
 ): Promise<PublicVote[]> => {
   return (
     await getDocs(query(collectionRef(yearId), orderBy('createdAt', 'asc')))

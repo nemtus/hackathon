@@ -21,7 +21,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-private-user-year-entry-onCreate'
+          'v1-firestore-private-user-year-entry-onCreate',
         )
       ) {
         return;
@@ -43,7 +43,7 @@ export const onCreate = () =>
       await setAdminUserYearEntry(
         context.params.userID,
         context.params.yearID,
-        adminUser
+        adminUser,
       );
 
       const publicUser =
@@ -53,6 +53,6 @@ export const onCreate = () =>
       await setPublicUserYearEntry(
         context.params.userID,
         context.params.yearID,
-        publicUser
+        publicUser,
       );
     });

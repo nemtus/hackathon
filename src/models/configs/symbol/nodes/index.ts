@@ -25,7 +25,7 @@ export type Nodes = Node[];
 
 const collectionPath = '/v/1/configs/symbol/nodes';
 const collectionRef = collection(db, collectionPath).withConverter(
-  converter<Node>()
+  converter<Node>(),
 );
 const docPath = (id: string) => `${collectionPath}/${id}`;
 const docRef = (id: string) =>
@@ -55,8 +55,8 @@ export const queryValidNodes = async (): Promise<Nodes> => {
         where('isValidHttps', '==', true),
         where('isValidWs', '==', true),
         where('isValidWss', '==', true),
-        where('isLatestBlockHeight', '==', true)
-      )
+        where('isLatestBlockHeight', '==', true),
+      ),
     )
   ).docs.map((doc) => doc.data());
 };

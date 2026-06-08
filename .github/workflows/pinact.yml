@@ -18,5 +18,5 @@ jobs:
         with:
           # Check-only: fail CI if any action is unpinned or a version comment
           # does not match its SHA. Never modify files.
-          fix: "false"
-          verify: "true"
+          fix: 'false'
+          verify: 'true'

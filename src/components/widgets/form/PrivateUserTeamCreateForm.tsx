@@ -19,8 +19,8 @@ const addressRegex =
   import.meta.env.REACT_APP_SYMBOL_PREFIX === 'T'
     ? /^T[A-Z0-9]{38}$/
     : import.meta.env.REACT_APP_SYMBOL_PREFIX === 'N'
-    ? /^N[A-Z0-9]{38}$/
-    : /^T[A-Z0-9]{38}$/;
+      ? /^N[A-Z0-9]{38}$/
+      : /^T[A-Z0-9]{38}$/;
 
 const customValidationUrlOrEmptyString = yup
   .string()
@@ -53,7 +53,7 @@ const schema = yup.object().shape({
           .required('Please enter a Twitter ID of this member')
           .url('Please enter a valid URL'),
         githubId: customValidationUrlOrEmptyString,
-      })
+      }),
     )
     .min(1, "Please enter at least one member's information"),
   addressForPrizeReceipt: yup
@@ -119,7 +119,7 @@ const PrivateUserYearTeamCreateFormWidgetComponent = (props: {
   };
 
   const onSubmit: SubmitHandler<PrivateUserYearTeam> = async (
-    privateUserYearTeam
+    privateUserYearTeam,
   ): Promise<void> => {
     const now = new Date();
     privateUserYearTeam.createdAt = now;

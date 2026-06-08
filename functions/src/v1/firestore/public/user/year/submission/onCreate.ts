@@ -18,7 +18,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-public-user-year-submission-onCreate'
+          'v1-firestore-public-user-year-submission-onCreate',
         )
       ) {
         return;
@@ -53,7 +53,7 @@ export const onCreate = () =>
       const publicSubmission =
         convertPublicUserYearSubmissionToPublicSubmission(
           userId,
-          publicUserYearSubmission
+          publicUserYearSubmission,
         );
       await setPublicSubmission(publicSubmission);
     });

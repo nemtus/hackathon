@@ -29,7 +29,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-private-user-year-team-onUpdate'
+          'v1-firestore-private-user-year-team-onUpdate',
         )
       ) {
         return;
@@ -98,7 +98,7 @@ export const onUpdate = () =>
         const postMessageResponse = await postMessage(
           slackBotUserOAuthToken,
           JSON.stringify(publicUserYearTeam, null, 2),
-          `#${slackNotifyChannel}`
+          `#${slackNotifyChannel}`,
         );
         logger.debug({ postMessageResponse });
       }

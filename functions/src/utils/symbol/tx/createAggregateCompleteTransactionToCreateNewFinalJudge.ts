@@ -38,7 +38,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
   dataEncryptionKey: string,
   userId: string,
   adminUserYearFinalJudge: AdminUserYearFinalJudge,
-  mosaicIdHex: string
+  mosaicIdHex: string,
 ): Promise<AdminUserTx> => {
   if (!userId) {
     throw Error('userId is undefined');
@@ -53,14 +53,14 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
   logger.debug({ adminUser });
 
   const feeBillingAccount = await restoreAccountFromPrivateKey(
-    feeBillingAccountPrivateKey
+    feeBillingAccountPrivateKey,
   );
   const messageReceivingAccount = await restoreAccountFromPrivateKey(
-    messageReceivingAccountPrivateKey
+    messageReceivingAccountPrivateKey,
   );
   const multisigAccounts: MultisigAccounts = await restoreAccountsFromAdminUser(
     adminUser,
-    dataEncryptionKey
+    dataEncryptionKey,
   );
 
   const multisigAccount = multisigAccounts.multisigAccount;
@@ -96,7 +96,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
     multisigAccount.address,
     [],
     PlainMessage.create(messageString),
-    networkType
+    networkType,
   ).toAggregate(feeBillingAccount.publicAccount);
 
   logger.debug('embeddedTransferTransaction2');
@@ -117,7 +117,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message2String),
-    networkType
+    networkType,
   ).toAggregate(multisigAccount.publicAccount);
 
   const embeddedJudgeTransactions: InnerTransaction[] = [];
@@ -151,7 +151,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
     const adminUserYearTeam = await getAdminUserYearTeam(
       finalJudge.teamId,
       finalJudge.yearId,
-      finalJudge.teamId
+      finalJudge.teamId,
     );
     logger.debug({ adminUserYearTeam });
     if (!adminUserYearTeam) {
@@ -182,11 +182,11 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
     };
     const teamAccount = await restoreAccountFromEncryptedAccount(
       teamEncryptedAccount,
-      dataEncryptionKey
+      dataEncryptionKey,
     );
 
     logger.debug(
-      `embeddedMosaicSupplyRevocationTransactionForEachFinalJudge userId: ${finalJudge.userId}, teamId: ${finalJudge.teamId}, point: ${finalJudge.point}`
+      `embeddedMosaicSupplyRevocationTransactionForEachFinalJudge userId: ${finalJudge.userId}, teamId: ${finalJudge.teamId}, point: ${finalJudge.point}`,
     );
     const mosaic = new Mosaic(mosaicId, UInt64.fromUint(finalJudge.point));
     const embeddedMosaicSupplyRevocationTransaction =
@@ -194,19 +194,19 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
         deadline,
         multisigAccount.address,
         mosaic,
-        networkType
+        networkType,
       ).toAggregate(feeBillingAccount.publicAccount);
     embeddedJudgeTransactions.push(embeddedMosaicSupplyRevocationTransaction);
 
     logger.debug(
-      `embeddedTransferTransactionForEachFinalJudge userId: ${finalJudge.userId}, teamId: ${finalJudge.teamId}, point: ${finalJudge.point}, message: ${finalJudge.message}`
+      `embeddedTransferTransactionForEachFinalJudge userId: ${finalJudge.userId}, teamId: ${finalJudge.teamId}, point: ${finalJudge.point}, message: ${finalJudge.message}`,
     );
     const messageForEachFinalJudgeJson = finalJudge;
     logger.debug('messageForEachFinalJudgeJson', {
       messageForEachFinalJudgeJson,
     });
     const messageForEachFinalJudgeString = JSON.stringify(
-      messageForEachFinalJudgeJson
+      messageForEachFinalJudgeJson,
     );
     logger.debug('messageForEachFinalJudgeString', {
       messageForEachFinalJudgeString,
@@ -216,7 +216,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
       teamAccount.address,
       [mosaic],
       PlainMessage.create(messageForEachFinalJudgeString),
-      networkType
+      networkType,
     ).toAggregate(feeBillingAccount.publicAccount);
     embeddedJudgeTransactions.push(embeddedTransferTransactionForEachJudge);
 
@@ -228,7 +228,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
   }
   if (totalPoints !== adminUserYearFinalJudge.totalPoints) {
     throw Error(
-      'totalPoints should be equal to adminUserYearJudge.totalPoints'
+      'totalPoints should be equal to adminUserYearJudge.totalPoints',
     );
   }
 
@@ -236,7 +236,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const copiedAdminUserYearFinalJudge = Object.assign(
     {},
-    adminUserYearFinalJudge
+    adminUserYearFinalJudge,
   ) as any;
   delete copiedAdminUserYearFinalJudge.judges;
   const message3Json = copiedAdminUserYearFinalJudge;
@@ -248,7 +248,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message3String),
-    networkType
+    networkType,
   ).toAggregate(multisigAccount.publicAccount);
 
   logger.debug('embeddedTransferTransaction4');
@@ -258,11 +258,11 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
     [
       new Mosaic(
         mosaicId,
-        UInt64.fromUint(adminUserYearFinalJudge.totalPoints)
+        UInt64.fromUint(adminUserYearFinalJudge.totalPoints),
       ),
     ],
     EmptyMessage,
-    networkType
+    networkType,
   ).toAggregate(feeBillingAccount.publicAccount);
 
   logger.debug('aggregateTransaction');
@@ -280,7 +280,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
     deadline,
     embeddedTransactions,
     networkType,
-    initialEmptyCosignatures
+    initialEmptyCosignatures,
   ).setMaxFeeForAggregate(feeMultiplier, requiredCosignatories);
 
   const generationHashSeed = await getGenerationHashSeed();
@@ -292,7 +292,7 @@ export const createAggregateCompleteTransactionToCreateNewFinalJudge = async (
     feeBillingAccount.signTransactionWithCosignatories(
       aggregateCompleteTransaction,
       [multisigCosignatory1Account, multisigCosignatory2Account],
-      generationHashSeed
+      generationHashSeed,
     );
 
   const hash = signedAggregateCompleteTransactionWithCosignatures.hash;

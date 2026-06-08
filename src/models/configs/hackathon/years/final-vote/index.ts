@@ -20,18 +20,18 @@ const collectionPath = (yearId: string) => `/v/1/configs/hackathon/${yearId}`;
 const docPath = (yearId: string) => `${collectionPath(yearId)}/finalVote`;
 export const docRef = (yearId: string) =>
   doc(db, docPath(yearId)).withConverter(
-    converter<ConfigHackathonYearFinalVote>()
+    converter<ConfigHackathonYearFinalVote>(),
   );
 
 export const getConfigHackathonYearFinalVote = async (
-  yearId: string
+  yearId: string,
 ): Promise<ConfigHackathonYearFinalVote | undefined> => {
   return (await getDoc(docRef(yearId))).data();
 };
 
 export const setConfigHackathonYearFinalVote = async (
   yearId: string,
-  configHackathonYearFinalVote: Partial<ConfigHackathonYearFinalVote>
+  configHackathonYearFinalVote: Partial<ConfigHackathonYearFinalVote>,
 ): Promise<void> => {
   await setDoc(docRef(yearId), configHackathonYearFinalVote, { merge: true });
 };

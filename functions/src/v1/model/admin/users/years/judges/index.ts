@@ -23,18 +23,18 @@ const docRef = (userId: string, yearId: string, id: string) =>
 export const getAdminUserYearJudge = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<AdminUserYearJudge | undefined> => {
   return (await docRef(userId, yearId, id).get()).data();
 };
 
 export const setAdminUserYearJudge = async (
   userId: string,
-  adminUserYearJudge: AdminUserYearJudge
+  adminUserYearJudge: AdminUserYearJudge,
 ): Promise<AdminUserYearJudge | undefined> => {
   if (!adminUserYearJudge.id) {
     const docRef = await collectionRef(userId, adminUserYearJudge.yearId).add(
-      adminUserYearJudge
+      adminUserYearJudge,
     );
     return (await docRef.get()).data();
   }
@@ -42,7 +42,7 @@ export const setAdminUserYearJudge = async (
     adminUserYearJudge,
     {
       merge: true,
-    }
+    },
   );
   return (
     await docRef(userId, adminUserYearJudge.yearId, adminUserYearJudge.id).get()
@@ -50,7 +50,7 @@ export const setAdminUserYearJudge = async (
 };
 
 export const convertPrivateUserYearJudgeToAdminUserYearJudge = (
-  privateUserYearJudge: PrivateUserYearJudge
+  privateUserYearJudge: PrivateUserYearJudge,
 ): AdminUserYearJudge => {
   const adminUserYearJudge: AdminUserYearJudge = privateUserYearJudge;
   return adminUserYearJudge;

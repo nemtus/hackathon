@@ -31,7 +31,7 @@ const docRef = (id: string) =>
   db.doc(docPath(id)).withConverter(converter<PublicUser>());
 
 export const getPrivateUser = async (
-  id: string
+  id: string,
 ): Promise<PublicUser | undefined> => {
   return (await docRef(id).get()).data();
 };
@@ -73,7 +73,7 @@ export const queryVotePublicUsers = async (): Promise<PublicUsers> => {
 };
 
 export const convertAdminUserToPublicUser = (
-  adminUser: AdminUser
+  adminUser: AdminUser,
 ): PublicUser => {
   const publicUser: PublicUser = {
     id: adminUser.id,
@@ -93,7 +93,7 @@ export const convertAdminUserToPublicUser = (
 };
 
 export const convertPrivateUserToPublicUser = (
-  privateUser: PrivateUser
+  privateUser: PrivateUser,
 ): PublicUser => {
   const publicUser: PublicUser = {
     id: privateUser.id,

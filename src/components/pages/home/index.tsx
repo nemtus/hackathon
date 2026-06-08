@@ -275,7 +275,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribeConfigHackathonYearTeamDocListener = onSnapshot(
       configHackathonYearTeamDocRef(CURRENT_YEAR),
@@ -295,7 +295,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribeConfigHackathonYearSubmissionDocListener = onSnapshot(
       configHackathonYearSubmissionDocRef(CURRENT_YEAR),
@@ -315,7 +315,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribeConfigHackathonYearJudgeDocListener = onSnapshot(
       configHackathonYearJudgeDocRef(CURRENT_YEAR),
@@ -335,7 +335,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribeConfigHackathonYearVoteDocListener = onSnapshot(
       configHackathonYearVoteDocRef(CURRENT_YEAR),
@@ -355,7 +355,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribeConfigHackathonYearFinalJudgeDocListener = onSnapshot(
       configHackathonYearFinalJudgeDocRef(CURRENT_YEAR),
@@ -375,7 +375,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribeConfigHackathonYearFinalVoteDocListener = onSnapshot(
       configHackathonYearFinalVoteDocRef(CURRENT_YEAR),
@@ -395,7 +395,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserDocListener = onSnapshot(
       privateUserDocRef(userId),
@@ -415,7 +415,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserTxsCollectionListener = onSnapshot(
       privateUserTxsCollectionRef(userId),
@@ -435,7 +435,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearEntryDocListener = onSnapshot(
       privateUserYearEntryDocRef(userId, CURRENT_YEAR, userId),
@@ -452,7 +452,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearTeamDocListener = onSnapshot(
       privateUserYearTeamDocRef(userId, CURRENT_YEAR, userId),
@@ -469,7 +469,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearSubmissionDocListener = onSnapshot(
       privateUserYearSubmissionDocRef(userId, CURRENT_YEAR, userId),
@@ -486,7 +486,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearJudgeDocListener = onSnapshot(
       privateUserYearJudgeDocRef(userId, CURRENT_YEAR, userId),
@@ -503,7 +503,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearVoteDocListener = onSnapshot(
       privateUserYearVoteDocRef(userId, CURRENT_YEAR, userId),
@@ -520,7 +520,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearFinalJudgeDocListener = onSnapshot(
       privateUserYearFinalJudgeDocRef(userId, CURRENT_YEAR, userId),
@@ -537,7 +537,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearFinalVoteDocListener = onSnapshot(
       privateUserYearFinalVoteDocRef(userId, CURRENT_YEAR, userId),
@@ -554,7 +554,7 @@ const HomePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
 
     return () => {

@@ -44,7 +44,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-private-user-year-finalJudge-onCreate'
+          'v1-firestore-private-user-year-finalJudge-onCreate',
         )
       ) {
         return;
@@ -69,9 +69,8 @@ export const onCreate = () =>
         throw Error('finalJudgeId is undefined');
       }
 
-      const configHackathonYearJudge = await getConfigHackathonYearJudge(
-        yearId
-      );
+      const configHackathonYearJudge =
+        await getConfigHackathonYearJudge(yearId);
       if (!configHackathonYearJudge) {
         throw Error('configHackathonYearJudge is undefined');
       }
@@ -124,7 +123,7 @@ export const onCreate = () =>
             privateUserYearFinalJudge.createdAt <=
               configHackathonYearFinalJudge.endAt &&
             configHackathonYearFinalJudge.users.some(
-              (userId) => userId === privateUserYearFinalJudge.userId
+              (userId) => userId === privateUserYearFinalJudge.userId,
             ) &&
             finalJudge.userId && // Note: voting user
             finalJudge.yearId === CURRENT_YEAR &&
@@ -142,7 +141,7 @@ export const onCreate = () =>
         const adminUserYearTeam = await getAdminUserYearTeam(
           finalJudge.teamId,
           finalJudge.yearId,
-          finalJudge.teamId
+          finalJudge.teamId,
         );
         logger.debug({ adminUserYearTeam });
         if (!adminUserYearTeam) {
@@ -171,7 +170,7 @@ export const onCreate = () =>
       }
       if (totalPoints !== privateUserYearJudge.totalPoints) {
         throw Error(
-          'totalPoints should be equal to adminUserYearFinalJudge.totalPoints'
+          'totalPoints should be equal to adminUserYearFinalJudge.totalPoints',
         );
       }
 
@@ -190,7 +189,7 @@ export const onCreate = () =>
       const postMessageResponse = await postMessage(
         slackBotUserOAuthToken,
         JSON.stringify(publicUserYearFinalJudge, null, 2),
-        `#${slackNotifyChannel}`
+        `#${slackNotifyChannel}`,
       );
       logger.debug({ postMessageResponse });
     });

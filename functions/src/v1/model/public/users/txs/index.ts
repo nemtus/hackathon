@@ -45,28 +45,28 @@ const docRef = (userId: string, id: string) =>
 
 export const getPublicUserTx = async (
   userId: string,
-  id: string
+  id: string,
 ): Promise<PublicUserTx | undefined> => {
   return (await docRef(userId, id).get()).data();
 };
 
 export const setPublicUserTx = async (
   userId: string,
-  publicUserTx: PublicUserTx
+  publicUserTx: PublicUserTx,
 ): Promise<void> => {
   await docRef(userId, publicUserTx.id).set(publicUserTx, { merge: true });
 };
 
 export const getAllPublicUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<PublicUserTxs> => {
   return (await collectionRef(userId).get()).docs.map((snapshot) =>
-    snapshot.data()
+    snapshot.data(),
   );
 };
 
 export const queryAnnouncedPublicUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<PublicUserTxs> => {
   return (
     await collectionRef(userId)
@@ -77,7 +77,7 @@ export const queryAnnouncedPublicUserTxs = async (
 };
 
 export const queryUnconfirmedPublicUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<PublicUserTxs> => {
   return (
     await collectionRef(userId)
@@ -89,7 +89,7 @@ export const queryUnconfirmedPublicUserTxs = async (
 };
 
 export const queryConfirmedPublicUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<PublicUserTxs> => {
   return (
     await collectionRef(userId)
@@ -102,7 +102,7 @@ export const queryConfirmedPublicUserTxs = async (
 };
 
 export const queryFinalizedPublicUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<PublicUserTxs> => {
   return (
     await collectionRef(userId)
@@ -116,14 +116,14 @@ export const queryFinalizedPublicUserTxs = async (
 };
 
 export const convertAdminUserTxToPublicUserTx = (
-  adminUserTx: AdminUserTx
+  adminUserTx: AdminUserTx,
 ): PublicUserTx => {
   const publicUserTx: PublicUserTx = adminUserTx;
   return publicUserTx;
 };
 
 export const convertPrivateUserTxToPublicUserTx = (
-  privateUserTx: PrivateUserTx
+  privateUserTx: PrivateUserTx,
 ): PublicUserTx => {
   const publicUserTx: PublicUserTx = privateUserTx;
   return publicUserTx;

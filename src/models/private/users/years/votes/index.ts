@@ -17,31 +17,31 @@ const collectionPath = (userId: string, yearId: string) =>
   `/v/1/scopes/private/users/${userId}/years/${yearId}/votes`;
 const collectionRef = (userId: string, yearId: string) =>
   collection(db, collectionPath(userId, yearId)).withConverter(
-    converter<PrivateUserYearVote>()
+    converter<PrivateUserYearVote>(),
   );
 const docPath = (userId: string, yearId: string, id: string) =>
   `${collectionPath(userId, yearId)}/${id}`;
 export const docRef = (userId: string, yearId: string, id: string) =>
   doc(db, docPath(userId, yearId, id)).withConverter(
-    converter<PrivateUserYearVote>()
+    converter<PrivateUserYearVote>(),
   );
 
 export const getPrivateUserYearVote = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PrivateUserYearVote | undefined> => {
   return (await getDoc(docRef(userId, yearId, id))).data();
 };
 
 export const setPrivateUserYearVote = async (
   userId: string,
-  privateUserYearVote: PrivateUserYearVote
+  privateUserYearVote: PrivateUserYearVote,
 ): Promise<PrivateUserYearVote | undefined> => {
   if (!privateUserYearVote.id) {
     const docRef = await addDoc(
       collectionRef(userId, privateUserYearVote.yearId),
-      privateUserYearVote
+      privateUserYearVote,
     );
     return (await getDoc(docRef)).data();
   }
@@ -50,24 +50,24 @@ export const setPrivateUserYearVote = async (
     privateUserYearVote,
     {
       merge: true,
-    }
+    },
   );
   return (
     await getDoc(
-      docRef(userId, privateUserYearVote.yearId, privateUserYearVote.id)
+      docRef(userId, privateUserYearVote.yearId, privateUserYearVote.id),
     )
   ).data();
 };
 
 export const convertPrivateYearVoteToAdminUserYearVote = (
-  privateUserYearVote: PrivateUserYearVote
+  privateUserYearVote: PrivateUserYearVote,
 ): AdminUserYearVote => {
   const adminUserYearVote: AdminUserYearVote = privateUserYearVote;
   return adminUserYearVote;
 };
 
 export const convertPrivateUserYearVoteToPublicUserYearVote = (
-  privateUserYearVote: PrivateUserYearVote
+  privateUserYearVote: PrivateUserYearVote,
 ): PrivateUserYearVote => {
   const publicUserYearVote: PrivateUserYearVote = privateUserYearVote;
   return publicUserYearVote;

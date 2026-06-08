@@ -23,7 +23,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-public-user-year-finalVote-onUpdate'
+          'v1-firestore-public-user-year-finalVote-onUpdate',
         )
       ) {
         return;
@@ -50,7 +50,7 @@ export const onUpdate = () =>
 
       const beforePublicUserYearFinalVote =
         converter<PublicUserYearFinalVote>().fromFirestore(
-          changeSnapshot.before
+          changeSnapshot.before,
         );
       logger.debug({ beforePublicUserYearFinalVote });
       if (!beforePublicUserYearFinalVote) {
@@ -59,7 +59,7 @@ export const onUpdate = () =>
 
       const afterPublicUserYearFinalVote =
         converter<PublicUserYearFinalVote>().fromFirestore(
-          changeSnapshot.after
+          changeSnapshot.after,
         );
       logger.debug({ afterPublicUserYearFinalVote });
       if (!afterPublicUserYearFinalVote) {
@@ -67,7 +67,7 @@ export const onUpdate = () =>
       }
 
       const publicFinalVote = convertPublicUserYearFinalVoteToPublicFinalVote(
-        afterPublicUserYearFinalVote
+        afterPublicUserYearFinalVote,
       );
       await setPublicFinalVote(publicFinalVote);
     });

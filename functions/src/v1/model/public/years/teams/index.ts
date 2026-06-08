@@ -19,7 +19,7 @@ const docRef = (yearId: string, id: string) =>
 
 export const getPublicTeam = async (
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PublicTeam | undefined> => {
   return (await docRef(yearId, id).get()).data();
 };
@@ -31,10 +31,10 @@ export const setPublicTeam = async (publicTeam: PublicTeam): Promise<void> => {
 };
 
 export const getAllPublicTeams = async (
-  yearId: string
+  yearId: string,
 ): Promise<PublicTeams> => {
   return (await collectionRef(yearId).get()).docs.map((snapshot) =>
-    snapshot.data()
+    snapshot.data(),
   );
 };
 
@@ -63,7 +63,7 @@ export const getAllPublicTeams = async (
 
 export const convertPublicUserYearTeamToPublicTeam = (
   userId: string,
-  publicUserYearTeam: PublicUserYearTeam
+  publicUserYearTeam: PublicUserYearTeam,
 ): PublicTeam => {
   const publicTeam: PublicTeam = {
     userId,

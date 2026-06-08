@@ -37,7 +37,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-private-user-year-team-onCreate'
+          'v1-firestore-private-user-year-team-onCreate',
         )
       ) {
         return;
@@ -71,9 +71,8 @@ export const onCreate = () =>
       }
       logger.debug({ privateUserYearTeam });
 
-      const newTeamEncryptedAccount = await createNewEncryptedAccount(
-        dataEncryptionKey
-      );
+      const newTeamEncryptedAccount =
+        await createNewEncryptedAccount(dataEncryptionKey);
 
       const adminUserYearTeam: AdminUserYearTeam = {
         teamSaltHexString: newTeamEncryptedAccount.saltHexString,
@@ -104,7 +103,7 @@ export const onCreate = () =>
       const postMessageResponse = await postMessage(
         slackBotUserOAuthToken,
         JSON.stringify(publicUserYearTeam, null, 2),
-        `#${slackNotifyChannel}`
+        `#${slackNotifyChannel}`,
       );
       logger.debug({ postMessageResponse });
     });

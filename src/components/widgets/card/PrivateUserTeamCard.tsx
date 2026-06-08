@@ -2,7 +2,7 @@ import CopyButtonComponent from 'components/widgets/button/CopyButton';
 import { PrivateUserYearTeam } from 'models/private/users/years/teams';
 
 const PrivateUserTeamCardWidgetComponent = (
-  privateUserTeam: PrivateUserYearTeam
+  privateUserTeam: PrivateUserYearTeam,
 ) => {
   const {
     id,

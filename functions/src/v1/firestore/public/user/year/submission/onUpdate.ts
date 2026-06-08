@@ -18,7 +18,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-public-user-year-submission-onUpdate'
+          'v1-firestore-public-user-year-submission-onUpdate',
         )
       ) {
         return;
@@ -45,7 +45,7 @@ export const onUpdate = () =>
 
       const beforePublicUserYearSubmission =
         converter<PublicUserYearSubmission>().fromFirestore(
-          changeSnapshot.before
+          changeSnapshot.before,
         );
       logger.debug({ beforePublicUserYearSubmission });
       if (!beforePublicUserYearSubmission) {
@@ -54,7 +54,7 @@ export const onUpdate = () =>
 
       const afterPublicUserYearSubmission =
         converter<PublicUserYearSubmission>().fromFirestore(
-          changeSnapshot.after
+          changeSnapshot.after,
         );
       logger.debug({ afterPublicUserYearSubmission });
       if (!afterPublicUserYearSubmission) {
@@ -63,7 +63,7 @@ export const onUpdate = () =>
 
       const publicTeam = convertPublicUserYearSubmissionToPublicSubmission(
         userId,
-        afterPublicUserYearSubmission
+        afterPublicUserYearSubmission,
       );
       await setPublicSubmission(publicTeam);
     });

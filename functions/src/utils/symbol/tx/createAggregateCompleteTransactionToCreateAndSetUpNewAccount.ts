@@ -31,17 +31,17 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
     feeBillingAccountPrivateKey: string,
     messageReceivingAccountPrivateKey: string,
     dataEncryptionKey: string,
-    adminUser: AdminUser
+    adminUser: AdminUser,
   ): Promise<AdminUserTx> => {
     const feeBillingAccount = await restoreAccountFromPrivateKey(
-      feeBillingAccountPrivateKey
+      feeBillingAccountPrivateKey,
     );
     const messageReceivingAccount = await restoreAccountFromPrivateKey(
-      messageReceivingAccountPrivateKey
+      messageReceivingAccountPrivateKey,
     );
     const multisigAccounts = await restoreAccountsFromAdminUser(
       adminUser,
-      dataEncryptionKey
+      dataEncryptionKey,
     );
     const multisigAccount = multisigAccounts.multisigAccount;
     const multisigCosignatory1Account =
@@ -78,7 +78,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
       multisigAccount.address,
       [],
       PlainMessage.create(messageString),
-      networkType
+      networkType,
     ).toAggregate(feeBillingAccount.publicAccount);
 
     logger.debug('embeddedTransferTransaction2');
@@ -87,7 +87,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
       messageReceivingAccount.address,
       [],
       PlainMessage.create(messageString),
-      networkType
+      networkType,
     ).toAggregate(multisigAccount.publicAccount);
 
     logger.debug('embeddedMultisigAccountModificationTransaction');
@@ -106,7 +106,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
         minRemovalDelta,
         addressAdditions,
         addressDeletions,
-        networkType
+        networkType,
       ).toAggregate(multisigAccount.publicAccount);
 
     logger.debug('embeddedAccountAddressRestrictionTransaction1of4');
@@ -126,7 +126,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
         addressRestrictionFlag,
         restrictionAdditionsForMultisigAccount,
         restrictionDeletionsForMultisigAccount,
-        networkType
+        networkType,
       ).toAggregate(multisigAccount.publicAccount);
 
     logger.debug('embeddedAccountAddressRestrictionTransaction2of4');
@@ -147,7 +147,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
         addressRestrictionFlag,
         restrictionAdditionsForMultisigCosignatory1Account,
         restrictionDeletionsForMultisigCosignatory1Account,
-        networkType
+        networkType,
       ).toAggregate(multisigCosignatory1Account.publicAccount);
 
     logger.debug('embeddedAccountAddressRestrictionTransaction3of4');
@@ -168,7 +168,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
         addressRestrictionFlag,
         restrictionAdditionsForMultisigCosignatory2Account,
         restrictionDeletionsForMultisigCosignatory2Account,
-        networkType
+        networkType,
       ).toAggregate(multisigCosignatory2Account.publicAccount);
 
     logger.debug('embeddedAccountAddressRestrictionTransaction4of4');
@@ -189,7 +189,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
         addressRestrictionFlag,
         restrictionAdditionsForMultisigCosignatory3Account,
         restrictionDeletionsForMultisigCosignatory3Account,
-        networkType
+        networkType,
       ).toAggregate(multisigCosignatory3Account.publicAccount);
 
     logger.debug('aggregateCompleteTransaction');
@@ -209,7 +209,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
       deadline,
       embeddedTransactions,
       networkType,
-      initialEmptyCosignatures
+      initialEmptyCosignatures,
     ).setMaxFeeForAggregate(feeMultiplier, requiredCosignatories);
 
     const generationHashSeed = await getGenerationHashSeed();
@@ -223,7 +223,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
     logger.debug('signing aggregateCompleteTransaction by FeeBillingAccount');
     const partialSignedAggregateCompleteTransaction = feeBillingAccount.sign(
       aggregateCompleteTransaction,
-      generationHashSeed
+      generationHashSeed,
     );
 
     // Note: 連署データを保持する配列を初期化する。この後各アカウントで連署データ作る毎に配列に追加していき、全部そろったら改めてトランザクションに連署データをセットする。
@@ -232,72 +232,72 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
 
     // Note: 連署1/4
     logger.debug(
-      'cosigning 1/4 aggregateCompleteTransaction by multisigAccount'
+      'cosigning 1/4 aggregateCompleteTransaction by multisigAccount',
     );
     const cosignedTransactionByMultisigAccount =
       CosignatureTransaction.signTransactionPayload(
         multisigAccount,
         partialSignedAggregateCompleteTransaction.payload,
-        generationHashSeed
+        generationHashSeed,
       );
     const cosignatureByMultisigAccount = new CosignatureSignedTransaction(
       cosignedTransactionByMultisigAccount.parentHash,
       cosignedTransactionByMultisigAccount.signature,
-      cosignedTransactionByMultisigAccount.signerPublicKey
+      cosignedTransactionByMultisigAccount.signerPublicKey,
     );
     cosignatures.push(cosignatureByMultisigAccount);
 
     // Note: 連署2/4
     logger.debug(
-      'cosigning 2/4 aggregateCompleteTransaction by multisigCosignatory1Account'
+      'cosigning 2/4 aggregateCompleteTransaction by multisigCosignatory1Account',
     );
     const cosignedTransactionByMultisigCosignatory1Account =
       CosignatureTransaction.signTransactionPayload(
         multisigCosignatory1Account,
         partialSignedAggregateCompleteTransaction.payload,
-        generationHashSeed
+        generationHashSeed,
       );
     const cosignatureByMultisigCosignatory1Account =
       new CosignatureSignedTransaction(
         cosignedTransactionByMultisigCosignatory1Account.parentHash,
         cosignedTransactionByMultisigCosignatory1Account.signature,
-        cosignedTransactionByMultisigCosignatory1Account.signerPublicKey
+        cosignedTransactionByMultisigCosignatory1Account.signerPublicKey,
       );
     cosignatures.push(cosignatureByMultisigCosignatory1Account);
 
     // Note: 連署3/4
     logger.debug(
-      'cosigning 3/4 aggregateCompleteTransaction by multisigCosignatory2Account'
+      'cosigning 3/4 aggregateCompleteTransaction by multisigCosignatory2Account',
     );
     const cosignedTransactionByMultisigCosignatory2Account =
       CosignatureTransaction.signTransactionPayload(
         multisigCosignatory2Account,
         partialSignedAggregateCompleteTransaction.payload,
-        generationHashSeed
+        generationHashSeed,
       );
     const cosignatureByMultisigCosignatory2Account =
       new CosignatureSignedTransaction(
         cosignedTransactionByMultisigCosignatory2Account.parentHash,
         cosignedTransactionByMultisigCosignatory2Account.signature,
-        cosignedTransactionByMultisigCosignatory2Account.signerPublicKey
+        cosignedTransactionByMultisigCosignatory2Account.signerPublicKey,
       );
     cosignatures.push(cosignatureByMultisigCosignatory2Account);
 
     // Note: 連署4/4
     logger.debug(
-      'cosigning 4/4 aggregateCompleteTransaction by multisigCosignatory3Account'
+      'cosigning 4/4 aggregateCompleteTransaction by multisigCosignatory3Account',
     );
     const cosignedTransactionByMultisigCosignatory3Account =
       CosignatureTransaction.signTransactionPayload(
         multisigCosignatory3Account,
         partialSignedAggregateCompleteTransaction.payload,
-        generationHashSeed
+        generationHashSeed,
       );
     const cosignatureByMultisigCosignatory3Account =
       new CosignatureSignedTransaction(
         cosignedTransactionByMultisigCosignatory3Account.parentHash,
         cosignedTransactionByMultisigCosignatory3Account.signature,
-        cosignedTransactionByMultisigCosignatory3Account.signerPublicKey
+        cosignedTransactionByMultisigCosignatory3Account.signerPublicKey,
       );
     cosignatures.push(cosignatureByMultisigCosignatory3Account);
 
@@ -305,13 +305,13 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewAccount =
     logger.debug('setting cosignatures to aggregateCompleteTransaction');
     const aggregateCompleteTransactionWithCosignatures =
       TransactionMapping.createFromPayload(
-        partialSignedAggregateCompleteTransaction.payload
+        partialSignedAggregateCompleteTransaction.payload,
       ) as AggregateTransaction;
     const signedAggregateCompleteTransactionWithCosignatures =
       feeBillingAccount.signTransactionGivenSignatures(
         aggregateCompleteTransactionWithCosignatures,
         cosignatures,
-        generationHashSeed
+        generationHashSeed,
       );
 
     const hash = signedAggregateCompleteTransactionWithCosignatures.hash;

@@ -44,7 +44,7 @@ const collectionPath = (userId: string) =>
 
 const collectionRef = (userId: string) =>
   collection(db, collectionPath(userId)).withConverter(
-    converter<PublicUserTx>()
+    converter<PublicUserTx>(),
   );
 
 const docPath = (userId: string, id: string) =>
@@ -55,20 +55,20 @@ const docRef = (userId: string, id: string) =>
 
 export const getPublicUserTx = async (
   userId: string,
-  id: string
+  id: string,
 ): Promise<PublicUserTx | undefined> => {
   return (await getDoc(docRef(userId, id))).data();
 };
 
 export const setPublicUserTx = async (
   userId: string,
-  publicUserTx: PublicUserTx
+  publicUserTx: PublicUserTx,
 ): Promise<void> => {
   await setDoc(docRef(userId, publicUserTx.id), publicUserTx, { merge: true });
 };
 
 export const getAllPublicUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<PublicUserTxs> => {
   return (
     await getDocs(query(collectionRef(userId), orderBy('createdAt', 'desc')))
@@ -76,70 +76,70 @@ export const getAllPublicUserTxs = async (
 };
 
 export const queryNotAnnouncedPublicUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<PublicUserTxs> => {
   return (
     await getDocs(
       query(
         collectionRef(userId),
         where('announced', '==', false),
-        orderBy('createdAt', 'asc')
-      )
+        orderBy('createdAt', 'asc'),
+      ),
     )
   ).docs.map((doc) => doc.data());
 };
 
 export const queryNotUnconfirmedPublicUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<PublicUserTxs> => {
   return (
     await getDocs(
       query(
         collectionRef(userId),
         where('unconfirmed', '==', false),
-        orderBy('createdAt', 'asc')
-      )
+        orderBy('createdAt', 'asc'),
+      ),
     )
   ).docs.map((doc) => doc.data());
 };
 
 export const queryNotConfirmedPublicUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<PublicUserTxs> => {
   return (
     await getDocs(
       query(
         collectionRef(userId),
         where('confirmed', '==', false),
-        orderBy('createdAt', 'asc')
-      )
+        orderBy('createdAt', 'asc'),
+      ),
     )
   ).docs.map((doc) => doc.data());
 };
 
 export const queryNotFinalizedPublicUserTxs = async (
-  userId: string
+  userId: string,
 ): Promise<PublicUserTxs> => {
   return (
     await getDocs(
       query(
         collectionRef(userId),
         where('finalized', '==', false),
-        orderBy('createdAt', 'asc')
-      )
+        orderBy('createdAt', 'asc'),
+      ),
     )
   ).docs.map((doc) => doc.data());
 };
 
 export const convertAdminUserTxToPublicUserTx = (
-  adminUserTx: AdminUserTx
+  adminUserTx: AdminUserTx,
 ): PublicUserTx => {
   const publicUserTx: PublicUserTx = adminUserTx;
   return publicUserTx;
 };
 
 export const convertPrivateUserTxToPublicUserTx = (
-  privateUserTx: PrivateUserTx
+  privateUserTx: PrivateUserTx,
 ): PublicUserTx => {
   const publicUserTx: PublicUserTx = privateUserTx;
   return publicUserTx;

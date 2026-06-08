@@ -19,7 +19,7 @@ const docRef = (yearId: string, id: string) =>
 
 export const getPublicVote = async (
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PublicVote | undefined> => {
   return (await docRef(yearId, id).get()).data();
 };
@@ -31,10 +31,10 @@ export const setPublicVote = async (publicTeam: PublicVote): Promise<void> => {
 };
 
 export const getAllPublicVotes = async (
-  yearId: string
+  yearId: string,
 ): Promise<PublicVotes> => {
   return (await collectionRef(yearId).get()).docs.map((snapshot) =>
-    snapshot.data()
+    snapshot.data(),
   );
 };
 
@@ -62,7 +62,7 @@ export const getAllPublicVotes = async (
 // };
 
 export const convertPublicUserYearVoteToPublicVote = (
-  publicUserYearVote: PublicUserYearVote
+  publicUserYearVote: PublicUserYearVote,
 ): PublicVote => {
   const publicVote: PublicVote = publicUserYearVote;
   return publicVote;

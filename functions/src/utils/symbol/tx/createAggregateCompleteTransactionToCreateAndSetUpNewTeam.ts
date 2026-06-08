@@ -33,7 +33,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewTeam = async (
   messageReceivingAccountPrivateKey: string,
   dataEncryptionKey: string,
   userId: string,
-  adminUserYearTeam: AdminUserYearTeam
+  adminUserYearTeam: AdminUserYearTeam,
 ): Promise<AdminUserTx> => {
   if (!userId) {
     throw Error('userId is undefined');
@@ -45,14 +45,14 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewTeam = async (
   logger.debug({ adminUser });
 
   const feeBillingAccount = await restoreAccountFromPrivateKey(
-    feeBillingAccountPrivateKey
+    feeBillingAccountPrivateKey,
   );
   const messageReceivingAccount = await restoreAccountFromPrivateKey(
-    messageReceivingAccountPrivateKey
+    messageReceivingAccountPrivateKey,
   );
   const multisigAccounts: MultisigAccounts = await restoreAccountsFromAdminUser(
     adminUser,
-    dataEncryptionKey
+    dataEncryptionKey,
   );
 
   if (!adminUserYearTeam.teamSaltHexString) {
@@ -79,7 +79,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewTeam = async (
   };
   const teamAccount = await restoreAccountFromEncryptedAccount(
     teamEncryptedAccount,
-    dataEncryptionKey
+    dataEncryptionKey,
   );
 
   const multisigAccount = multisigAccounts.multisigAccount;
@@ -117,7 +117,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewTeam = async (
     teamAccount.address,
     [],
     PlainMessage.create(messageString),
-    networkType
+    networkType,
   ).toAggregate(feeBillingAccount.publicAccount);
 
   logger.debug('embeddedTransferTransaction2');
@@ -139,14 +139,14 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewTeam = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message2String),
-    networkType
+    networkType,
   ).toAggregate(teamAccount.publicAccount);
 
   logger.debug('embeddedTransferTransaction3');
   const publicUserYearTeam = await getPublicUserYearTeam(
     userId,
     adminUserYearTeam.yearId,
-    adminUserYearTeam.id
+    adminUserYearTeam.id,
   );
   if (!publicUserYearTeam) {
     throw Error('publicUserYearTeam is undefined');
@@ -160,7 +160,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewTeam = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message3String),
-    networkType
+    networkType,
   ).toAggregate(teamAccount.publicAccount);
 
   const copiedPublicUserYearTeam = Object.assign({}, publicUserYearTeam) as any;
@@ -175,7 +175,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewTeam = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message4String),
-    networkType
+    networkType,
   ).toAggregate(teamAccount.publicAccount);
 
   logger.debug('embeddedAccountAddressRestrictionTransaction1of4');
@@ -185,7 +185,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewTeam = async (
       AddressRestrictionFlag.AllowIncomingAddress,
       [teamAccount.address],
       [],
-      networkType
+      networkType,
     ).toAggregate(multisigAccount.publicAccount);
 
   logger.debug('embeddedMultisigAccountModificationTransaction');
@@ -200,7 +200,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewTeam = async (
       minRemovalDelta,
       addressAdditions,
       addressDeletions,
-      networkType
+      networkType,
     ).toAggregate(teamAccount.publicAccount);
 
   logger.debug('embeddedAccountAddressRestrictionTransaction1of4');
@@ -219,7 +219,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewTeam = async (
       AddressRestrictionFlag.AllowIncomingAddress,
       restrictionAdditionsForMultisigAccount,
       restrictionDeletionsForMultisigAccount,
-      networkType
+      networkType,
     ).toAggregate(teamAccount.publicAccount);
 
   logger.debug('aggregateTransaction');
@@ -239,7 +239,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewTeam = async (
     deadline,
     embeddedTransactions,
     networkType,
-    initialEmptyCosignatures
+    initialEmptyCosignatures,
   ).setMaxFeeForAggregate(feeMultiplier, requiredCosignatories);
 
   const generationHashSeed = await getGenerationHashSeed();
@@ -251,7 +251,7 @@ export const createAggregateCompleteTransactionToCreateAndSetUpNewTeam = async (
     feeBillingAccount.signTransactionWithCosignatories(
       aggregateCompleteTransaction,
       [teamAccount, multisigCosignatory1Account, multisigCosignatory2Account],
-      generationHashSeed
+      generationHashSeed,
     );
 
   const hash = signedAggregateCompleteTransactionWithCosignatures.hash;

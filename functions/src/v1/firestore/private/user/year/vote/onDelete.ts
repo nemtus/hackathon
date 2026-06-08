@@ -11,7 +11,7 @@ export const onDelete = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-private-user-year-vote-onDelete'
+          'v1-firestore-private-user-year-vote-onDelete',
         )
       ) {
         return;

@@ -30,14 +30,14 @@ const docRef = (nodeId: string, id: string) =>
 
 export const getNodeCheck = async (
   nodeId: string,
-  id: string
+  id: string,
 ): Promise<NodeCheck | undefined> => {
   return (await docRef(nodeId, id).get()).data();
 };
 
 export const addNodeCheck = async (
   nodeId: string,
-  nodeCheck: NodeCheck
+  nodeCheck: NodeCheck,
 ): Promise<void> => {
   nodeCheck.createdAt = new Date();
   const nodeCheckDocRef = await collectionRef(nodeId).add(nodeCheck);
@@ -47,7 +47,7 @@ export const addNodeCheck = async (
 
 export const setNodeCheck = async (
   nodeId: string,
-  nodeCheck: NodeCheck
+  nodeCheck: NodeCheck,
 ): Promise<void> => {
   if (!nodeCheck.id) {
     await addNodeCheck(nodeId, nodeCheck);
@@ -63,7 +63,7 @@ export const getNodeChecks = async (nodeId: string): Promise<NodeChecks> => {
 };
 
 export const getLatestNodeCheck = async (
-  nodeId: string
+  nodeId: string,
 ): Promise<NodeCheck | undefined> => {
   const nodes = (
     await collectionRef(nodeId).orderBy('createdAt', 'desc').limit(1).get()

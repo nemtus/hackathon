@@ -3,7 +3,7 @@ import { db, FieldValue } from '../../utils/firebase';
 
 export const hasAlreadyTriggered = (
   eventID: string,
-  suffix: string
+  suffix: string,
 ): Promise<boolean> => {
   const id = [eventID, suffix].join('-');
   return db.runTransaction(async (t) => {
@@ -22,7 +22,7 @@ export const triggerOnce =
   <T>(
     suffix: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    handler: (data: T, context: EventContext) => PromiseLike<any> | any
+    handler: (data: T, context: EventContext) => PromiseLike<any> | any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): ((data: T, context: EventContext) => PromiseLike<any> | any) =>
   async (data, context) => {

@@ -17,7 +17,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-public-user-year-vote-onCreate'
+          'v1-firestore-public-user-year-vote-onCreate',
         )
       ) {
         return;

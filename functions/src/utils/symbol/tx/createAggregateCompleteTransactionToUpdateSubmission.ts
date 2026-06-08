@@ -31,7 +31,7 @@ export const createAggregateCompleteTransactionToUpdateSubmission = async (
   dataEncryptionKey: string,
   userId: string,
   adminUserYearTeam: AdminUserYearTeam,
-  adminUserYearSubmission: AdminUserYearSubmission
+  adminUserYearSubmission: AdminUserYearSubmission,
 ): Promise<AdminUserTx> => {
   if (!userId) {
     throw Error('userId is undefined');
@@ -43,14 +43,14 @@ export const createAggregateCompleteTransactionToUpdateSubmission = async (
   logger.debug({ adminUser });
 
   const feeBillingAccount = await restoreAccountFromPrivateKey(
-    feeBillingAccountPrivateKey
+    feeBillingAccountPrivateKey,
   );
   const messageReceivingAccount = await restoreAccountFromPrivateKey(
-    messageReceivingAccountPrivateKey
+    messageReceivingAccountPrivateKey,
   );
   const multisigAccounts: MultisigAccounts = await restoreAccountsFromAdminUser(
     adminUser,
-    dataEncryptionKey
+    dataEncryptionKey,
   );
 
   if (!adminUserYearTeam.teamSaltHexString) {
@@ -77,7 +77,7 @@ export const createAggregateCompleteTransactionToUpdateSubmission = async (
   };
   const teamAccount = await restoreAccountFromEncryptedAccount(
     teamEncryptedAccount,
-    dataEncryptionKey
+    dataEncryptionKey,
   );
 
   const multisigAccount = multisigAccounts.multisigAccount;
@@ -113,7 +113,7 @@ export const createAggregateCompleteTransactionToUpdateSubmission = async (
     teamAccount.address,
     [],
     PlainMessage.create(messageString),
-    networkType
+    networkType,
   ).toAggregate(feeBillingAccount.publicAccount);
 
   logger.debug('embeddedTransferTransaction2');
@@ -136,14 +136,14 @@ export const createAggregateCompleteTransactionToUpdateSubmission = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message2String),
-    networkType
+    networkType,
   ).toAggregate(teamAccount.publicAccount);
 
   logger.debug('embeddedTransferTransaction3');
   const publicUserYearSubmission = await getPublicUserYearSubmission(
     userId,
     adminUserYearTeam.yearId,
-    adminUserYearTeam.id
+    adminUserYearTeam.id,
   );
   if (!publicUserYearSubmission) {
     throw Error('publicUserYearSubmission is undefined');
@@ -161,7 +161,7 @@ export const createAggregateCompleteTransactionToUpdateSubmission = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message3String),
-    networkType
+    networkType,
   ).toAggregate(teamAccount.publicAccount);
 
   const message4Json = { imageUrl: publicUserYearSubmission.imageUrl };
@@ -173,7 +173,7 @@ export const createAggregateCompleteTransactionToUpdateSubmission = async (
     messageReceivingAccount.address,
     [],
     PlainMessage.create(message4String),
-    networkType
+    networkType,
   ).toAggregate(teamAccount.publicAccount);
 
   logger.debug('aggregateTransaction');
@@ -190,7 +190,7 @@ export const createAggregateCompleteTransactionToUpdateSubmission = async (
     deadline,
     embeddedTransactions,
     networkType,
-    initialEmptyCosignatures
+    initialEmptyCosignatures,
   ).setMaxFeeForAggregate(feeMultiplier, requiredCosignatories);
 
   const generationHashSeed = await getGenerationHashSeed();
@@ -202,7 +202,7 @@ export const createAggregateCompleteTransactionToUpdateSubmission = async (
     feeBillingAccount.signTransactionWithCosignatories(
       aggregateCompleteTransaction,
       [multisigCosignatory1Account, multisigCosignatory2Account],
-      generationHashSeed
+      generationHashSeed,
     );
 
   const hash = signedAggregateCompleteTransactionWithCosignatures.hash;

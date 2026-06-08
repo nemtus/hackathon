@@ -21,7 +21,7 @@ type TxStatus = {
 };
 
 export const announceTx = async (
-  adminUserTx: AdminUserTx
+  adminUserTx: AdminUserTx,
 ): Promise<TxStatus> => {
   logger.debug({ adminUserTx });
 
@@ -30,7 +30,7 @@ export const announceTx = async (
   }
   const address = Address.createFromPublicKey(
     adminUserTx.publicKey,
-    adminUserTx.networkType
+    adminUserTx.networkType,
   );
 
   if (
@@ -46,7 +46,7 @@ export const announceTx = async (
     adminUserTx.hash,
     adminUserTx.publicKey,
     adminUserTx.type,
-    adminUserTx.networkType
+    adminUserTx.networkType,
   );
 
   const validNodes = await queryValidNodes();
@@ -83,7 +83,7 @@ export const announceTx = async (
     // Note: 既にconfirmedかunconfirmedになっていないか確認
     try {
       const transactionStatus = await firstValueFrom(
-        transactionStatusRepository.getTransactionStatus(adminUserTx.hash)
+        transactionStatusRepository.getTransactionStatus(adminUserTx.hash),
       );
       if (transactionStatus.group === 'confirmed') {
         const now = new Date();
@@ -197,7 +197,7 @@ export const announceTx = async (
       // Note: listenerでの検知漏れ対策として、もう一度confirmedかunconfirmedになっていないか確認
       try {
         const transactionStatus = await firstValueFrom(
-          transactionStatusRepository.getTransactionStatus(adminUserTx.hash)
+          transactionStatusRepository.getTransactionStatus(adminUserTx.hash),
         );
         if (transactionStatus.group === 'confirmed') {
           const now = new Date();

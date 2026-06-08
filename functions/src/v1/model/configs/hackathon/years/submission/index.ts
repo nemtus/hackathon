@@ -18,7 +18,7 @@ const docRef = (yearId: string) =>
     .withConverter(converter<ConfigHackathonYearSubmission>());
 
 export const getConfigHackathonYearSubmission = async (
-  yearId: string
+  yearId: string,
 ): Promise<ConfigHackathonYearSubmission | undefined> => {
   return (await docRef(yearId).get()).data();
 };

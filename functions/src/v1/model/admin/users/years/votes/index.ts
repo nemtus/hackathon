@@ -23,18 +23,18 @@ const docRef = (userId: string, yearId: string, id: string) =>
 export const getAdminUserYearVote = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<AdminUserYearVote | undefined> => {
   return (await docRef(userId, yearId, id).get()).data();
 };
 
 export const setAdminUserYearVote = async (
   userId: string,
-  adminUserYearTeam: AdminUserYearVote
+  adminUserYearTeam: AdminUserYearVote,
 ): Promise<AdminUserYearVote | undefined> => {
   if (!adminUserYearTeam.id) {
     const docRef = await collectionRef(userId, adminUserYearTeam.yearId).add(
-      adminUserYearTeam
+      adminUserYearTeam,
     );
     return (await docRef.get()).data();
   }
@@ -42,7 +42,7 @@ export const setAdminUserYearVote = async (
     adminUserYearTeam,
     {
       merge: true,
-    }
+    },
   );
   return (
     await docRef(userId, adminUserYearTeam.yearId, adminUserYearTeam.id).get()
@@ -50,7 +50,7 @@ export const setAdminUserYearVote = async (
 };
 
 export const convertPrivateUserYearVoteToAdminUserYearVote = (
-  privateUserYearVote: PrivateUserYearVote
+  privateUserYearVote: PrivateUserYearVote,
 ): AdminUserYearVote => {
   const adminUserYearVote: AdminUserYearVote = privateUserYearVote;
   return adminUserYearVote;

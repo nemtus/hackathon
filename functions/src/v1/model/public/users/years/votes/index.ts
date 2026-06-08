@@ -44,18 +44,18 @@ const docRef = (userId: string, yearId: string, id: string) =>
 export const getPublicUserYearVote = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PublicUserYearVote | undefined> => {
   return (await docRef(userId, yearId, id).get()).data();
 };
 
 export const setPublicUserYearVote = async (
   userId: string,
-  publicUserYearVote: PublicUserYearVote
+  publicUserYearVote: PublicUserYearVote,
 ): Promise<PublicUserYearVote | undefined> => {
   if (!publicUserYearVote.id) {
     const docRef = await collectionRef(userId, publicUserYearVote.yearId).add(
-      publicUserYearVote
+      publicUserYearVote,
     );
     return (await docRef.get()).data();
   }
@@ -63,7 +63,7 @@ export const setPublicUserYearVote = async (
     publicUserYearVote,
     {
       merge: true,
-    }
+    },
   );
   return (
     await docRef(userId, publicUserYearVote.yearId, publicUserYearVote.id).get()
@@ -71,7 +71,7 @@ export const setPublicUserYearVote = async (
 };
 
 export const convertPrivateUserYearVoteToPublicUserYearVote = (
-  privateUserYearVote: PrivateUserYearVote
+  privateUserYearVote: PrivateUserYearVote,
 ): PublicUserYearVote => {
   const publicUserYearVote: PublicUserYearVote = privateUserYearVote;
   return publicUserYearVote;

@@ -36,31 +36,31 @@ const collectionPath = (userId: string, yearId: string) =>
   `/v/1/scopes/public/users/${userId}/years/${yearId}/finalJudges`;
 const collectionRef = (userId: string, yearId: string) =>
   collection(db, collectionPath(userId, yearId)).withConverter(
-    converter<PublicUserYearFinalJudge>()
+    converter<PublicUserYearFinalJudge>(),
   );
 const docPath = (userId: string, yearId: string, id: string) =>
   `${collectionPath(userId, yearId)}/${id}`;
 const docRef = (userId: string, yearId: string, id: string) =>
   doc(db, docPath(userId, yearId, id)).withConverter(
-    converter<PublicUserYearFinalJudge>()
+    converter<PublicUserYearFinalJudge>(),
   );
 
 export const getPublicUserYearFinalJudge = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PublicUserYearFinalJudge | undefined> => {
   return (await getDoc(docRef(userId, yearId, id))).data();
 };
 
 export const setPublicUserYearFinalJudge = async (
   userId: string,
-  publicUserYearJudge: PublicUserYearFinalJudge
+  publicUserYearJudge: PublicUserYearFinalJudge,
 ): Promise<PublicUserYearFinalJudge | undefined> => {
   if (!publicUserYearJudge.id) {
     const docRef = await addDoc(
       collectionRef(userId, publicUserYearJudge.yearId),
-      publicUserYearJudge
+      publicUserYearJudge,
     );
     return (await getDoc(docRef)).data();
   }
@@ -69,17 +69,17 @@ export const setPublicUserYearFinalJudge = async (
     publicUserYearJudge,
     {
       merge: true,
-    }
+    },
   );
   return (
     await getDoc(
-      docRef(userId, publicUserYearJudge.yearId, publicUserYearJudge.id)
+      docRef(userId, publicUserYearJudge.yearId, publicUserYearJudge.id),
     )
   ).data();
 };
 
 export const convertPrivateUserYearFinalJudgeToPublicUserYearFinalJudge = (
-  privateUserYearFinalJudge: PrivateUserYearFinalJudge
+  privateUserYearFinalJudge: PrivateUserYearFinalJudge,
 ): PublicUserYearFinalJudge => {
   const publicUserYearFinalJudge: PublicUserYearFinalJudge =
     privateUserYearFinalJudge;

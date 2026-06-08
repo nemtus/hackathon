@@ -24,31 +24,31 @@ const collectionPath = (userId: string, yearId: string) =>
   `/v/1/scopes/private/users/${userId}/years/${yearId}/teams`;
 export const collectionRef = (userId: string, yearId: string) =>
   collection(db, collectionPath(userId, yearId)).withConverter(
-    converter<PrivateUserYearTeam>()
+    converter<PrivateUserYearTeam>(),
   );
 const docPath = (userId: string, yearId: string, id: string) =>
   `${collectionPath(userId, yearId)}/${id}`;
 export const docRef = (userId: string, yearId: string, id: string) =>
   doc(db, docPath(userId, yearId, id)).withConverter(
-    converter<PrivateUserYearTeam>()
+    converter<PrivateUserYearTeam>(),
   );
 
 export const getPrivateUserYearTeam = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PrivateUserYearTeam | undefined> => {
   return (await getDoc(docRef(userId, yearId, id))).data();
 };
 
 export const setPrivateUserYearTeam = async (
   userId: string,
-  privateUserYearTeam: PrivateUserYearTeam
+  privateUserYearTeam: PrivateUserYearTeam,
 ): Promise<PrivateUserYearTeam | undefined> => {
   if (!privateUserYearTeam.id) {
     const docRef = await addDoc(
       collectionRef(userId, privateUserYearTeam.yearId),
-      privateUserYearTeam
+      privateUserYearTeam,
     );
     return (await getDoc(docRef)).data();
   }
@@ -58,23 +58,23 @@ export const setPrivateUserYearTeam = async (
       const privateUserYearTeamDocRef = docRef(
         userId,
         privateUserYearTeam.yearId,
-        privateUserYearTeam.id
+        privateUserYearTeam.id,
       );
       const privateUserYearTeamDoc = await transaction.get(
-        privateUserYearTeamDocRef
+        privateUserYearTeamDocRef,
       );
       if (!privateUserYearTeamDoc.exists()) {
         transaction.set(privateUserYearTeamDocRef, privateUserYearTeam);
         return (
           await getDoc(
-            docRef(userId, privateUserYearTeam.yearId, privateUserYearTeam.id)
+            docRef(userId, privateUserYearTeam.yearId, privateUserYearTeam.id),
           )
         ).data();
       }
       transaction.update(privateUserYearTeamDocRef, privateUserYearTeam);
       return (
         await getDoc(
-          docRef(userId, privateUserYearTeam.yearId, privateUserYearTeam.id)
+          docRef(userId, privateUserYearTeam.yearId, privateUserYearTeam.id),
         )
       ).data();
     });
@@ -85,24 +85,24 @@ export const setPrivateUserYearTeam = async (
 
 export const getAllPrivateUserYearTeams = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<PrivateUserYearTeams> => {
   return (
     await getDocs(
-      query(collectionRef(userId, yearId), orderBy('createdAt', 'asc'))
+      query(collectionRef(userId, yearId), orderBy('createdAt', 'asc')),
     )
   ).docs.map((doc) => doc.data());
 };
 
 export const convertPrivateUserYearTeamToPublicUserYearTeam = (
-  privateUserYearTeam: PrivateUserYearTeam
+  privateUserYearTeam: PrivateUserYearTeam,
 ): PublicUserYearTeam => {
   const publicUserYearTeam: PublicUserYearTeam = privateUserYearTeam;
   return publicUserYearTeam;
 };
 
 export const convertPrivateUserYearTeamToAdminUserYearTeam = (
-  privateUserYearTeam: PrivateUserYearTeam
+  privateUserYearTeam: PrivateUserYearTeam,
 ): AdminUserYearTeam => {
   const adminUserYearTeam: AdminUserYearTeam = privateUserYearTeam;
   return adminUserYearTeam;

@@ -8,7 +8,7 @@ import { onMetadataUpdate } from './onMetadataUpdate';
 
 const _exportFunction = (
   name: string,
-  f: () => CloudFunction<ObjectMetadata>
+  f: () => CloudFunction<ObjectMetadata>,
 ) =>
   exportFunction(['v1', 'storage', 'admin', 'user', 'file', name], exports, f);
 

@@ -21,31 +21,31 @@ const collectionPath = (userId: string, yearId: string) =>
   `/v/1/scopes/private/users/${userId}/years/${yearId}/teams`;
 export const collectionRef = (userId: string, yearId: string) =>
   collection(db, collectionPath(userId, yearId)).withConverter(
-    converter<AdminUserYearTeam>()
+    converter<AdminUserYearTeam>(),
   );
 const docPath = (userId: string, yearId: string, id: string) =>
   `${collectionPath(userId, yearId)}/${id}`;
 export const docRef = (userId: string, yearId: string, id: string) =>
   doc(db, docPath(userId, yearId, id)).withConverter(
-    converter<AdminUserYearTeam>()
+    converter<AdminUserYearTeam>(),
   );
 
 export const getAdminUserYearTeam = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<AdminUserYearTeam | undefined> => {
   return (await getDoc(docRef(userId, yearId, id))).data();
 };
 
 export const setAdminUserYearTeam = async (
   userId: string,
-  adminUserYearTeam: AdminUserYearTeam
+  adminUserYearTeam: AdminUserYearTeam,
 ): Promise<AdminUserYearTeam | undefined> => {
   if (!adminUserYearTeam.id) {
     const docRef = await addDoc(
       collectionRef(userId, adminUserYearTeam.yearId),
-      adminUserYearTeam
+      adminUserYearTeam,
     );
     return (await getDoc(docRef)).data();
   }
@@ -54,7 +54,7 @@ export const setAdminUserYearTeam = async (
     adminUserYearTeam,
     {
       merge: true,
-    }
+    },
   );
   return (
     await getDoc(docRef(userId, adminUserYearTeam.yearId, adminUserYearTeam.id))

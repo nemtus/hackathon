@@ -21,7 +21,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-admin-user-tx-onCreate'
+          'v1-firestore-admin-user-tx-onCreate',
         )
       ) {
         return;

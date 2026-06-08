@@ -10,10 +10,10 @@ import { createAggregateCompleteTransactionToCreateNewSubmission } from '../../.
 import { createAggregateCompleteTransactionToUpdateSubmission } from '../../../../../../utils/symbol/tx/createAggregateCompleteTransactionToUpdateSubmission';
 
 const FEE_BILLING_ACCOUNT_PRIVATE_KEY = defineSecret(
-  'FEE_BILLING_ACCOUNT_PRIVATE_KEY'
+  'FEE_BILLING_ACCOUNT_PRIVATE_KEY',
 );
 const MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY = defineSecret(
-  'MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY'
+  'MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY',
 );
 const DATA_ENCRYPTION_KEY = defineSecret('DATA_ENCRYPTION_KEY');
 
@@ -35,7 +35,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-admin-user-year-submission-onUpdate'
+          'v1-firestore-admin-user-year-submission-onUpdate',
         )
       ) {
         return;
@@ -68,7 +68,7 @@ export const onUpdate = () =>
 
       const beforeAdminUserYearSubmission =
         converter<AdminUserYearSubmission>().fromFirestore(
-          changeSnapshot.before
+          changeSnapshot.before,
         );
       logger.debug({ beforeAdminUserYearSubmission });
       if (!beforeAdminUserYearSubmission) {
@@ -77,7 +77,7 @@ export const onUpdate = () =>
 
       const afterAdminUserYearSubmission =
         converter<AdminUserYearSubmission>().fromFirestore(
-          changeSnapshot.after
+          changeSnapshot.after,
         );
       logger.debug({ afterAdminUserYearSubmission });
       if (!afterAdminUserYearSubmission) {
@@ -87,7 +87,7 @@ export const onUpdate = () =>
       const adminUserYearTeam = await getAdminUserYearTeam(
         userId,
         yearId,
-        afterAdminUserYearSubmission.teamId
+        afterAdminUserYearSubmission.teamId,
       );
       if (!adminUserYearTeam) {
         throw Error('adminUserYearTeam is undefined');
@@ -116,11 +116,11 @@ export const onUpdate = () =>
             dataEncryptionKey,
             userId,
             adminUserYearTeam,
-            afterAdminUserYearSubmission
+            afterAdminUserYearSubmission,
           );
         await setAdminUserTx(
           userId,
-          aggregateCompleteTransactionToCreateAndSetUpNewSubmission
+          aggregateCompleteTransactionToCreateAndSetUpNewSubmission,
         );
       }
 
@@ -133,11 +133,11 @@ export const onUpdate = () =>
             dataEncryptionKey,
             userId,
             adminUserYearTeam,
-            afterAdminUserYearSubmission
+            afterAdminUserYearSubmission,
           );
         await setAdminUserTx(
           userId,
-          aggregateCompleteTransactionToUpdateSubmission
+          aggregateCompleteTransactionToUpdateSubmission,
         );
       }
     });

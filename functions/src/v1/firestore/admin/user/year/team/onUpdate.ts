@@ -9,10 +9,10 @@ import { setAdminUserTx } from '../../../../../model/admin/users/txs';
 import { AdminUserYearTeam } from '../../../../../model/admin/users/years/teams';
 
 const FEE_BILLING_ACCOUNT_PRIVATE_KEY = defineSecret(
-  'FEE_BILLING_ACCOUNT_PRIVATE_KEY'
+  'FEE_BILLING_ACCOUNT_PRIVATE_KEY',
 );
 const MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY = defineSecret(
-  'MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY'
+  'MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY',
 );
 const DATA_ENCRYPTION_KEY = defineSecret('DATA_ENCRYPTION_KEY');
 
@@ -33,7 +33,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-admin-user-year-team-onUpdate'
+          'v1-firestore-admin-user-year-team-onUpdate',
         )
       ) {
         return;
@@ -100,11 +100,11 @@ export const onUpdate = () =>
             messageReceivingAccountPrivateKey,
             dataEncryptionKey,
             userId,
-            afterAdminUserYearTeam
+            afterAdminUserYearTeam,
           );
         await setAdminUserTx(
           userId,
-          aggregateCompleteTransactionToCreateAndSetUpNewTeam
+          aggregateCompleteTransactionToCreateAndSetUpNewTeam,
         );
       }
 
@@ -116,11 +116,11 @@ export const onUpdate = () =>
             messageReceivingAccountPrivateKey,
             dataEncryptionKey,
             userId,
-            afterAdminUserYearTeam
+            afterAdminUserYearTeam,
           );
         await setAdminUserTx(
           userId,
-          aggregateCompleteTransactionToUpdateTeamInfo
+          aggregateCompleteTransactionToUpdateTeamInfo,
         );
       }
     });

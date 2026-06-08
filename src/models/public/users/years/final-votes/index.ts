@@ -36,31 +36,31 @@ const collectionPath = (userId: string, yearId: string) =>
   `/v/1/scopes/public/users/${userId}/years/${yearId}/finalVotes`;
 const collectionRef = (userId: string, yearId: string) =>
   collection(db, collectionPath(userId, yearId)).withConverter(
-    converter<PublicUserYearFinalVote>()
+    converter<PublicUserYearFinalVote>(),
   );
 const docPath = (userId: string, yearId: string, id: string) =>
   `${collectionPath(userId, yearId)}/${id}`;
 const docRef = (userId: string, yearId: string, id: string) =>
   doc(db, docPath(userId, yearId, id)).withConverter(
-    converter<PublicUserYearFinalVote>()
+    converter<PublicUserYearFinalVote>(),
   );
 
 export const getPublicUserYearFinalVote = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PublicUserYearFinalVote | undefined> => {
   return (await getDoc(docRef(userId, yearId, id))).data();
 };
 
 export const setPublicUserYearFinalVote = async (
   userId: string,
-  publicUserYearFinalVote: PublicUserYearFinalVote
+  publicUserYearFinalVote: PublicUserYearFinalVote,
 ): Promise<PublicUserYearFinalVote | undefined> => {
   if (!publicUserYearFinalVote.id) {
     const docRef = await addDoc(
       collectionRef(userId, publicUserYearFinalVote.yearId),
-      publicUserYearFinalVote
+      publicUserYearFinalVote,
     );
     return (await getDoc(docRef)).data();
   }
@@ -69,17 +69,21 @@ export const setPublicUserYearFinalVote = async (
     publicUserYearFinalVote,
     {
       merge: true,
-    }
+    },
   );
   return (
     await getDoc(
-      docRef(userId, publicUserYearFinalVote.yearId, publicUserYearFinalVote.id)
+      docRef(
+        userId,
+        publicUserYearFinalVote.yearId,
+        publicUserYearFinalVote.id,
+      ),
     )
   ).data();
 };
 
 export const convertPrivateUserYearFinalVoteToPublicUserYearFinalVote = (
-  privateUserYearFinalVote: PrivateUserYearFinalVote
+  privateUserYearFinalVote: PrivateUserYearFinalVote,
 ): PublicUserYearFinalVote => {
   const publicUserYearFinalVote: PublicUserYearFinalVote =
     privateUserYearFinalVote;

@@ -65,7 +65,7 @@ const TeamCreatePageComponent = () => {
     getPrivateUserYearTeam(
       userId,
       yearId,
-      userId /* Note: teamId should be userId */
+      userId /* Note: teamId should be userId */,
     )
       .then((privateUserYearTeam) => {
         setPrivateUserYearTeam(privateUserYearTeam);
@@ -92,7 +92,7 @@ const TeamCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearEntryDocListener = onSnapshot(
       privateUserYearEntryDocRef(userId, CURRENT_YEAR, userId),
@@ -109,7 +109,7 @@ const TeamCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
     const unsubscribePrivateUserYearTeamDocListener = onSnapshot(
       privateUserYearTeamDocRef(userId, CURRENT_YEAR, userId),
@@ -127,7 +127,7 @@ const TeamCreatePageComponent = () => {
         complete: () => {
           console.log('complete');
         },
-      }
+      },
     );
 
     return () => {

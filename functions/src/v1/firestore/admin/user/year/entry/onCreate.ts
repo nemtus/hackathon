@@ -8,10 +8,10 @@ import { setAdminUserTx } from '../../../../../model/admin/users/txs';
 import { privateUserYearEntryConverter } from '../../../../../model/private/users/years/entries';
 
 const FEE_BILLING_ACCOUNT_PRIVATE_KEY = defineSecret(
-  'FEE_BILLING_ACCOUNT_PRIVATE_KEY'
+  'FEE_BILLING_ACCOUNT_PRIVATE_KEY',
 );
 const MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY = defineSecret(
-  'MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY'
+  'MESSAGE_RECEIVING_ACCOUNT_PRIVATE_KEY',
 );
 const DATA_ENCRYPTION_KEY = defineSecret('DATA_ENCRYPTION_KEY');
 
@@ -33,7 +33,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-admin-user-year-entry-onCreate'
+          'v1-firestore-admin-user-year-entry-onCreate',
         )
       ) {
         return;
@@ -62,10 +62,10 @@ export const onCreate = () =>
       const dataEncryptionKey = DATA_ENCRYPTION_KEY.value();
 
       const feeBillingAccount = await restoreAccountFromPrivateKey(
-        feeBillingAccountPrivateKey
+        feeBillingAccountPrivateKey,
       );
       const messageReceivingAccount = await restoreAccountFromPrivateKey(
-        messageReceivingAccountPrivateKey
+        messageReceivingAccountPrivateKey,
       );
 
       const aggregateCompleteTransactionToEntry =
@@ -73,10 +73,10 @@ export const onCreate = () =>
           feeBillingAccount.privateKey,
           messageReceivingAccount.privateKey,
           dataEncryptionKey,
-          adminUserYearEntry
+          adminUserYearEntry,
         );
       await setAdminUserTx(
         adminUserYearEntry.userId,
-        aggregateCompleteTransactionToEntry
+        aggregateCompleteTransactionToEntry,
       );
     });

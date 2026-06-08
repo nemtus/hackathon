@@ -12,7 +12,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-admin-user-year-entry-onUpdate'
+          'v1-firestore-admin-user-year-entry-onUpdate',
         )
       ) {
         return;

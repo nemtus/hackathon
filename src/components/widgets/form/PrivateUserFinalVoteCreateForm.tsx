@@ -47,7 +47,7 @@ const schema = yup.object().shape({
       submissionId: yup.string(),
       point: yup.number().required().integer().min(0),
       message: yup.string().max(140),
-    })
+    }),
   ),
 });
 
@@ -96,7 +96,7 @@ const PrivateUserFinalYearVoteCreateFormWidgetComponent = (props: {
 
       userIsNotJudge: !props.configHackathonYearFinalJudge.users.some(
         (userId) =>
-          userId === props.authUser.uid && userId === props.privateUser.id
+          userId === props.authUser.uid && userId === props.privateUser.id,
       ),
     });
     console.log({
@@ -115,7 +115,7 @@ const PrivateUserFinalYearVoteCreateFormWidgetComponent = (props: {
       now: now <= props.configHackathonYearFinalVote.endAt,
       userIsNotJudge: !props.configHackathonYearFinalJudge.users.some(
         (userId) =>
-          userId === props.authUser.uid && userId === props.privateUser.id
+          userId === props.authUser.uid && userId === props.privateUser.id,
       ),
     });
     return (
@@ -130,16 +130,16 @@ const PrivateUserFinalYearVoteCreateFormWidgetComponent = (props: {
       now <= props.configHackathonYearFinalVote.endAt &&
       !props.configHackathonYearFinalJudge.users.some(
         (userId) =>
-          userId === props.authUser.uid && userId === props.privateUser.id
+          userId === props.authUser.uid && userId === props.privateUser.id,
       )
     );
   };
 
   const isCreatablePrivateUserYearVote = (
-    privateUserYearFinalVote: PrivateUserYearFinalVote
+    privateUserYearFinalVote: PrivateUserYearFinalVote,
   ) => {
     const isPositive = !privateUserYearFinalVote.votes.some(
-      (vote) => vote.point < 0 || !Number.isInteger(vote.point)
+      (vote) => vote.point < 0 || !Number.isInteger(vote.point),
     );
     console.log({ isPositive });
     const isValidMessage = !privateUserYearFinalVote.votes.some((vote) => {
@@ -148,7 +148,7 @@ const PrivateUserFinalYearVoteCreateFormWidgetComponent = (props: {
     });
     console.log({ isValidMessage });
     const votes = privateUserYearFinalVote.votes.map((vote) =>
-      parseInt(vote.point.toString())
+      parseInt(vote.point.toString()),
     );
     const totalPoints = votes.length
       ? votes.reduce((acc, cur) => acc + cur)
@@ -161,7 +161,7 @@ const PrivateUserFinalYearVoteCreateFormWidgetComponent = (props: {
   };
 
   const convertPublicResultsToInitialFinalVotes = (
-    publicResults: PublicResults
+    publicResults: PublicResults,
   ) => {
     const finalVotes: Vote[] = publicResults.map((publicResult) => {
       return {
@@ -239,17 +239,17 @@ const PrivateUserFinalYearVoteCreateFormWidgetComponent = (props: {
   };
 
   const onSubmit: SubmitHandler<PrivateUserYearFinalVote> = async (
-    privateUserYearFinalVote
+    privateUserYearFinalVote,
   ): Promise<void> => {
     if (!isCreatableUser()) {
       alert(
-        "You can't create a vote. Because you are not a submitter or the deadline has passed or you have already created a vote."
+        "You can't create a vote. Because you are not a submitter or the deadline has passed or you have already created a vote.",
       );
       return;
     }
     if (!isCreatablePrivateUserYearVote(privateUserYearFinalVote)) {
       alert(
-        "You can't create a vote. Because the vote is invalid. Please make sure that the number of points you have and the total number of points scored match. Please use up all the points you have."
+        "You can't create a vote. Because the vote is invalid. Please make sure that the number of points you have and the total number of points scored match. Please use up all the points you have.",
       );
       return;
     }
@@ -258,7 +258,7 @@ const PrivateUserFinalYearVoteCreateFormWidgetComponent = (props: {
     privateUserYearFinalVote.updatedAt = now;
     privateUserYearFinalVote.approvedAt = undefined;
     const votes = getValues('votes').map((vote) =>
-      parseInt(vote.point.toString())
+      parseInt(vote.point.toString()),
     );
     privateUserYearFinalVote.totalPoints = votes.length
       ? votes.reduce((acc, cur) => acc + cur)

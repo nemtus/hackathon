@@ -32,14 +32,14 @@ export type PublicUsers = PublicUser[];
 
 const collectionPath = '/v/1/scopes/public/users';
 const collectionRef = collection(db, collectionPath).withConverter(
-  converter<AdminUser>()
+  converter<AdminUser>(),
 );
 const docPath = (id: string) => `${collectionPath}/${id}`;
 const docRef = (id: string) =>
   doc(db, docPath(id)).withConverter(converter<AdminUser>());
 
 export const getPrivateUser = async (
-  id: string
+  id: string,
 ): Promise<PublicUser | undefined> => {
   return (await getDoc(docRef(id))).data();
 };
@@ -62,7 +62,7 @@ export const queryEntryPublicUsers = async (): Promise<PublicUsers> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
     await getDocs(
-      query(collectionRef, orderBy('entryAt', 'asc'), startAt(startDate))
+      query(collectionRef, orderBy('entryAt', 'asc'), startAt(startDate)),
     )
   ).docs.map((doc) => doc.data());
 };
@@ -71,7 +71,7 @@ export const getCountEntryPublicUsers = async (): Promise<number> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
     await getCountFromServer(
-      query(collectionRef, orderBy('entryAt', 'asc'), startAt(startDate))
+      query(collectionRef, orderBy('entryAt', 'asc'), startAt(startDate)),
     )
   ).data().count;
 };
@@ -80,7 +80,7 @@ export const querySubmitPublicUsers = async (): Promise<PublicUsers> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
     await getDocs(
-      query(collectionRef, orderBy('submitAt', 'asc'), startAt(startDate))
+      query(collectionRef, orderBy('submitAt', 'asc'), startAt(startDate)),
     )
   ).docs.map((doc) => doc.data());
 };
@@ -89,7 +89,7 @@ export const getCountSubmitPublicUsers = async (): Promise<number> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
     await getCountFromServer(
-      query(collectionRef, orderBy('submitAt', 'asc'), startAt(startDate))
+      query(collectionRef, orderBy('submitAt', 'asc'), startAt(startDate)),
     )
   ).data().count;
 };
@@ -98,13 +98,13 @@ export const queryVotePublicUsers = async (): Promise<PublicUsers> => {
   const startDate = new Date('2022-12-17T00:00:00.000Z');
   return (
     await getDocs(
-      query(collectionRef, orderBy('voteAt', 'asc'), startAt(startDate))
+      query(collectionRef, orderBy('voteAt', 'asc'), startAt(startDate)),
     )
   ).docs.map((doc) => doc.data());
 };
 
 export const convertAdminUserToPublicUser = (
-  adminUser: PrivateUser
+  adminUser: PrivateUser,
 ): PublicUser => {
   const publicUser: PublicUser = {
     id: adminUser.id,
@@ -124,7 +124,7 @@ export const convertAdminUserToPublicUser = (
 };
 
 export const convertPrivateUserToPublicUser = (
-  privateUser: PrivateUser
+  privateUser: PrivateUser,
 ): PublicUser => {
   const publicUser: PublicUser = {
     id: privateUser.id,

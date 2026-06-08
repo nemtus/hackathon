@@ -30,31 +30,31 @@ const collectionPath = (userId: string, yearId: string) =>
   `/v/1/scopes/public/users/${userId}/years/${yearId}/submissions`;
 const collectionRef = (userId: string, yearId: string) =>
   collection(db, collectionPath(userId, yearId)).withConverter(
-    converter<PublicUserYearSubmission>()
+    converter<PublicUserYearSubmission>(),
   );
 const docPath = (userId: string, yearId: string, id: string) =>
   `${collectionPath(userId, yearId)}/${id}`;
 const docRef = (userId: string, yearId: string, id: string) =>
   doc(db, docPath(userId, yearId, id)).withConverter(
-    converter<PublicUserYearSubmission>()
+    converter<PublicUserYearSubmission>(),
   );
 
 export const getPublicUserYearSubmission = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PublicUserYearSubmission | undefined> => {
   return (await getDoc(docRef(userId, yearId, id))).data();
 };
 
 export const setPublicUserYearSubmission = async (
   userId: string,
-  publicUserYearSubmission: PublicUserYearSubmission
+  publicUserYearSubmission: PublicUserYearSubmission,
 ): Promise<PublicUserYearSubmission | undefined> => {
   if (!publicUserYearSubmission.id) {
     const docRef = await addDoc(
       collectionRef(userId, publicUserYearSubmission.yearId),
-      publicUserYearSubmission
+      publicUserYearSubmission,
     );
     return (await getDoc(docRef)).data();
   }
@@ -62,26 +62,26 @@ export const setPublicUserYearSubmission = async (
     docRef(
       userId,
       publicUserYearSubmission.yearId,
-      publicUserYearSubmission.id
+      publicUserYearSubmission.id,
     ),
     publicUserYearSubmission,
     {
       merge: true,
-    }
+    },
   );
   return (
     await getDoc(
       docRef(
         userId,
         publicUserYearSubmission.yearId,
-        publicUserYearSubmission.id
-      )
+        publicUserYearSubmission.id,
+      ),
     )
   ).data();
 };
 
 export const convertPrivateUserYearSubmissionToPublicUserYearSubmission = (
-  privateUserYearSubmission: PrivateUserYearSubmission
+  privateUserYearSubmission: PrivateUserYearSubmission,
 ): PublicUserYearSubmission => {
   const publicUserYearSubmission: PublicUserYearSubmission =
     privateUserYearSubmission;

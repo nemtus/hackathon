@@ -23,7 +23,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-public-user-year-finalJudge-onUpdate'
+          'v1-firestore-public-user-year-finalJudge-onUpdate',
         )
       ) {
         return;
@@ -50,7 +50,7 @@ export const onUpdate = () =>
 
       const beforePublicUserYearFinalJudge =
         converter<PublicUserYearFinalJudge>().fromFirestore(
-          changeSnapshot.before
+          changeSnapshot.before,
         );
       logger.debug({ beforePublicUserYearFinalJudge });
       if (!beforePublicUserYearFinalJudge) {
@@ -59,7 +59,7 @@ export const onUpdate = () =>
 
       const afterPublicUserYearFinalJudge =
         converter<PublicUserYearFinalJudge>().fromFirestore(
-          changeSnapshot.after
+          changeSnapshot.after,
         );
       logger.debug({ afterPublicUserYearFinalJudge });
       if (!afterPublicUserYearFinalJudge) {
@@ -68,7 +68,7 @@ export const onUpdate = () =>
 
       const publicFinalJudge =
         convertPublicUserYearFinalJudgeToPublicFinalJudge(
-          afterPublicUserYearFinalJudge
+          afterPublicUserYearFinalJudge,
         );
       await setPublicFinalJudge(publicFinalJudge);
     });

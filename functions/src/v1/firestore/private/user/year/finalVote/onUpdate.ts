@@ -47,7 +47,7 @@ export const onUpdate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-private-user-year-finalVote-onUpdate'
+          'v1-firestore-private-user-year-finalVote-onUpdate',
         )
       ) {
         return;
@@ -85,17 +85,17 @@ export const onUpdate = () =>
       const privateUserYearFinalJudge = await getPrivateUserYearFinalJudge(
         userId,
         yearId,
-        userId
+        userId,
       );
       if (privateUserYearFinalJudge) {
         throw Error(
-          'privateUserYearFinalJudge should be undefined. Judge cannot vote'
+          'privateUserYearFinalJudge should be undefined. Judge cannot vote',
         );
       }
 
       const beforePrivateUserYearFinalVote =
         converter<PrivateUserYearFinalVote>().fromFirestore(
-          changeSnapshot.before
+          changeSnapshot.before,
         );
       logger.debug({ beforePrivateUserYearFinalVote });
       if (!beforePrivateUserYearFinalVote) {
@@ -104,7 +104,7 @@ export const onUpdate = () =>
 
       const afterPrivateUserYearFinalVote =
         converter<PrivateUserYearFinalVote>().fromFirestore(
-          changeSnapshot.after
+          changeSnapshot.after,
         );
       logger.debug({ afterPrivateUserYearFinalVote });
       if (!afterPrivateUserYearFinalVote) {
@@ -117,7 +117,7 @@ export const onUpdate = () =>
       }
       if (afterPrivateUserYearFinalVote.userId !== userId) {
         throw Error(
-          'userId is not matched to afterPrivateUserYearFinalVote.userId'
+          'userId is not matched to afterPrivateUserYearFinalVote.userId',
         );
       }
       const adminUser = await getAdminUser(userId);
@@ -157,7 +157,7 @@ export const onUpdate = () =>
         const adminUserYearTeam = await getAdminUserYearTeam(
           finalVote.teamId,
           finalVote.yearId,
-          finalVote.teamId
+          finalVote.teamId,
         );
         logger.debug({ adminUserYearTeam });
         if (!adminUserYearTeam) {
@@ -186,7 +186,7 @@ export const onUpdate = () =>
       }
       if (totalPoints !== afterPrivateUserYearFinalVote.totalPoints) {
         throw Error(
-          'totalPoints should be equal to afterPrivateUserYearFinalVote.totalPoints'
+          'totalPoints should be equal to afterPrivateUserYearFinalVote.totalPoints',
         );
       }
 
@@ -221,7 +221,7 @@ export const onUpdate = () =>
         const postMessageResponse = await postMessage(
           slackBotUserOAuthToken,
           JSON.stringify(publicUserYearFinalVote, null, 2),
-          `#${slackNotifyChannel}`
+          `#${slackNotifyChannel}`,
         );
         logger.debug({ postMessageResponse });
       }

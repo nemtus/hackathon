@@ -34,7 +34,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-private-user-year-judge-onCreate'
+          'v1-firestore-private-user-year-judge-onCreate',
         )
       ) {
         return;
@@ -59,9 +59,8 @@ export const onCreate = () =>
         throw Error('judgeId is undefined');
       }
 
-      const configHackathonYearJudge = await getConfigHackathonYearJudge(
-        yearId
-      );
+      const configHackathonYearJudge =
+        await getConfigHackathonYearJudge(yearId);
       if (!configHackathonYearJudge) {
         throw Error('configHackathonYearJudge is undefined');
       }
@@ -101,7 +100,7 @@ export const onCreate = () =>
               privateUserYearJudge.createdAt &&
             privateUserYearJudge.createdAt <= configHackathonYearJudge.endAt &&
             configHackathonYearJudge.users.some(
-              (userId) => userId === privateUserYearJudge.userId
+              (userId) => userId === privateUserYearJudge.userId,
             ) &&
             judge.userId && // Note: voting user
             judge.yearId === CURRENT_YEAR &&
@@ -119,7 +118,7 @@ export const onCreate = () =>
         const adminUserYearTeam = await getAdminUserYearTeam(
           judge.teamId,
           judge.yearId,
-          judge.teamId
+          judge.teamId,
         );
         logger.debug({ adminUserYearTeam });
         if (!adminUserYearTeam) {
@@ -148,7 +147,7 @@ export const onCreate = () =>
       }
       if (totalPoints !== privateUserYearJudge.totalPoints) {
         throw Error(
-          'totalPoints should be equal to adminUserYearJudge.totalPoints'
+          'totalPoints should be equal to adminUserYearJudge.totalPoints',
         );
       }
 
@@ -165,7 +164,7 @@ export const onCreate = () =>
       const postMessageResponse = await postMessage(
         slackBotUserOAuthToken,
         JSON.stringify(publicUserYearJudge, null, 2),
-        `#${slackNotifyChannel}`
+        `#${slackNotifyChannel}`,
       );
       logger.debug({ postMessageResponse });
     });

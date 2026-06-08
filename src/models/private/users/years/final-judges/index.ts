@@ -17,31 +17,31 @@ const collectionPath = (userId: string, yearId: string) =>
   `/v/1/scopes/private/users/${userId}/years/${yearId}/finalJudges`;
 const collectionRef = (userId: string, yearId: string) =>
   collection(db, collectionPath(userId, yearId)).withConverter(
-    converter<PrivateUserYearFinalJudge>()
+    converter<PrivateUserYearFinalJudge>(),
   );
 const docPath = (userId: string, yearId: string, id: string) =>
   `${collectionPath(userId, yearId)}/${id}`;
 export const docRef = (userId: string, yearId: string, id: string) =>
   doc(db, docPath(userId, yearId, id)).withConverter(
-    converter<PrivateUserYearFinalJudge>()
+    converter<PrivateUserYearFinalJudge>(),
   );
 
 export const getPrivateUserYearFinalJudge = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<PrivateUserYearFinalJudge | undefined> => {
   return (await getDoc(docRef(userId, yearId, id))).data();
 };
 
 export const setPrivateUserYearFinalJudge = async (
   userId: string,
-  privateUserYearJudge: PrivateUserYearFinalJudge
+  privateUserYearJudge: PrivateUserYearFinalJudge,
 ): Promise<PrivateUserYearFinalJudge | undefined> => {
   if (!privateUserYearJudge.id) {
     const docRef = await addDoc(
       collectionRef(userId, privateUserYearJudge.yearId),
-      privateUserYearJudge
+      privateUserYearJudge,
     );
     return (await getDoc(docRef)).data();
   }
@@ -50,17 +50,17 @@ export const setPrivateUserYearFinalJudge = async (
     privateUserYearJudge,
     {
       merge: true,
-    }
+    },
   );
   return (
     await getDoc(
-      docRef(userId, privateUserYearJudge.yearId, privateUserYearJudge.id)
+      docRef(userId, privateUserYearJudge.yearId, privateUserYearJudge.id),
     )
   ).data();
 };
 
 export const convertPrivateYearJudgeToAdminUserYearJudge = (
-  privateUserYearFinalJudge: PrivateUserYearFinalJudge
+  privateUserYearFinalJudge: PrivateUserYearFinalJudge,
 ): AdminUserYearFinalJudge => {
   const adminUserYearFinalJudge: AdminUserYearFinalJudge =
     privateUserYearFinalJudge;
@@ -68,7 +68,7 @@ export const convertPrivateYearJudgeToAdminUserYearJudge = (
 };
 
 export const convertPrivateUserYearJudgeToPublicUserYearJudge = (
-  privateUserYearFinalJudge: PrivateUserYearFinalJudge
+  privateUserYearFinalJudge: PrivateUserYearFinalJudge,
 ): PrivateUserYearFinalJudge => {
   const publicUserYearFinalJudge: PublicUserYearFinalJudge =
     privateUserYearFinalJudge;

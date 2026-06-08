@@ -24,7 +24,7 @@ const docRef = (userId: string, yearId: string, id: string) =>
 export const getAdminUserYearEntry = async (
   userId: string,
   yearId: string,
-  id: string
+  id: string,
 ): Promise<AdminUserYearEntry | undefined> => {
   return (await docRef(userId, yearId, id).get()).data();
 };
@@ -32,7 +32,7 @@ export const getAdminUserYearEntry = async (
 export const setAdminUserYearEntry = async (
   userId: string,
   yearId: string,
-  adminUserYearEntry: AdminUserYearEntry
+  adminUserYearEntry: AdminUserYearEntry,
 ): Promise<void> => {
   await docRef(userId, yearId, adminUserYearEntry.id).set(adminUserYearEntry, {
     merge: true,
@@ -41,16 +41,16 @@ export const setAdminUserYearEntry = async (
 
 export const getAllAdminUserYearEntries = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<AdminUserEntries> => {
   return (await collectionRef(userId, yearId).get()).docs.map((snapshot) =>
-    snapshot.data()
+    snapshot.data(),
   );
 };
 
 export const queryEntryAdminUserYearEntries = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<AdminUserEntries> => {
   return (
     await collectionRef(userId, yearId)
@@ -62,7 +62,7 @@ export const queryEntryAdminUserYearEntries = async (
 
 export const querySubmitAdminUserYearEntries = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<AdminUserEntries> => {
   return (
     await collectionRef(userId, yearId)
@@ -75,7 +75,7 @@ export const querySubmitAdminUserYearEntries = async (
 
 export const queryVoteAdminUserYearEntries = async (
   userId: string,
-  yearId: string
+  yearId: string,
 ): Promise<AdminUserEntries> => {
   return (
     await collectionRef(userId, yearId)
@@ -86,7 +86,7 @@ export const queryVoteAdminUserYearEntries = async (
 };
 
 export const convertPrivateUserYearEntryToAdminUserYearEntry = (
-  privateUserYearEntry: PrivateUserYearEntry
+  privateUserYearEntry: PrivateUserYearEntry,
 ): AdminUserYearEntry => {
   const adminUserYearEntry: AdminUserYearEntry = {
     id: privateUserYearEntry.id,

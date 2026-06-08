@@ -17,7 +17,7 @@ export const onCreate = () =>
       if (
         await hasAlreadyTriggered(
           context.eventId,
-          'v1-firestore-public-user-year-team-onCreate'
+          'v1-firestore-public-user-year-team-onCreate',
         )
       ) {
         return;
@@ -51,7 +51,7 @@ export const onCreate = () =>
 
       const publicTeam = convertPublicUserYearTeamToPublicTeam(
         userId,
-        publicUserYearTeam
+        publicUserYearTeam,
       );
       await setPublicTeam(publicTeam);
     });

@@ -4,5 +4,5 @@ import { exportFunctionsModule } from '../../../utils/firebase/deploy';
 const domains: string[] = ['user'];
 
 domains.forEach((domain) =>
-  exportFunctionsModule(['v1', 'firestore', 'private', domain], exports)
+  exportFunctionsModule(['v1', 'firestore', 'private', domain], exports),
 );
