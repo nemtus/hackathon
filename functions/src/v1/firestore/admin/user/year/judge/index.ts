@@ -2,8 +2,8 @@ import {
   exportFunctionsModule,
   exportFunction,
 } from '../../../../../../utils/firebase/deploy';
-import { Change, CloudFunction } from 'firebase-functions';
-import { QueryDocumentSnapshot } from 'firebase-functions/lib/v1/providers/firestore';
+import { Change, CloudFunction } from 'firebase-functions/v1';
+import { QueryDocumentSnapshot } from 'firebase-functions/v1/firestore';
 // import { onCreate } from './onCreate';
 import { onUpdate } from './onUpdate';
 // import { onDelete } from './onDelete';
