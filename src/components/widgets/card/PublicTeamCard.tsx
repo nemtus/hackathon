@@ -37,7 +37,7 @@ const PublicTeamCardWidgetComponent = (publicTeam: PublicTeam) => {
               <div className="stat-value">
                 <a
                   className="link link-primary"
-                  href={`${process.env.REACT_APP_SYMBOL_BLOCK_EXPLORER_URL}/accounts/${teamAddress}`}
+                  href={`${import.meta.env.REACT_APP_SYMBOL_BLOCK_EXPLORER_URL}/accounts/${teamAddress}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

@@ -3,6 +3,7 @@ import {
   SubmitHandler,
   useFieldArray,
   FieldError,
+  Resolver,
 } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -31,7 +32,7 @@ import { ConfigHackathonYearVote } from 'models/configs/hackathon/years/vote';
 import { ConfigHackathonYearFinalJudge } from 'models/configs/hackathon/years/final-judge';
 import { ConfigHackathonYearFinalVote } from 'models/configs/hackathon/years/final-vote';
 
-const CURRENT_YEAR = process.env.REACT_APP_CURRENT_YEAR;
+const CURRENT_YEAR = import.meta.env.REACT_APP_CURRENT_YEAR;
 
 const schema = yup.object().shape({
   id: yup.string(),
@@ -199,7 +200,7 @@ const PrivateUserYearFinalJudgeCreateFormWidgetComponent = (props: {
       updatedAt: undefined,
       approvedAt: undefined,
     },
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema) as unknown as Resolver<PrivateUserYearFinalJudge>,
   });
 
   const { fields } = useFieldArray({

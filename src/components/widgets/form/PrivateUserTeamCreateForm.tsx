@@ -3,6 +3,7 @@ import {
   SubmitHandler,
   useFieldArray,
   FieldError,
+  Resolver,
 } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -15,9 +16,9 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 const addressRegex =
-  process.env.REACT_APP_SYMBOL_PREFIX === 'T'
+  import.meta.env.REACT_APP_SYMBOL_PREFIX === 'T'
     ? /^T[A-Z0-9]{38}$/
-    : process.env.REACT_APP_SYMBOL_PREFIX === 'N'
+    : import.meta.env.REACT_APP_SYMBOL_PREFIX === 'N'
     ? /^N[A-Z0-9]{38}$/
     : /^T[A-Z0-9]{38}$/;
 
@@ -96,7 +97,7 @@ const PrivateUserYearTeamCreateFormWidgetComponent = (props: {
       updatedAt: undefined,
       approvedAt: undefined,
     },
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema) as unknown as Resolver<PrivateUserYearTeam>,
   });
 
   const { fields, append, remove } = useFieldArray({

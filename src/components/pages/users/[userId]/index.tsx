@@ -92,7 +92,7 @@ import {
 import PrivateUserJudgeCardWidgetComponent from 'components/widgets/card/PrivateUserJudgeCard';
 import PrivateUserVoteCardWidgetComponent from 'components/widgets/card/PrivateUserVoteCard';
 
-const CURRENT_YEAR = process.env.REACT_APP_CURRENT_YEAR;
+const CURRENT_YEAR = import.meta.env.REACT_APP_CURRENT_YEAR;
 if (!CURRENT_YEAR) {
   throw Error('REACT_APP_CURRENT_YEAR is not defined');
 }

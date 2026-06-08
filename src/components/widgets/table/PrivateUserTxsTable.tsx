@@ -24,7 +24,7 @@ const PrivateUserTxsTableWidgetComponent = (props: {
               <CopyButtonComponent copiedString={tx.hash} />
               <a
                 className="link link-primary"
-                href={`${process.env.REACT_APP_SYMBOL_BLOCK_EXPLORER_URL}/transactions/${tx.hash}`}
+                href={`${import.meta.env.REACT_APP_SYMBOL_BLOCK_EXPLORER_URL}/transactions/${tx.hash}`}
               >
                 {tx.hash}
               </a>
