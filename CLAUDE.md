@@ -67,3 +67,11 @@ npm run preview     # ビルド結果のプレビュー
 - `.github/workflows/ci-react.yml` — PR ごとに `npm audit` → `npm ci` → `npm run build`
 - `.github/workflows/ci-functions.yml` — 同上を `functions/` で実行
 - いずれも Node 24 環境。コミット前に `npm run typecheck` / `npm run build` が通ることを確認する
+
+## CD（デプロイ）
+
+- `.github/workflows/cd-firebase-testnet.yml` — main への push / 手動実行で testnet（`nemtus-hackathon-test`）へデプロイ
+- `.github/workflows/cd-firebase-mainnet.yml` — 手動実行（`workflow_dispatch`）で mainnet（`nemtus-hackathon`）へデプロイ
+- **認証は OIDC + Workload Identity Federation（キーレス）**。`google-github-actions/auth` で GCP のデプロイ用サービスアカウントを impersonation し、firebase CLI は ADC（`GOOGLE_APPLICATION_CREDENTIALS`）経由でデプロイする。長期 `FIREBASE_TOKEN` は使わない
+- GitHub Environment（`testnet` / `mainnet`）の Variables に `WIF_PROVIDER` / `DEPLOY_SERVICE_ACCOUNT` / `GCP_PROJECT_ID` を設定する。GCP 側の WIF プール・SA 設定手順は移行計画を参照
+- ワークフローの permissions に `id-token: write` が必須（OIDC トークン取得のため）
