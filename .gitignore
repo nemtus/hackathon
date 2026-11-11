@@ -31,6 +31,10 @@ yarn-error.log*
 .env.testnet
 .env.testnet.encoded
 .env.testnet.decoded
+# Catch-all for any other env variant, e.g. Firebase Functions per-project
+# files such as functions/.env.<projectId>. Only the example is tracked.
+.env.*
+!.env.example
 
 *.log
 
